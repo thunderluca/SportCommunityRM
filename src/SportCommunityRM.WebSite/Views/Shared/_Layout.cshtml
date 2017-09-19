@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - SportCommunityRM.WebSite</title>
+    <title>@ViewData["Title"] - @WebSiteResources.WebSiteName</title>
 
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
@@ -34,7 +34,7 @@
                     <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
                 </ul>
-                @await Html.PartialAsync("_LoginPartial")
+                @await Component.InvokeAsync("Login")
             </div>
         </div>
     </nav>
@@ -42,9 +42,10 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; 2017 - SportCommunityRM.WebSite</p>
+            <p>&copy; @DateTime.Now.Year - @WebSiteResources.WebSiteName</p>
         </footer>
     </div>
+
 
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>

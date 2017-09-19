@@ -29,10 +29,10 @@ namespace SportCommunityRM.WebSite.Controllers
             ILogger<AccountController> logger,
             UrlEncoder urlEncoder) : base(urlEncoder)
         {
-            UserManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
-            SignInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
-            EmailSender = emailSender ?? throw new ArgumentNullException(nameof(emailSender));
-            Logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            this.UserManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+            this.SignInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
+            this.EmailSender = emailSender ?? throw new ArgumentNullException(nameof(emailSender));
+            this.Logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         [TempData]

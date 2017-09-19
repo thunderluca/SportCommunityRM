@@ -21,7 +21,6 @@ namespace SportCommunityRM.WebSite.Controllers
         private readonly SignInManager<ApplicationUser> SignInManager;
         private readonly IEmailSender EmailSender;
         private readonly ILogger Logger;
-        private readonly UrlEncoder UrlEncoder;
 
         public ManageController(
           UserManager<ApplicationUser> userManager,
@@ -30,11 +29,10 @@ namespace SportCommunityRM.WebSite.Controllers
           ILogger<ManageController> logger,
           UrlEncoder urlEncoder) : base(urlEncoder)
         {
-            UserManager = userManager;
-            SignInManager = signInManager;
-            EmailSender = emailSender;
-            Logger = logger;
-            UrlEncoder = urlEncoder;
+            this.UserManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+            this.SignInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
+            this.EmailSender = emailSender ?? throw new ArgumentNullException(nameof(emailSender));
+            this.Logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         [TempData]
