@@ -31,7 +31,7 @@ namespace SportCommunityRM.WebSite
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddScoped(_ => new SCRMContext(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<SCRMContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddScoped<IDatabase, Database>(_ => new Database(new SCRMContext(Configuration.GetConnectionString("DefaultConnection"))));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()

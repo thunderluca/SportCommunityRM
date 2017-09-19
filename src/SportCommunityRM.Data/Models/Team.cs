@@ -17,5 +17,7 @@ namespace SportCommunityRM.Data.Models
         public virtual ICollection<RegisteredUser> Players { get; set; }
 
         public virtual ICollection<RegisteredUser> Coaches { get; set; }
+
+        public virtual ICollection<Activity> Calendar { get; set; }
     }
 }

@@ -5,17 +5,19 @@ using System.Text;
 
 namespace SportCommunityRM.Data.Models
 {
-    public abstract class BaseDocumentEntity : BaseContextEntity
+    public abstract class Activity : BaseContextEntity
     {
-        public DateTime InsertionDate { get; set; }
+        public string Name { get; set; }
 
         public DateTime StartDate { get; set; }
 
         public DateTime EndDate { get; set; }
 
-        [ForeignKey(nameof(User))]
-        public Guid? UserId { get; set; }
+        [ForeignKey(nameof(Field))]
+        public Guid? FieldId { get; set; }
 
-        public virtual RegisteredUser User { get; set; }
+        public virtual Field Field { get; set; }
+
+        public string Notes { get; set; }
     }
 }
