@@ -1,40 +1,38 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using SportCommunityRM.WebSite.Models;
-using SportCommunityRM.WebSite.Models.AccountViewModels;
+using SportCommunityRM.WebSite.ViewModels.Account;
 using SportCommunityRM.WebSite.Services;
+using System.Text.Encodings.Web;
 
 namespace SportCommunityRM.WebSite.Controllers
 {
     [Authorize]
     [Route("[controller]/[action]")]
-    public class AccountController : Controller
+    public class AccountController : BaseController
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly IEmailSender _emailSender;
-        private readonly ILogger _logger;
+        private readonly UserManager<ApplicationUser> UserManager;
+        private readonly SignInManager<ApplicationUser> SignInManager;
+        private readonly IEmailSender EmailSender;
+        private readonly ILogger Logger;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IEmailSender emailSender,
-            ILogger<AccountController> logger)
+            ILogger<AccountController> logger,
+            UrlEncoder urlEncoder) : base(urlEncoder)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _emailSender = emailSender;
-            _logger = logger;
+            UserManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+            SignInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
+            EmailSender = emailSender ?? throw new ArgumentNullException(nameof(emailSender));
+            Logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         [TempData]
@@ -57,33 +55,26 @@ namespace SportCommunityRM.WebSite.Controllers
         public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
+            if (result.Succeeded)
             {
-                // This doesn't count login failures towards account lockout
-                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
-                if (result.Succeeded)
-                {
-                    _logger.LogInformation("User logged in.");
-                    return RedirectToLocal(returnUrl);
-                }
-                if (result.RequiresTwoFactor)
-                {
-                    return RedirectToAction(nameof(LoginWith2fa), new { returnUrl, model.RememberMe });
-                }
-                if (result.IsLockedOut)
-                {
-                    _logger.LogWarning("User account locked out.");
-                    return RedirectToAction(nameof(Lockout));
-                }
-                else
-                {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                    return View(model);
-                }
+                Logger.LogInformation("User logged in.");
+                return RedirectToLocal(returnUrl, nameof(HomeController.Index), "Home");
+            }
+            if (result.RequiresTwoFactor)
+            {
+                return RedirectToAction(nameof(LoginWith2fa), new { returnUrl, model.RememberMe });
+            }
+            if (result.IsLockedOut)
+            {
+                Logger.LogWarning("User account locked out.");
+                return RedirectToAction(nameof(Lockout));
             }
 
-            // If we got this far, something failed, redisplay form
+            ModelState.AddModelError(string.Empty, "Invalid login attempt.");
             return View(model);
         }
 
@@ -92,7 +83,7 @@ namespace SportCommunityRM.WebSite.Controllers
         public async Task<IActionResult> LoginWith2fa(bool rememberMe, string returnUrl = null)
         {
             // Ensure the user has gone through the username & password screen first
-            var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+            var user = await SignInManager.GetTwoFactorAuthenticationUserAsync();
 
             if (user == null)
             {
@@ -111,36 +102,32 @@ namespace SportCommunityRM.WebSite.Controllers
         public async Task<IActionResult> LoginWith2fa(LoginWith2faViewModel model, bool rememberMe, string returnUrl = null)
         {
             if (!ModelState.IsValid)
-            {
                 return View(model);
-            }
 
-            var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+            var user = await SignInManager.GetTwoFactorAuthenticationUserAsync();
             if (user == null)
             {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                throw new ApplicationException($"Unable to load user with ID '{UserManager.GetUserId(User)}'.");
             }
 
             var authenticatorCode = model.TwoFactorCode.Replace(" ", string.Empty).Replace("-", string.Empty);
 
-            var result = await _signInManager.TwoFactorAuthenticatorSignInAsync(authenticatorCode, rememberMe, model.RememberMachine);
+            var result = await SignInManager.TwoFactorAuthenticatorSignInAsync(authenticatorCode, rememberMe, model.RememberMachine);
 
             if (result.Succeeded)
             {
-                _logger.LogInformation("User with ID {UserId} logged in with 2fa.", user.Id);
-                return RedirectToLocal(returnUrl);
+                Logger.LogInformation("User with ID {UserId} logged in with 2fa.", user.Id);
+                return RedirectToLocal(returnUrl, nameof(HomeController.Index), "Home");
             }
-            else if (result.IsLockedOut)
+            if (result.IsLockedOut)
             {
-                _logger.LogWarning("User with ID {UserId} account locked out.", user.Id);
+                Logger.LogWarning("User with ID {UserId} account locked out.", user.Id);
                 return RedirectToAction(nameof(Lockout));
             }
-            else
-            {
-                _logger.LogWarning("Invalid authenticator code entered for user with ID {UserId}.", user.Id);
-                ModelState.AddModelError(string.Empty, "Invalid authenticator code.");
-                return View();
-            }
+
+            Logger.LogWarning("Invalid authenticator code entered for user with ID {UserId}.", user.Id);
+            ModelState.AddModelError(string.Empty, "Invalid authenticator code.");
+            return View();
         }
 
         [HttpGet]
@@ -148,7 +135,7 @@ namespace SportCommunityRM.WebSite.Controllers
         public async Task<IActionResult> LoginWithRecoveryCode(string returnUrl = null)
         {
             // Ensure the user has gone through the username & password screen first
-            var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+            var user = await SignInManager.GetTwoFactorAuthenticationUserAsync();
             if (user == null)
             {
                 throw new ApplicationException($"Unable to load two-factor authentication user.");
@@ -165,11 +152,9 @@ namespace SportCommunityRM.WebSite.Controllers
         public async Task<IActionResult> LoginWithRecoveryCode(LoginWithRecoveryCodeViewModel model, string returnUrl = null)
         {
             if (!ModelState.IsValid)
-            {
                 return View(model);
-            }
 
-            var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+            var user = await SignInManager.GetTwoFactorAuthenticationUserAsync();
             if (user == null)
             {
                 throw new ApplicationException($"Unable to load two-factor authentication user.");
@@ -177,24 +162,22 @@ namespace SportCommunityRM.WebSite.Controllers
 
             var recoveryCode = model.RecoveryCode.Replace(" ", string.Empty);
 
-            var result = await _signInManager.TwoFactorRecoveryCodeSignInAsync(recoveryCode);
+            var result = await SignInManager.TwoFactorRecoveryCodeSignInAsync(recoveryCode);
 
             if (result.Succeeded)
             {
-                _logger.LogInformation("User with ID {UserId} logged in with a recovery code.", user.Id);
-                return RedirectToLocal(returnUrl);
+                Logger.LogInformation("User with ID {UserId} logged in with a recovery code.", user.Id);
+                return RedirectToLocal(returnUrl, nameof(HomeController.Index), "Home");
             }
             if (result.IsLockedOut)
             {
-                _logger.LogWarning("User with ID {UserId} account locked out.", user.Id);
+                Logger.LogWarning("User with ID {UserId} account locked out.", user.Id);
                 return RedirectToAction(nameof(Lockout));
             }
-            else
-            {
-                _logger.LogWarning("Invalid recovery code entered for user with ID {UserId}", user.Id);
-                ModelState.AddModelError(string.Empty, "Invalid recovery code entered.");
-                return View();
-            }
+
+            Logger.LogWarning("Invalid recovery code entered for user with ID {UserId}", user.Id);
+            ModelState.AddModelError(string.Empty, "Invalid recovery code entered.");
+            return View();
         }
 
         [HttpGet]
@@ -218,35 +201,34 @@ namespace SportCommunityRM.WebSite.Controllers
         public async Task<IActionResult> Register(RegisterViewModel model, string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+            var result = await UserManager.CreateAsync(user, model.Password);
+            if (!result.Succeeded)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                var result = await _userManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
-                {
-                    _logger.LogInformation("User created a new account with password.");
-
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
-                    await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
-
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-                    _logger.LogInformation("User created a new account with password.");
-                    return RedirectToLocal(returnUrl);
-                }
                 AddErrors(result);
+                return View(model);
             }
 
-            // If we got this far, something failed, redisplay form
-            return View(model);
+            Logger.LogInformation("User created a new account with password.");
+
+            var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
+            var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
+            await EmailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
+
+            await SignInManager.SignInAsync(user, isPersistent: false);
+            Logger.LogInformation("User created a new account with password.");
+            return RedirectToLocal(returnUrl, nameof(HomeController.Index), "Home");
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
-            await _signInManager.SignOutAsync();
-            _logger.LogInformation("User logged out.");
+            await SignInManager.SignOutAsync();
+            Logger.LogInformation("User logged out.");
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 
@@ -257,7 +239,7 @@ namespace SportCommunityRM.WebSite.Controllers
         {
             // Request a redirect to the external login provider.
             var redirectUrl = Url.Action(nameof(ExternalLoginCallback), "Account", new { returnUrl });
-            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+            var properties = SignInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
             return Challenge(properties, provider);
         }
 
@@ -270,31 +252,28 @@ namespace SportCommunityRM.WebSite.Controllers
                 ErrorMessage = $"Error from external provider: {remoteError}";
                 return RedirectToAction(nameof(Login));
             }
-            var info = await _signInManager.GetExternalLoginInfoAsync();
+            var info = await SignInManager.GetExternalLoginInfoAsync();
             if (info == null)
             {
                 return RedirectToAction(nameof(Login));
             }
 
             // Sign in the user with this external login provider if the user already has a login.
-            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+            var result = await SignInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
             if (result.Succeeded)
             {
-                _logger.LogInformation("User logged in with {Name} provider.", info.LoginProvider);
-                return RedirectToLocal(returnUrl);
+                Logger.LogInformation("User logged in with {Name} provider.", info.LoginProvider);
+                return RedirectToLocal(returnUrl, nameof(HomeController.Index), "Home");
             }
             if (result.IsLockedOut)
             {
                 return RedirectToAction(nameof(Lockout));
             }
-            else
-            {
-                // If the user does not have an account, then ask the user to create an account.
-                ViewData["ReturnUrl"] = returnUrl;
-                ViewData["LoginProvider"] = info.LoginProvider;
-                var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-                return View("ExternalLogin", new ExternalLoginViewModel { Email = email });
-            }
+
+            ViewData["ReturnUrl"] = returnUrl;
+            ViewData["LoginProvider"] = info.LoginProvider;
+            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+            return View("ExternalLogin", new ExternalLoginViewModel { Email = email });
         }
 
         [HttpPost]
@@ -302,28 +281,30 @@ namespace SportCommunityRM.WebSite.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ExternalLoginConfirmation(ExternalLoginViewModel model, string returnUrl = null)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                // Get the information about the user from the external login provider
-                var info = await _signInManager.GetExternalLoginInfoAsync();
-                if (info == null)
-                {
-                    throw new ApplicationException("Error loading external login information during confirmation.");
-                }
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                var result = await _userManager.CreateAsync(user);
+                ViewData["ReturnUrl"] = returnUrl;
+                return View(nameof(ExternalLogin), model);
+            }
+
+            var info = await SignInManager.GetExternalLoginInfoAsync();
+            if (info == null)
+            {
+                throw new ApplicationException("Error loading external login information during confirmation.");
+            }
+            var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+            var result = await UserManager.CreateAsync(user);
+            if (result.Succeeded)
+            {
+                result = await UserManager.AddLoginAsync(user, info);
                 if (result.Succeeded)
                 {
-                    result = await _userManager.AddLoginAsync(user, info);
-                    if (result.Succeeded)
-                    {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-                        _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
-                        return RedirectToLocal(returnUrl);
-                    }
+                    await SignInManager.SignInAsync(user, isPersistent: false);
+                    Logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
+                    return RedirectToLocal(returnUrl, nameof(HomeController.Index), "Home");
                 }
-                AddErrors(result);
             }
+            AddErrors(result);
 
             ViewData["ReturnUrl"] = returnUrl;
             return View(nameof(ExternalLogin), model);
@@ -337,12 +318,12 @@ namespace SportCommunityRM.WebSite.Controllers
             {
                 return RedirectToAction(nameof(HomeController.Index), "Home");
             }
-            var user = await _userManager.FindByIdAsync(userId);
+            var user = await UserManager.FindByIdAsync(userId);
             if (user == null)
             {
                 throw new ApplicationException($"Unable to load user with ID '{userId}'.");
             }
-            var result = await _userManager.ConfirmEmailAsync(user, code);
+            var result = await UserManager.ConfirmEmailAsync(user, code);
             return View(result.Succeeded ? "ConfirmEmail" : "Error");
         }
 
@@ -358,26 +339,23 @@ namespace SportCommunityRM.WebSite.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
-            if (ModelState.IsValid)
-            {
-                var user = await _userManager.FindByEmailAsync(model.Email);
-                if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
-                {
-                    // Don't reveal that the user does not exist or is not confirmed
-                    return RedirectToAction(nameof(ForgotPasswordConfirmation));
-                }
+            if (!ModelState.IsValid)
+                return View(model);
 
-                // For more information on how to enable account confirmation and password reset please
-                // visit https://go.microsoft.com/fwlink/?LinkID=532713
-                var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-                var callbackUrl = Url.ResetPasswordCallbackLink(user.Id, code, Request.Scheme);
-                await _emailSender.SendEmailAsync(model.Email, "Reset Password",
-                   $"Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>");
+            var user = await UserManager.FindByEmailAsync(model.Email);
+            if (user == null || !(await UserManager.IsEmailConfirmedAsync(user)))
+            {
+                // Don't reveal that the user does not exist or is not confirmed
                 return RedirectToAction(nameof(ForgotPasswordConfirmation));
             }
 
-            // If we got this far, something failed, redisplay form
-            return View(model);
+            // For more information on how to enable account confirmation and password reset please
+            // visit https://go.microsoft.com/fwlink/?LinkID=532713
+            var code = await UserManager.GeneratePasswordResetTokenAsync(user);
+            var callbackUrl = Url.ResetPasswordCallbackLink(user.Id, code, Request.Scheme);
+            await EmailSender.SendEmailAsync(model.Email, "Reset Password",
+               $"Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>");
+            return RedirectToAction(nameof(ForgotPasswordConfirmation));
         }
 
         [HttpGet]
@@ -405,16 +383,15 @@ namespace SportCommunityRM.WebSite.Controllers
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
         {
             if (!ModelState.IsValid)
-            {
                 return View(model);
-            }
-            var user = await _userManager.FindByEmailAsync(model.Email);
+
+            var user = await UserManager.FindByEmailAsync(model.Email);
             if (user == null)
             {
                 // Don't reveal that the user does not exist
                 return RedirectToAction(nameof(ResetPasswordConfirmation));
             }
-            var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
+            var result = await UserManager.ResetPasswordAsync(user, model.Code, model.Password);
             if (result.Succeeded)
             {
                 return RedirectToAction(nameof(ResetPasswordConfirmation));
@@ -436,29 +413,5 @@ namespace SportCommunityRM.WebSite.Controllers
         {
             return View();
         }
-
-        #region Helpers
-
-        private void AddErrors(IdentityResult result)
-        {
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError(string.Empty, error.Description);
-            }
-        }
-
-        private IActionResult RedirectToLocal(string returnUrl)
-        {
-            if (Url.IsLocalUrl(returnUrl))
-            {
-                return Redirect(returnUrl);
-            }
-            else
-            {
-                return RedirectToAction(nameof(HomeController.Index), "Home");
-            }
-        }
-
-        #endregion
     }
 }

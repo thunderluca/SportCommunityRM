@@ -1,8 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SportCommunityRM.Data.Models;
 using System;
-using System.Collections.Generic;
-using System.Text;
+using static SportCommunityRM.Data.Helpers.DbContextHelper;
 
 namespace SportCommunityRM.Data
 {
@@ -28,7 +27,8 @@ namespace SportCommunityRM.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
+            foreach (var type in modelBuilder.Model.GetEntityTypes())
+                modelBuilder.Entity(type.ClrType).ToTable(GetFormattedLookupTableName("SCRM", typeof(SCRMContext), type.ClrType));
         }
 
         public DbSet<Inscription> Inscriptions { get; set; }

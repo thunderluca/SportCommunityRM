@@ -1,6 +1,6 @@
 using System;
 
-namespace SportCommunityRM.WebSite.Models
+namespace SportCommunityRM.WebSite.ViewModels.Shared
 {
     public class ErrorViewModel
     {

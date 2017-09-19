@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 
-namespace SportCommunityRM.WebSite.Models.ManageViewModels
+namespace SportCommunityRM.WebSite.ViewModels.Manage
 {
     public class ExternalLoginsViewModel
     {

@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
@@ -9,37 +7,34 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using SportCommunityRM.WebSite.Models;
-using SportCommunityRM.WebSite.Models.ManageViewModels;
+using SportCommunityRM.WebSite.ViewModels.Manage;
 using SportCommunityRM.WebSite.Services;
 
 namespace SportCommunityRM.WebSite.Controllers
 {
     [Authorize]
     [Route("[controller]/[action]")]
-    public class ManageController : Controller
+    public class ManageController : BaseController
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly IEmailSender _emailSender;
-        private readonly ILogger _logger;
-        private readonly UrlEncoder _urlEncoder;
-
-        private const string AuthenicatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
+        private readonly UserManager<ApplicationUser> UserManager;
+        private readonly SignInManager<ApplicationUser> SignInManager;
+        private readonly IEmailSender EmailSender;
+        private readonly ILogger Logger;
+        private readonly UrlEncoder UrlEncoder;
 
         public ManageController(
           UserManager<ApplicationUser> userManager,
           SignInManager<ApplicationUser> signInManager,
           IEmailSender emailSender,
           ILogger<ManageController> logger,
-          UrlEncoder urlEncoder)
+          UrlEncoder urlEncoder) : base(urlEncoder)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _emailSender = emailSender;
-            _logger = logger;
-            _urlEncoder = urlEncoder;
+            UserManager = userManager;
+            SignInManager = signInManager;
+            EmailSender = emailSender;
+            Logger = logger;
+            UrlEncoder = urlEncoder;
         }
 
         [TempData]
@@ -48,10 +43,10 @@ namespace SportCommunityRM.WebSite.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await UserManager.GetUserAsync(User);
             if (user == null)
             {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                throw new ApplicationException($"Unable to load user with ID '{UserManager.GetUserId(User)}'.");
             }
 
             var model = new IndexViewModel
@@ -75,16 +70,16 @@ namespace SportCommunityRM.WebSite.Controllers
                 return View(model);
             }
 
-            var user = await _userManager.GetUserAsync(User);
+            var user = await UserManager.GetUserAsync(User);
             if (user == null)
             {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                throw new ApplicationException($"Unable to load user with ID '{UserManager.GetUserId(User)}'.");
             }
 
             var email = user.Email;
             if (model.Email != email)
             {
-                var setEmailResult = await _userManager.SetEmailAsync(user, model.Email);
+                var setEmailResult = await UserManager.SetEmailAsync(user, model.Email);
                 if (!setEmailResult.Succeeded)
                 {
                     throw new ApplicationException($"Unexpected error occurred setting email for user with ID '{user.Id}'.");
@@ -94,7 +89,7 @@ namespace SportCommunityRM.WebSite.Controllers
             var phoneNumber = user.PhoneNumber;
             if (model.PhoneNumber != phoneNumber)
             {
-                var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, model.PhoneNumber);
+                var setPhoneResult = await UserManager.SetPhoneNumberAsync(user, model.PhoneNumber);
                 if (!setPhoneResult.Succeeded)
                 {
                     throw new ApplicationException($"Unexpected error occurred setting phone number for user with ID '{user.Id}'.");
@@ -114,16 +109,16 @@ namespace SportCommunityRM.WebSite.Controllers
                 return View(model);
             }
 
-            var user = await _userManager.GetUserAsync(User);
+            var user = await UserManager.GetUserAsync(User);
             if (user == null)
             {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                throw new ApplicationException($"Unable to load user with ID '{UserManager.GetUserId(User)}'.");
             }
 
-            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
             var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
             var email = user.Email;
-            await _emailSender.SendEmailConfirmationAsync(email, callbackUrl);
+            await EmailSender.SendEmailConfirmationAsync(email, callbackUrl);
 
             StatusMessage = "Verification email sent. Please check your email.";
             return RedirectToAction(nameof(Index));
@@ -132,13 +127,13 @@ namespace SportCommunityRM.WebSite.Controllers
         [HttpGet]
         public async Task<IActionResult> ChangePassword()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await UserManager.GetUserAsync(User);
             if (user == null)
             {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                throw new ApplicationException($"Unable to load user with ID '{UserManager.GetUserId(User)}'.");
             }
 
-            var hasPassword = await _userManager.HasPasswordAsync(user);
+            var hasPassword = await UserManager.HasPasswordAsync(user);
             if (!hasPassword)
             {
                 return RedirectToAction(nameof(SetPassword));
@@ -157,21 +152,21 @@ namespace SportCommunityRM.WebSite.Controllers
                 return View(model);
             }
 
-            var user = await _userManager.GetUserAsync(User);
+            var user = await UserManager.GetUserAsync(User);
             if (user == null)
             {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                throw new ApplicationException($"Unable to load user with ID '{UserManager.GetUserId(User)}'.");
             }
 
-            var changePasswordResult = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+            var changePasswordResult = await UserManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
             if (!changePasswordResult.Succeeded)
             {
                 AddErrors(changePasswordResult);
                 return View(model);
             }
 
-            await _signInManager.SignInAsync(user, isPersistent: false);
-            _logger.LogInformation("User changed their password successfully.");
+            await SignInManager.SignInAsync(user, isPersistent: false);
+            Logger.LogInformation("User changed their password successfully.");
             StatusMessage = "Your password has been changed.";
 
             return RedirectToAction(nameof(ChangePassword));
@@ -180,13 +175,13 @@ namespace SportCommunityRM.WebSite.Controllers
         [HttpGet]
         public async Task<IActionResult> SetPassword()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await UserManager.GetUserAsync(User);
             if (user == null)
             {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                throw new ApplicationException($"Unable to load user with ID '{UserManager.GetUserId(User)}'.");
             }
 
-            var hasPassword = await _userManager.HasPasswordAsync(user);
+            var hasPassword = await UserManager.HasPasswordAsync(user);
 
             if (hasPassword)
             {
@@ -206,20 +201,20 @@ namespace SportCommunityRM.WebSite.Controllers
                 return View(model);
             }
 
-            var user = await _userManager.GetUserAsync(User);
+            var user = await UserManager.GetUserAsync(User);
             if (user == null)
             {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                throw new ApplicationException($"Unable to load user with ID '{UserManager.GetUserId(User)}'.");
             }
 
-            var addPasswordResult = await _userManager.AddPasswordAsync(user, model.NewPassword);
+            var addPasswordResult = await UserManager.AddPasswordAsync(user, model.NewPassword);
             if (!addPasswordResult.Succeeded)
             {
                 AddErrors(addPasswordResult);
                 return View(model);
             }
 
-            await _signInManager.SignInAsync(user, isPersistent: false);
+            await SignInManager.SignInAsync(user, isPersistent: false);
             StatusMessage = "Your password has been set.";
 
             return RedirectToAction(nameof(SetPassword));
@@ -228,17 +223,17 @@ namespace SportCommunityRM.WebSite.Controllers
         [HttpGet]
         public async Task<IActionResult> ExternalLogins()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await UserManager.GetUserAsync(User);
             if (user == null)
             {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                throw new ApplicationException($"Unable to load user with ID '{UserManager.GetUserId(User)}'.");
             }
 
-            var model = new ExternalLoginsViewModel { CurrentLogins = await _userManager.GetLoginsAsync(user) };
-            model.OtherLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync())
+            var model = new ExternalLoginsViewModel { CurrentLogins = await UserManager.GetLoginsAsync(user) };
+            model.OtherLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync())
                 .Where(auth => model.CurrentLogins.All(ul => auth.Name != ul.LoginProvider))
                 .ToList();
-            model.ShowRemoveButton = await _userManager.HasPasswordAsync(user) || model.CurrentLogins.Count > 1;
+            model.ShowRemoveButton = await UserManager.HasPasswordAsync(user) || model.CurrentLogins.Count > 1;
             model.StatusMessage = StatusMessage;
 
             return View(model);
@@ -253,26 +248,26 @@ namespace SportCommunityRM.WebSite.Controllers
 
             // Request a redirect to the external login provider to link a login for the current user
             var redirectUrl = Url.Action(nameof(LinkLoginCallback));
-            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl, _userManager.GetUserId(User));
+            var properties = SignInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl, UserManager.GetUserId(User));
             return new ChallengeResult(provider, properties);
         }
 
         [HttpGet]
         public async Task<IActionResult> LinkLoginCallback()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await UserManager.GetUserAsync(User);
             if (user == null)
             {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                throw new ApplicationException($"Unable to load user with ID '{UserManager.GetUserId(User)}'.");
             }
 
-            var info = await _signInManager.GetExternalLoginInfoAsync(user.Id);
+            var info = await SignInManager.GetExternalLoginInfoAsync(user.Id);
             if (info == null)
             {
                 throw new ApplicationException($"Unexpected error occurred loading external login info for user with ID '{user.Id}'.");
             }
 
-            var result = await _userManager.AddLoginAsync(user, info);
+            var result = await UserManager.AddLoginAsync(user, info);
             if (!result.Succeeded)
             {
                 throw new ApplicationException($"Unexpected error occurred adding external login for user with ID '{user.Id}'.");
@@ -289,19 +284,19 @@ namespace SportCommunityRM.WebSite.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoveLogin(RemoveLoginViewModel model)
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await UserManager.GetUserAsync(User);
             if (user == null)
             {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                throw new ApplicationException($"Unable to load user with ID '{UserManager.GetUserId(User)}'.");
             }
 
-            var result = await _userManager.RemoveLoginAsync(user, model.LoginProvider, model.ProviderKey);
+            var result = await UserManager.RemoveLoginAsync(user, model.LoginProvider, model.ProviderKey);
             if (!result.Succeeded)
             {
                 throw new ApplicationException($"Unexpected error occurred removing external login for user with ID '{user.Id}'.");
             }
 
-            await _signInManager.SignInAsync(user, isPersistent: false);
+            await SignInManager.SignInAsync(user, isPersistent: false);
             StatusMessage = "The external login was removed.";
             return RedirectToAction(nameof(ExternalLogins));
         }
@@ -309,17 +304,17 @@ namespace SportCommunityRM.WebSite.Controllers
         [HttpGet]
         public async Task<IActionResult> TwoFactorAuthentication()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await UserManager.GetUserAsync(User);
             if (user == null)
             {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                throw new ApplicationException($"Unable to load user with ID '{UserManager.GetUserId(User)}'.");
             }
 
             var model = new TwoFactorAuthenticationViewModel
             {
-                HasAuthenticator = await _userManager.GetAuthenticatorKeyAsync(user) != null,
+                HasAuthenticator = await UserManager.GetAuthenticatorKeyAsync(user) != null,
                 Is2faEnabled = user.TwoFactorEnabled,
-                RecoveryCodesLeft = await _userManager.CountRecoveryCodesAsync(user),
+                RecoveryCodesLeft = await UserManager.CountRecoveryCodesAsync(user),
             };
 
             return View(model);
@@ -328,10 +323,10 @@ namespace SportCommunityRM.WebSite.Controllers
         [HttpGet]
         public async Task<IActionResult> Disable2faWarning()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await UserManager.GetUserAsync(User);
             if (user == null)
             {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                throw new ApplicationException($"Unable to load user with ID '{UserManager.GetUserId(User)}'.");
             }
 
             if (!user.TwoFactorEnabled)
@@ -346,36 +341,36 @@ namespace SportCommunityRM.WebSite.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Disable2fa()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await UserManager.GetUserAsync(User);
             if (user == null)
             {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                throw new ApplicationException($"Unable to load user with ID '{UserManager.GetUserId(User)}'.");
             }
 
-            var disable2faResult = await _userManager.SetTwoFactorEnabledAsync(user, false);
+            var disable2faResult = await UserManager.SetTwoFactorEnabledAsync(user, false);
             if (!disable2faResult.Succeeded)
             {
                 throw new ApplicationException($"Unexpected error occured disabling 2FA for user with ID '{user.Id}'.");
             }
 
-            _logger.LogInformation("User with ID {UserId} has disabled 2fa.", user.Id);
+            Logger.LogInformation("User with ID {UserId} has disabled 2fa.", user.Id);
             return RedirectToAction(nameof(TwoFactorAuthentication));
         }
 
         [HttpGet]
         public async Task<IActionResult> EnableAuthenticator()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await UserManager.GetUserAsync(User);
             if (user == null)
             {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                throw new ApplicationException($"Unable to load user with ID '{UserManager.GetUserId(User)}'.");
             }
 
-            var unformattedKey = await _userManager.GetAuthenticatorKeyAsync(user);
+            var unformattedKey = await UserManager.GetAuthenticatorKeyAsync(user);
             if (string.IsNullOrEmpty(unformattedKey))
             {
-                await _userManager.ResetAuthenticatorKeyAsync(user);
-                unformattedKey = await _userManager.GetAuthenticatorKeyAsync(user);
+                await UserManager.ResetAuthenticatorKeyAsync(user);
+                unformattedKey = await UserManager.GetAuthenticatorKeyAsync(user);
             }
 
             var model = new EnableAuthenticatorViewModel
@@ -396,17 +391,17 @@ namespace SportCommunityRM.WebSite.Controllers
                 return View(model);
             }
 
-            var user = await _userManager.GetUserAsync(User);
+            var user = await UserManager.GetUserAsync(User);
             if (user == null)
             {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                throw new ApplicationException($"Unable to load user with ID '{UserManager.GetUserId(User)}'.");
             }
 
             // Strip spaces and hypens
             var verificationCode = model.Code.Replace(" ", string.Empty).Replace("-", string.Empty);
 
-            var is2faTokenValid = await _userManager.VerifyTwoFactorTokenAsync(
-                user, _userManager.Options.Tokens.AuthenticatorTokenProvider, verificationCode);
+            var is2faTokenValid = await UserManager.VerifyTwoFactorTokenAsync(
+                user, UserManager.Options.Tokens.AuthenticatorTokenProvider, verificationCode);
 
             if (!is2faTokenValid)
             {
@@ -414,8 +409,8 @@ namespace SportCommunityRM.WebSite.Controllers
                 return View(model);
             }
 
-            await _userManager.SetTwoFactorEnabledAsync(user, true);
-            _logger.LogInformation("User with ID {UserId} has enabled 2FA with an authenticator app.", user.Id);
+            await UserManager.SetTwoFactorEnabledAsync(user, true);
+            Logger.LogInformation("User with ID {UserId} has enabled 2FA with an authenticator app.", user.Id);
             return RedirectToAction(nameof(GenerateRecoveryCodes));
         }
 
@@ -429,15 +424,15 @@ namespace SportCommunityRM.WebSite.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetAuthenticator()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await UserManager.GetUserAsync(User);
             if (user == null)
             {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                throw new ApplicationException($"Unable to load user with ID '{UserManager.GetUserId(User)}'.");
             }
 
-            await _userManager.SetTwoFactorEnabledAsync(user, false);
-            await _userManager.ResetAuthenticatorKeyAsync(user);
-            _logger.LogInformation("User with id '{UserId}' has reset their authentication app key.", user.Id);
+            await UserManager.SetTwoFactorEnabledAsync(user, false);
+            await UserManager.ResetAuthenticatorKeyAsync(user);
+            Logger.LogInformation("User with id '{UserId}' has reset their authentication app key.", user.Id);
 
             return RedirectToAction(nameof(EnableAuthenticator));
         }
@@ -445,10 +440,10 @@ namespace SportCommunityRM.WebSite.Controllers
         [HttpGet]
         public async Task<IActionResult> GenerateRecoveryCodes()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await UserManager.GetUserAsync(User);
             if (user == null)
             {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                throw new ApplicationException($"Unable to load user with ID '{UserManager.GetUserId(User)}'.");
             }
 
             if (!user.TwoFactorEnabled)
@@ -456,50 +451,12 @@ namespace SportCommunityRM.WebSite.Controllers
                 throw new ApplicationException($"Cannot generate recovery codes for user with ID '{user.Id}' as they do not have 2FA enabled.");
             }
 
-            var recoveryCodes = await _userManager.GenerateNewTwoFactorRecoveryCodesAsync(user, 10);
+            var recoveryCodes = await UserManager.GenerateNewTwoFactorRecoveryCodesAsync(user, 10);
             var model = new GenerateRecoveryCodesViewModel { RecoveryCodes = recoveryCodes.ToArray() };
 
-            _logger.LogInformation("User with ID {UserId} has generated new 2FA recovery codes.", user.Id);
+            Logger.LogInformation("User with ID {UserId} has generated new 2FA recovery codes.", user.Id);
 
             return View(model);
         }
-
-        #region Helpers
-
-        private void AddErrors(IdentityResult result)
-        {
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError(string.Empty, error.Description);
-            }
-        }
-
-        private string FormatKey(string unformattedKey)
-        {
-            var result = new StringBuilder();
-            int currentPosition = 0;
-            while (currentPosition + 4 < unformattedKey.Length)
-            {
-                result.Append(unformattedKey.Substring(currentPosition, 4)).Append(" ");
-                currentPosition += 4;
-            }
-            if (currentPosition < unformattedKey.Length)
-            {
-                result.Append(unformattedKey.Substring(currentPosition));
-            }
-
-            return result.ToString().ToLowerInvariant();
-        }
-
-        private string GenerateQrCodeUri(string email, string unformattedKey)
-        {
-            return string.Format(
-                AuthenicatorUriFormat,
-                _urlEncoder.Encode("SportCommunityRM.WebSite"),
-                _urlEncoder.Encode(email),
-                unformattedKey);
-        }
-
-        #endregion
     }
 }

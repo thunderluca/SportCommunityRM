@@ -1,12 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SportCommunityRM.WebSite.Models.AccountViewModels
+namespace SportCommunityRM.WebSite.ViewModels.Account
 {
-    public class ForgotPasswordViewModel
+    public class ExternalLoginViewModel
     {
         [Required]
         [EmailAddress]

@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SportCommunityRM.WebSite.Models.ManageViewModels
+namespace SportCommunityRM.WebSite.ViewModels.Manage
 {
     public class EnableAuthenticatorViewModel
     {

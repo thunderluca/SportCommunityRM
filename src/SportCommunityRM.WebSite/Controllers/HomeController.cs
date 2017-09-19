@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Mvc;
-using SportCommunityRM.WebSite.Models;
 
 namespace SportCommunityRM.WebSite.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
+        public HomeController(UrlEncoder urlEncoder) : base(urlEncoder)
+        {
+        }
+
         public IActionResult Index()
         {
             return View();
@@ -27,11 +26,6 @@ namespace SportCommunityRM.WebSite.Controllers
             ViewData["Message"] = "Your contact page.";
 
             return View();
-        }
-
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }

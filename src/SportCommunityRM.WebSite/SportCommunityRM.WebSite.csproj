@@ -25,4 +25,8 @@
     <ProjectReference Include="..\SportCommunityRM.Data\SportCommunityRM.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="WorkerServices\" />
+  </ItemGroup>
+
 </Project>
