@@ -4,10 +4,7 @@ using SportCommunityRM.Data.Models;
 using SportCommunityRM.Data.ReadModel;
 using SportCommunityRM.WebSite.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace SportCommunityRM.WebSite.Components
 {
@@ -37,11 +34,14 @@ namespace SportCommunityRM.WebSite.Components
 
             var username = UserManager.GetUserName(this.UserClaimsPrincipal);
 
+            var isLogged = SignInManager.IsSignedIn(this.UserClaimsPrincipal);
+
             var model = new Model
             {
                 Username = username,
                 FirstName = registeredUser.FirstName,
-                LastName = registeredUser.LastName
+                LastName = registeredUser.LastName,
+                IsLogged = isLogged
             };
 
             return View(model);
@@ -55,12 +55,9 @@ namespace SportCommunityRM.WebSite.Components
 
             public string LastName { get; set; }
 
-            public string[] Roles { get; set; }
+            public bool IsLogged { get; set; }
 
-            public bool IsLogged
-            {
-                get { return !string.IsNullOrWhiteSpace(this.Username); }
-            }
+            public string[] Roles { get; set; }
         }
     }
 }

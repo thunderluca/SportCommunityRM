@@ -8,8 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SportCommunityRM.WebSite.Models;
 using SportCommunityRM.WebSite.ViewModels.Account;
-using SportCommunityRM.WebSite.Services;
-using System.Text.Encodings.Web;
+using SportCommunityRM.WebSite.WorkerServices;
 
 namespace SportCommunityRM.WebSite.Controllers
 {
@@ -17,22 +16,18 @@ namespace SportCommunityRM.WebSite.Controllers
     [Route("[controller]/[action]")]
     public class AccountController : BaseController
     {
-        private readonly UserManager<ApplicationUser> UserManager;
         private readonly SignInManager<ApplicationUser> SignInManager;
-        private readonly IEmailSender EmailSender;
         private readonly ILogger Logger;
+        private readonly AccountControllerWorkerServices WorkerServices;
 
         public AccountController(
-            UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            IEmailSender emailSender,
             ILogger<AccountController> logger,
-            UrlEncoder urlEncoder) : base(urlEncoder)
+            AccountControllerWorkerServices workerServices)
         {
-            this.UserManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             this.SignInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
-            this.EmailSender = emailSender ?? throw new ArgumentNullException(nameof(emailSender));
             this.Logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            this.WorkerServices = workerServices ?? throw new ArgumentNullException(nameof(workerServices));
         }
 
         [TempData]
@@ -42,7 +37,6 @@ namespace SportCommunityRM.WebSite.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login(string returnUrl = null)
         {
-            // Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
             ViewData["ReturnUrl"] = returnUrl;
@@ -62,7 +56,7 @@ namespace SportCommunityRM.WebSite.Controllers
             if (result.Succeeded)
             {
                 Logger.LogInformation("User logged in.");
-                return RedirectToLocal(returnUrl, nameof(HomeController.Index), "Home");
+                return RedirectToLocal(returnUrl);
             }
             if (result.RequiresTwoFactor)
             {
@@ -107,7 +101,7 @@ namespace SportCommunityRM.WebSite.Controllers
             var user = await SignInManager.GetTwoFactorAuthenticationUserAsync();
             if (user == null)
             {
-                throw new ApplicationException($"Unable to load user with ID '{UserManager.GetUserId(User)}'.");
+                throw new ApplicationException($"Unable to load user with ID '{User.GetUserId()}'.");
             }
 
             var authenticatorCode = model.TwoFactorCode.Replace(" ", string.Empty).Replace("-", string.Empty);
@@ -117,7 +111,7 @@ namespace SportCommunityRM.WebSite.Controllers
             if (result.Succeeded)
             {
                 Logger.LogInformation("User with ID {UserId} logged in with 2fa.", user.Id);
-                return RedirectToLocal(returnUrl, nameof(HomeController.Index), "Home");
+                return RedirectToLocal(returnUrl);
             }
             if (result.IsLockedOut)
             {
@@ -167,7 +161,7 @@ namespace SportCommunityRM.WebSite.Controllers
             if (result.Succeeded)
             {
                 Logger.LogInformation("User with ID {UserId} logged in with a recovery code.", user.Id);
-                return RedirectToLocal(returnUrl, nameof(HomeController.Index), "Home");
+                return RedirectToLocal(returnUrl);
             }
             if (result.IsLockedOut)
             {
@@ -204,23 +198,12 @@ namespace SportCommunityRM.WebSite.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-            var result = await UserManager.CreateAsync(user, model.Password);
-            if (!result.Succeeded)
-            {
-                AddErrors(result);
-                return View(model);
-            }
+            var result = await this.WorkerServices.RegisterUserAsync(model);
+            if (result.Succeeded)
+                return RedirectToLocal(returnUrl);
 
-            Logger.LogInformation("User created a new account with password.");
-
-            var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
-            var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
-            await EmailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
-
-            await SignInManager.SignInAsync(user, isPersistent: false);
-            Logger.LogInformation("User created a new account with password.");
-            return RedirectToLocal(returnUrl, nameof(HomeController.Index), "Home");
+            AddErrors(result);
+            return View(model);
         }
 
         [HttpPost]
@@ -254,26 +237,23 @@ namespace SportCommunityRM.WebSite.Controllers
             }
             var info = await SignInManager.GetExternalLoginInfoAsync();
             if (info == null)
-            {
                 return RedirectToAction(nameof(Login));
-            }
 
-            // Sign in the user with this external login provider if the user already has a login.
             var result = await SignInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
             if (result.Succeeded)
             {
                 Logger.LogInformation("User logged in with {Name} provider.", info.LoginProvider);
-                return RedirectToLocal(returnUrl, nameof(HomeController.Index), "Home");
+                return RedirectToLocal(returnUrl);
             }
             if (result.IsLockedOut)
-            {
                 return RedirectToAction(nameof(Lockout));
-            }
+
+            var model = this.WorkerServices.GetExternalLoginViewModel(info);
 
             ViewData["ReturnUrl"] = returnUrl;
             ViewData["LoginProvider"] = info.LoginProvider;
-            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-            return View("ExternalLogin", new ExternalLoginViewModel { Email = email });
+
+            return View(nameof(this.ExternalLogin), model);
         }
 
         [HttpPost]
@@ -286,24 +266,11 @@ namespace SportCommunityRM.WebSite.Controllers
                 ViewData["ReturnUrl"] = returnUrl;
                 return View(nameof(ExternalLogin), model);
             }
-
-            var info = await SignInManager.GetExternalLoginInfoAsync();
-            if (info == null)
-            {
-                throw new ApplicationException("Error loading external login information during confirmation.");
-            }
-            var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-            var result = await UserManager.CreateAsync(user);
+            
+            var result = await this.WorkerServices.ConfirmExternalLoginAsync(model);
             if (result.Succeeded)
-            {
-                result = await UserManager.AddLoginAsync(user, info);
-                if (result.Succeeded)
-                {
-                    await SignInManager.SignInAsync(user, isPersistent: false);
-                    Logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
-                    return RedirectToLocal(returnUrl, nameof(HomeController.Index), "Home");
-                }
-            }
+                return RedirectToLocal(returnUrl);
+
             AddErrors(result);
 
             ViewData["ReturnUrl"] = returnUrl;
@@ -314,17 +281,12 @@ namespace SportCommunityRM.WebSite.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> ConfirmEmail(string userId, string code)
         {
-            if (userId == null || code == null)
-            {
+            if (string.IsNullOrWhiteSpace(userId) || string.IsNullOrWhiteSpace(code))
                 return RedirectToAction(nameof(HomeController.Index), "Home");
-            }
-            var user = await UserManager.FindByIdAsync(userId);
-            if (user == null)
-            {
-                throw new ApplicationException($"Unable to load user with ID '{userId}'.");
-            }
-            var result = await UserManager.ConfirmEmailAsync(user, code);
-            return View(result.Succeeded ? "ConfirmEmail" : "Error");
+
+            var actionName = await this.WorkerServices.ConfirmEmailAsync(userId, code);
+            
+            return View(actionName);
         }
 
         [HttpGet]
@@ -342,19 +304,12 @@ namespace SportCommunityRM.WebSite.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            var user = await UserManager.FindByEmailAsync(model.Email);
-            if (user == null || !(await UserManager.IsEmailConfirmedAsync(user)))
-            {
-                // Don't reveal that the user does not exist or is not confirmed
+            var user = await this.WorkerServices.FindApplicationUserByEmail(model.Email, checkIfConfirmed: true);
+            if (user == null)
                 return RedirectToAction(nameof(ForgotPasswordConfirmation));
-            }
 
-            // For more information on how to enable account confirmation and password reset please
-            // visit https://go.microsoft.com/fwlink/?LinkID=532713
-            var code = await UserManager.GeneratePasswordResetTokenAsync(user);
-            var callbackUrl = Url.ResetPasswordCallbackLink(user.Id, code, Request.Scheme);
-            await EmailSender.SendEmailAsync(model.Email, "Reset Password",
-               $"Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>");
+            await this.WorkerServices.SendForgotPasswordMailAsync(user);
+
             return RedirectToAction(nameof(ForgotPasswordConfirmation));
         }
 
@@ -385,17 +340,10 @@ namespace SportCommunityRM.WebSite.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            var user = await UserManager.FindByEmailAsync(model.Email);
-            if (user == null)
-            {
-                // Don't reveal that the user does not exist
-                return RedirectToAction(nameof(ResetPasswordConfirmation));
-            }
-            var result = await UserManager.ResetPasswordAsync(user, model.Code, model.Password);
+            var result = await this.WorkerServices.ResetPasswordAsync(model);
             if (result.Succeeded)
-            {
                 return RedirectToAction(nameof(ResetPasswordConfirmation));
-            }
+
             AddErrors(result);
             return View();
         }

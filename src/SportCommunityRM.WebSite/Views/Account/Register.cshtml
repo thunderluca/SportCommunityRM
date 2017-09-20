@@ -1,4 +1,6 @@
-﻿@model SportCommunityRM.WebSite.ViewModels.Account.RegisterViewModel
+﻿@{ var twoLetterIsoLanguage = System.Threading.Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName.ToLower(); }
+@using SportCommunityRM.WebSite.ViewModels.Account
+@model RegisterViewModel
 @{
     ViewData["Title"] = "Register";
 }
@@ -11,6 +13,31 @@
             <h4>Create a new account.</h4>
             <hr />
             <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Username"></label>
+                <input asp-for="Username" class="form-control" />
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FirstName"></label>
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastName"></label>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BirthDate"></label>
+                <input asp-for="BirthDate" class="datepicker form-control" />
+                <span asp-validation-for="BirthDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SelectedSex"></label>
+                <select asp-for="SelectedSex" asp-items="Html.GetEnumSelectList<RegisterViewModel.Sex>()" class="form-control"></select>
+                <span asp-validation-for="SelectedSex" class="text-danger"></span>
+            </div>
             <div class="form-group">
                 <label asp-for="Email"></label>
                 <input asp-for="Email" class="form-control" />
@@ -30,6 +57,17 @@
         </form>
     </div>
 </div>
+
+<script type="text/javascript">
+    $(function () {
+        var endDate = moment().format('X');
+        var options = defaultDatepickerOptions;
+        options.endDate = endDate;
+        options.language = '@twoLetterIsoLanguage';
+
+        $('.datepicker').datepicker(options);
+    });
+</script>
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")

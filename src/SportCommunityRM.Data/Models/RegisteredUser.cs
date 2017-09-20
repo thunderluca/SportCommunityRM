@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace SportCommunityRM.Data.Models
@@ -24,5 +23,8 @@ namespace SportCommunityRM.Data.Models
         public virtual ICollection<MedicalCertificate> MedicalCertificatesHistory { get; set; }
 
         public virtual ICollection<Inscription> InscriptionsHistory { get; set; }
+
+        //[System.ComponentModel.DataAnnotations.Schema.NotMapped]
+        public virtual ICollection<RegisteredUserTeam> Teams { get; set; }
     }
 }

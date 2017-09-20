@@ -1,31 +1,44 @@
-﻿using System.Text.Encodings.Web;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SportCommunityRM.WebSite.WorkerServices;
+using System;
+using System.Threading.Tasks;
 
 namespace SportCommunityRM.WebSite.Controllers
 {
+    [Authorize]
     public class HomeController : BaseController
     {
-        public HomeController(UrlEncoder urlEncoder) : base(urlEncoder)
+        private readonly HomeControllerWorkerServices WorkerServices;
+
+        public HomeController(HomeControllerWorkerServices workerServices)
         {
+            this.WorkerServices = workerServices ?? throw new ArgumentNullException(nameof(workerServices));
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var model = await this.WorkerServices.GetIndexViewModelAsync();
+
+            return View(model);
         }
 
         public IActionResult About()
         {
-            ViewData["Message"] = "Your application description page.";
+            throw new NotSupportedException();
 
-            return View();
+            //ViewData["Message"] = "Your application description page.";
+
+            //return View();
         }
 
         public IActionResult Contact()
         {
-            ViewData["Message"] = "Your contact page.";
+            throw new NotSupportedException();
 
-            return View();
+            //ViewData["Message"] = "Your contact page.";
+
+            //return View();
         }
     }
 }

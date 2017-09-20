@@ -13,6 +13,9 @@ using SportCommunityRM.WebSite.Models;
 using SportCommunityRM.WebSite.Services;
 using SportCommunityRM.Data;
 using SportCommunityRM.Data.ReadModel;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using ReflectionIT.Mvc.Paging;
+using SportCommunityRM.WebSite.WorkerServices;
 
 namespace SportCommunityRM.WebSite
 {
@@ -40,8 +43,17 @@ namespace SportCommunityRM.WebSite
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
+            services.AddScoped<IUrlService, UrlService>();
+
+            services.AddScoped<AccountControllerWorkerServices>();
+            services.AddScoped<HomeControllerWorkerServices>();
+            services.AddScoped<ManageControllerWorkerServices>();
 
             services.AddMvc();
+
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+
+            services.AddPaging();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

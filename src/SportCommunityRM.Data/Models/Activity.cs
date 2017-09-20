@@ -19,5 +19,10 @@ namespace SportCommunityRM.Data.Models
         public virtual Field Field { get; set; }
 
         public string Notes { get; set; }
+
+        [ForeignKey(nameof(Team))]
+        public Guid? TeamId { get; set; }
+
+        public virtual Team Team { get; set; }
     }
 }

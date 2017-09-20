@@ -53,6 +53,20 @@ namespace SportCommunityRM.Data.Migrations
                     b.HasDiscriminator<string>("Discriminator").HasValue("Activity");
                 });
 
+            modelBuilder.Entity("SportCommunityRM.Data.Models.Coach", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<Guid>("RegisteredUserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RegisteredUserId");
+
+                    b.ToTable("SCRM_Coach");
+                });
+
             modelBuilder.Entity("SportCommunityRM.Data.Models.Field", b =>
                 {
                     b.Property<Guid>("Id")
@@ -158,17 +172,22 @@ namespace SportCommunityRM.Data.Migrations
 
                     b.Property<int>("Sex");
 
-                    b.Property<Guid?>("TeamId");
-
-                    b.Property<Guid?>("TeamId1");
-
                     b.HasKey("Id");
+
+                    b.ToTable("SCRM_RegisteredUsers");
+                });
+
+            modelBuilder.Entity("SportCommunityRM.Data.Models.RegisteredUserTeam", b =>
+                {
+                    b.Property<Guid>("RegisteredUserId");
+
+                    b.Property<Guid>("TeamId");
+
+                    b.HasKey("RegisteredUserId", "TeamId");
 
                     b.HasIndex("TeamId");
 
-                    b.HasIndex("TeamId1");
-
-                    b.ToTable("SCRM_RegisteredUsers");
+                    b.ToTable("SCRM_RegisteredUserTeam");
                 });
 
             modelBuilder.Entity("SportCommunityRM.Data.Models.Team", b =>
@@ -188,6 +207,19 @@ namespace SportCommunityRM.Data.Migrations
                     b.ToTable("SCRM_Teams");
                 });
 
+            modelBuilder.Entity("SportCommunityRM.Data.Models.TeamCoach", b =>
+                {
+                    b.Property<Guid>("TeamId");
+
+                    b.Property<Guid>("CoachId");
+
+                    b.HasKey("TeamId", "CoachId");
+
+                    b.HasIndex("CoachId");
+
+                    b.ToTable("SCRM_TeamCoach");
+                });
+
             modelBuilder.Entity("SportCommunityRM.Data.Models.Match", b =>
                 {
                     b.HasBaseType("SportCommunityRM.Data.Models.Activity");
@@ -197,6 +229,10 @@ namespace SportCommunityRM.Data.Migrations
                     b.Property<int>("EnemyTeamScore");
 
                     b.Property<int>("TeamScore");
+
+                    b.Property<Guid?>("TournamentId");
+
+                    b.HasIndex("TournamentId");
 
                     b.ToTable("SCRM_Matches");
 
@@ -229,9 +265,17 @@ namespace SportCommunityRM.Data.Migrations
                         .WithMany("BookedActivities")
                         .HasForeignKey("FieldId");
 
-                    b.HasOne("SportCommunityRM.Data.Models.Team")
+                    b.HasOne("SportCommunityRM.Data.Models.Team", "Team")
                         .WithMany("Calendar")
                         .HasForeignKey("TeamId");
+                });
+
+            modelBuilder.Entity("SportCommunityRM.Data.Models.Coach", b =>
+                {
+                    b.HasOne("SportCommunityRM.Data.Models.RegisteredUser", "RegisteredUser")
+                        .WithMany()
+                        .HasForeignKey("RegisteredUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("SportCommunityRM.Data.Models.Field", b =>
@@ -256,15 +300,37 @@ namespace SportCommunityRM.Data.Migrations
                         .HasForeignKey("UserId");
                 });
 
-            modelBuilder.Entity("SportCommunityRM.Data.Models.RegisteredUser", b =>
+            modelBuilder.Entity("SportCommunityRM.Data.Models.RegisteredUserTeam", b =>
                 {
-                    b.HasOne("SportCommunityRM.Data.Models.Team")
-                        .WithMany("Coaches")
-                        .HasForeignKey("TeamId");
+                    b.HasOne("SportCommunityRM.Data.Models.RegisteredUser", "RegisteredUser")
+                        .WithMany("Teams")
+                        .HasForeignKey("RegisteredUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("SportCommunityRM.Data.Models.Team")
+                    b.HasOne("SportCommunityRM.Data.Models.Team", "Team")
                         .WithMany("Players")
-                        .HasForeignKey("TeamId1");
+                        .HasForeignKey("TeamId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("SportCommunityRM.Data.Models.TeamCoach", b =>
+                {
+                    b.HasOne("SportCommunityRM.Data.Models.Coach", "Coach")
+                        .WithMany("Teams")
+                        .HasForeignKey("CoachId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("SportCommunityRM.Data.Models.Team", "Team")
+                        .WithMany("Coaches")
+                        .HasForeignKey("TeamId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("SportCommunityRM.Data.Models.Match", b =>
+                {
+                    b.HasOne("SportCommunityRM.Data.Models.Tournament")
+                        .WithMany("Matches")
+                        .HasForeignKey("TournamentId");
                 });
 #pragma warning restore 612, 618
         }

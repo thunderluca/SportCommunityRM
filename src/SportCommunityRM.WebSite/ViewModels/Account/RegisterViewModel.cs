@@ -9,6 +9,27 @@ namespace SportCommunityRM.WebSite.ViewModels.Account
     public class RegisterViewModel
     {
         [Required]
+        [Display(Name = "Username")]
+        public string Username { get; set; }
+
+        [Required]
+        [Display(Name = "First name")]
+        public string FirstName { get; set; }
+
+        [Required]
+        [Display(Name = "Last name")]
+        public string LastName { get; set; }
+
+        [Required]
+        [Display(Name = "Gender")]
+        public Sex SelectedSex { get; set; }
+
+        [Required]
+        [Display(Name = "Birth Date")]
+        [DisplayFormat(DataFormatString = "{0: dd/MM/yy}", ApplyFormatInEditMode = true)]
+        public DateTime BirthDate { get; set; }
+
+        [Required]
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; }
@@ -23,5 +44,12 @@ namespace SportCommunityRM.WebSite.ViewModels.Account
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        public enum Sex
+        {
+            Unspecified = 0,
+            Female = 1,
+            Male = 2
+        }
     }
 }
