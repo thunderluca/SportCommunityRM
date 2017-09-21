@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting;
@@ -48,6 +44,7 @@ namespace SportCommunityRM.WebSite
             services.AddScoped<AccountControllerWorkerServices>();
             services.AddScoped<HomeControllerWorkerServices>();
             services.AddScoped<ManageControllerWorkerServices>();
+            services.AddScoped<TeamControllerWorkerServices>();
 
             services.AddMvc();
 

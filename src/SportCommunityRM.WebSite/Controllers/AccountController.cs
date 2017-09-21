@@ -53,6 +53,12 @@ namespace SportCommunityRM.WebSite.Controllers
                 return View(model);
 
             var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
+            if (!result.Succeeded)
+            {
+                var user = await this.WorkerServices.FindApplicationUserByEmail(model.Email, checkIfConfirmed: false);
+                result = await SignInManager.PasswordSignInAsync(user.UserName, model.Password, model.RememberMe, lockoutOnFailure: false);
+            }
+
             if (result.Succeeded)
             {
                 Logger.LogInformation("User logged in.");
@@ -202,7 +208,7 @@ namespace SportCommunityRM.WebSite.Controllers
             if (result.Succeeded)
                 return RedirectToLocal(returnUrl);
 
-            AddErrors(result);
+            ModelState.AddErrors(result);
             return View(model);
         }
 
@@ -271,7 +277,7 @@ namespace SportCommunityRM.WebSite.Controllers
             if (result.Succeeded)
                 return RedirectToLocal(returnUrl);
 
-            AddErrors(result);
+            ModelState.AddErrors(result);
 
             ViewData["ReturnUrl"] = returnUrl;
             return View(nameof(ExternalLogin), model);
@@ -344,7 +350,7 @@ namespace SportCommunityRM.WebSite.Controllers
             if (result.Succeeded)
                 return RedirectToAction(nameof(ResetPasswordConfirmation));
 
-            AddErrors(result);
+            ModelState.AddErrors(result);
             return View();
         }
 
@@ -354,7 +360,6 @@ namespace SportCommunityRM.WebSite.Controllers
         {
             return View();
         }
-
 
         [HttpGet]
         public IActionResult AccessDenied()

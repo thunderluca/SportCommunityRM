@@ -1,11 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace SportCommunityRM.Data.Models
 {
     public class Tournament : Activity
     {
-        public virtual ICollection<Match> Matches { get; set; }
+        private ICollection<Match> _matches;
+        public virtual ICollection<Match> Matches
+        {
+            get
+            {
+                if (_matches == null)
+                    _matches = new HashSet<Match>();
+                return _matches;
+            }
+            set { _matches = value; }
+        }
     }
 }

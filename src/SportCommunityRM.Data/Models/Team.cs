@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace SportCommunityRM.Data.Models
 {
@@ -14,10 +12,40 @@ namespace SportCommunityRM.Data.Models
 
         public int? MaxBirthYear { get; set; }
 
-        public virtual ICollection<RegisteredUserTeam> Players { get; set; }
+        private ICollection<RegisteredUserTeam> _players;
+        public virtual ICollection<RegisteredUserTeam> Players
+        {
+            get
+            {
+                if (_players == null)
+                    _players = new HashSet<RegisteredUserTeam>();
+                return _players;
+            }
+            set { _players = value; }
+        }
 
-        public virtual ICollection<TeamCoach> Coaches { get; set; }
+        private ICollection<TeamCoach> _coaches;
+        public virtual ICollection<TeamCoach> Coaches
+        {
+            get
+            {
+                if (_coaches == null)
+                    _coaches = new HashSet<TeamCoach>();
+                return _coaches;
+            }
+            set { _coaches = value; }
+        }
 
-        public virtual ICollection<Activity> Calendar { get; set; }
+        private ICollection<Activity> _calendar;
+        public virtual ICollection<Activity> Calendar
+        {
+            get
+            {
+                if (_calendar == null)
+                    _calendar = new HashSet<Activity>();
+                return _calendar;
+            }
+            set { _calendar = value; }
+        }
     }
 }

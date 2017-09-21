@@ -12,6 +12,21 @@
         <form method="post">
             <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group">
+                <label asp-for="FirstName"></label>
+                <br/> 
+                <span>@Html.DisplayFor(m => m.FirstName)</span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastName"></label>
+                <br /> 
+                <span>@Html.DisplayFor(m => m.LastName)</span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BirthDate"></label>
+                <br /> 
+                <span>@Html.DisplayFor(m => m.BirthDate)</span>
+            </div>
+            <div class="form-group">
                 <label asp-for="Username"></label>
                 <input asp-for="Username" class="form-control" disabled />
             </div>

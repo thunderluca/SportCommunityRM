@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using SportCommunityRM.WebSite.Models;
+using Microsoft.Extensions.Logging;
+using SportCommunityRM.Data;
 
 namespace SportCommunityRM.WebSite.WorkerServices
 {
@@ -14,8 +16,10 @@ namespace SportCommunityRM.WebSite.WorkerServices
     {
         public HomeControllerWorkerServices(
             UserManager<ApplicationUser> userManager, 
+            SCRMContext dbContext, 
             IDatabase database, 
-            IHttpContextAccessor httpContextAccessor) : base(userManager, database, httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor, 
+            ILogger<HomeControllerWorkerServices> logger) : base(userManager, dbContext, database, httpContextAccessor, logger)
         {
         }
 

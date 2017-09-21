@@ -1,0 +1,79 @@
+﻿@model SportCommunityRM.WebSite.ViewModels.Team.IndexViewModel
+@{ 
+    ViewData["Title"] = "Teams";
+}
+
+<div class="row">
+    <div class="col-md-9">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h1 class="panel-title">@ViewData["Title"]</h1>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Players count</th>
+                                        <th>Coaches count</th>
+                                        <th>@*Actions header*@</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.Teams == null || !Model.Teams.Any())
+                                    {
+                                        <tr>
+                                            <td colspan="4">No team to display</td>
+                                        </tr>
+                                    }
+                                    else
+                                    {
+                                        foreach (var team in Model.Teams)
+                                        {
+                                            <tr>
+                                                <td>@team.Name</td>
+                                                <td>@team.PlayersCount</td>
+                                                <td>@team.CoachesCount</td>
+                                                <td>
+                                                    <a data-edit-team-btn class="text-primary" title="Edit" asp-action="Edit" asp-controller="Team" asp-route-id="@team.Id">
+                                                        <i class="glyphicon glyphicon-edit"></i>
+                                                    </a>
+                                                    <a data-delete-team-btn class="text-danger" title="Delete" asp-action="Delete" asp-controller="Team" asp-route-id="@team.Id">
+                                                        <i class="glyphicon glyphicon-remove"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-md-12">
+                        <a class="btn btn-success pull-right" title="Create new team" asp-action="Create" asp-controller="Team">
+                            Create new team <i class="glyphicon glyphicon-plus"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('[data-delete-team-btn ]').on('click', function (event) {
+            event.preventDefault();
+            var deleteUrl = $(this).attr('href');
+            bootbox.confirm('Are you sure to delete this team? All players and coaches will be removed from the deleted team.', function (result) {
+                if (result) window.location.href = deleteUrl;
+            });
+        });
+    });
+</script>

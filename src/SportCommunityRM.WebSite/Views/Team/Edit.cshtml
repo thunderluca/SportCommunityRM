@@ -1,0 +1,300 @@
+﻿@using SportCommunityRM.WebSite.ViewModels.Team
+@model EditViewModel
+@{ 
+    ViewData["Title"] = "Edit team";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <form class="form-horizontal" method="post">
+            <div class="form-group">
+                <label asp-for="Name" class="control-label col-md-3"></label>
+                <div class="col-md-9">
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="MinBirthYear" class="control-label col-md-3"></label>
+                <div class="col-md-9">
+                    <input asp-for="MinBirthYear" class="form-control" />
+                    <span asp-validation-for="MinBirthYear" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="MaxBirthYear" class="control-label col-md-3"></label>
+                <div class="col-md-9">
+                    <input asp-for="MaxBirthYear" class="form-control" />
+                    <span asp-validation-for="MaxBirthYear" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Players" class="control-label col-md-3"></label>
+                <div class="col-md-9">
+                    <div class="input-group">
+                        <input id="search-player-input" type="text" autocomplete="off" class="form-control form-control-auto" />
+                        <span class="input-group-addon success" title="Add player">
+                            <i class="glyphicon glyphicon-plus"></i>
+                        </span>
+                    </div>
+                    <br/>
+                    <ul id="players-list" class="list-unstyled">
+                        @if (Model.Players != null && Model.Players.Length > 0)
+                        {
+                            for (var i = 0; i < Model.Players.Length; i++)
+                            {
+                                <li>
+                                    <input id="@Html.IdFor(m => Model.Players[i].Id)" name="@Html.NameFor(m => Model.Players[i].Id)" type="hidden" value="@Html.ValueFor(m => Model.Players[i].Id)" />
+                                    <input id="@Html.IdFor(m => Model.Players[i].FirstName)" name="@Html.NameFor(m => Model.Players[i].FirstName)" type="hidden" value="@Html.ValueFor(m => Model.Players[i].FirstName)" />
+                                    <input id="@Html.IdFor(m => Model.Players[i].LastName)" name="@Html.NameFor(m => Model.Players[i].LastName)" type="hidden" value="@Html.ValueFor(m => Model.Players[i].LastName)" />
+                                    <input id="@Html.IdFor(m => Model.Players[i].BirthDate)" name="@Html.NameFor(m => Model.Players[i].BirthDate)" type="hidden" value="@Html.ValueFor(m => Model.Players[i].BirthDate)" />
+                                    <div class="inline-children">
+                                        <span>@Model.Players[i].FullInfo</span>
+                                        <a role="button" href="#" data-remove-player-btn type="button" class="text-danger" title="Remove player">
+                                            <i class="glyphicon glyphicon-remove"></i>
+                                        </a>
+                                    </div>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Coaches" class="control-label col-md-3"></label>
+                <div class="col-md-9">
+                    <div class="input-group">
+                        <input id="search-coach-input" type="text" autocomplete="off" class="form-control form-control-auto" />
+                        <span class="input-group-addon success" title="Add coach">
+                            <i class="glyphicon glyphicon-plus"></i>
+                        </span>
+                    </div>
+                    <br />
+                    <ul id="coaches-list" class="list-unstyled">
+                        @if (Model.Coaches != null && Model.Coaches.Length > 0)
+                        {
+                            for (var i = 0; i < Model.Coaches.Length; i++)
+                            {
+                                <li>
+                                    <input id="@Html.IdFor(m => Model.Coaches[i].Id)" name="@Html.NameFor(m => Model.Coaches[i].Id)" type="hidden" value="@Html.ValueFor(m => Model.Coaches[i].Id)" />
+                                    <input id="@Html.IdFor(m => Model.Coaches[i].FirstName)" name="@Html.NameFor(m => Model.Coaches[i].FirstName)" type="hidden" value="@Html.ValueFor(m => Model.Coaches[i].FirstName)" />
+                                    <input id="@Html.IdFor(m => Model.Coaches[i].LastName)" name="@Html.NameFor(m => Model.Coaches[i].LastName)" type="hidden" value="@Html.ValueFor(m => Model.Coaches[i].LastName)" />
+                                    <input id="@Html.IdFor(m => Model.Coaches[i].BirthDate)" name="@Html.NameFor(m => Model.Coaches[i].BirthDate)" type="hidden" value="@Html.ValueFor(m => Model.Coaches[i].BirthDate)" />
+                                    <div class="inline-children">
+                                        <span>@Model.Coaches[i].FullInfo</span>
+                                        <a role="button" href="#" data-remove-coach-btn type="button" class="text-danger" title="Remove coach">
+                                            <i class="glyphicon glyphicon-remove"></i>
+                                        </a>
+                                    </div>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-12">
+                    <button type="button" class="btn btn-danger" onclick="history.back()">Cancel</button>
+                    <input type="submit" class="btn btn-success pull-right" value="Edit" />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/html" id="new-player-template">
+    <li>
+        <input id="Players_<%= index %>__Id" name="Players[<%= index %>].Id" type="hidden" value="<%= id %>" />
+        <input id="Players_<%= index %>__FirstName" name="Players[<%= index %>].FirstName" type="hidden" value="<%= firstName %>" />
+        <input id="Players_<%= index %>__LastName" name="Players[<%= index %>].LastName" type="hidden" value="<%= lastName %>" />
+        <input id="Players_<%= index %>__BirthDate" name="Players[<%= index %>].BirthDate" type="hidden" value="<%= birthDate %>" />
+        <div class="inline-children">
+            <span><%= fullInfo %></span>
+            <a role="button" href="#" data-remove-player-btn type="button" class="text-danger" title="Remove player">
+                <i class="glyphicon glyphicon-remove"></i>
+            </a>
+        </div>  
+    </li>
+</script>
+
+<script type="text/html" id="new-coach-template">
+    <li>
+        <input id="Coaches_<%= index %>__Id" name="Coaches[<%= index %>].Id" type="hidden" value="<%= id %>" />
+        <input id="Coaches_<%= index %>__FirstName" name="Coaches[<%= index %>].FirstName" type="hidden" value="<%= firstName %>" />
+        <input id="Coaches_<%= index %>__LastName" name="Coaches[<%= index %>].LastName" type="hidden" value="<%= lastName %>" />
+        <input id="Coaches_<%= index %>__BirthDate" name="Coaches[<%= index %>].BirthDate" type="hidden" value="<%= birthDate %>" />
+        <div class="inline-children">
+            <span><%= fullInfo %></span>
+            <a role="button" href="#" data-remove-coach-btn type="button" class="text-danger" title="Remove coach">
+                <i class="glyphicon glyphicon-remove"></i>
+            </a>
+        </div>     
+    </li>
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        var searchActionUrl = '@Url.Action(nameof(TeamController.SearchUser))';
+        var $minBirthDateInput = $('#@nameof(Model.MinBirthYear)');
+        var $maxBirthDateInput = $('#@nameof(Model.MaxBirthYear)');
+        var $playersList = $('#players-list');
+        var $searchPlayerInput = $('#search-player-input');
+        var $addPlayerButton = $('[data-add-player-btn]');
+        var $coachesList = $('#coaches-list');
+        var $searchCoachInput = $('#search-coach-input');
+        var $addCoachButton = $('[data-add-coach-btn]');
+
+        var users = [];
+        var map = {};
+
+        var addNewPlayer = function (player) {
+            if (!player) return;
+
+            var templateViewModel = {
+                index: $playersList.find('li').length,
+                id: player.id,
+                firstName: player.firstName,
+                lastName: player.lastName,
+                birthDate: player.birthDate,
+                fullInfo: player.fullInfo
+            };
+            var templateRawText = $("#new-player-template").html();
+            var compiledTemplate = _.template(templateRawText);
+            var templateResult = compiledTemplate(templateViewModel);
+
+            $playersList.append(templateResult);
+        };
+
+        var addNewCoach = function (coach) {
+            if (!coach) return;
+
+            var templateViewModel = {
+                index: $coachesList.find('li').length,
+                id: coach.id,
+                firstName: coach.firstName,
+                lastName: coach.lastName,
+                birthDate: coach.birthDate,
+                fullInfo: coach.fullInfo
+            };
+            var templateRawText = $("#new-coach-template").html();
+            var compiledTemplate = _.template(templateRawText);
+            var templateResult = compiledTemplate(templateViewModel);
+
+            $coachesList.append(templateResult);
+        };
+
+        var getSelectedPlayersIds = function () {
+            return $playersList.find('li').map(function (index, li) {
+                return $(li).find('input[id$="@nameof(EditViewModel.Player.Id)"]').val();
+            }).toArray();
+        };
+
+        var getSelectedCoachesIds = function () {
+            return $coachesList.find('li').map(function (index, li) {
+                return $(li).find('input[id$="@nameof(EditViewModel.Coach.Id)"]').val();
+            }).toArray();
+        };
+
+        var typeaheadSourceCallback = function (query, process, idsToExclude) {
+            if (nullOrEmptyString(query)) return;
+            users = [];
+            map = {};
+            var successCallback = function (data) {
+                _.each(data, function (user) {
+                    map[user.id] = user;
+                    users.push(user);
+                });
+
+                process(users);
+            };
+
+            var errorCallback = function (data) {
+                bootbox.alert('Error!');
+            };
+
+            var data = JSON.stringify({
+                Filter: query,
+                MinBirthDate: $minBirthDateInput.val(),
+                MaxBirthDate: $maxBirthDateInput.val(),
+                IdsToExclude: idsToExclude
+            });
+
+            $.ajax({
+                url: searchActionUrl,
+                type: 'POST',
+                contentType: 'application/json',
+                data: data,
+                processData: false,
+                success: successCallback,
+                error: errorCallback
+            });
+        };
+
+        var getTypeAheadOptions = function (updaterCallback, idsToExclude) {
+            return {
+                source: function (query, process) {
+                    typeaheadSourceCallback(query, process, idsToExclude);
+                },
+                updater: updaterCallback,
+                items: 20,
+                displayText: function (item) {
+                    return item.fullInfo;
+                }
+            };
+        };
+
+        var searchPlayerOptions = getTypeAheadOptions(function (item) {
+            addNewPlayer(item);
+        }, getSelectedPlayersIds());
+        $searchPlayerInput.typeahead(searchPlayerOptions);
+
+        var searchCoachOptions = getTypeAheadOptions(function (item) {
+            addNewCoach(item);
+        }, getSelectedCoachesIds());
+        $searchCoachInput.typeahead(searchCoachOptions);
+
+        var refreshPlayersList = function () {
+            var oldList = $playersList.find('li').map(function (index, li) {
+                return {
+                    id: $(li).find('input[id$="@nameof(EditViewModel.Player.Id)"]').val(),
+                    name: $(li).find('input[id$="@nameof(EditViewModel.Player.Name)"]').val()
+                };
+            }).toArray();
+
+            $playersList.find('li').remove();
+
+            _.each(oldList, function (item) {
+                addNewPlayer(item);
+            });
+        };
+
+        var refreshCoachesList = function () {
+            var oldList = $coachesList.find('li').map(function (index, li) {
+                return {
+                    id: $(li).find('input[id$="@nameof(EditViewModel.Coach.Id)"]').val(),
+                    name: $(li).find('input[id$="@nameof(EditViewModel.Coach.Name)"]').val()
+                };
+            }).toArray();
+
+            $coachesList.find('li').remove();
+
+            _.each(oldList, function (item) {
+                addNewCoach(item);
+            });
+        };
+
+        $(document).on('click', '[data-remove-coach-btn]', function (event) {
+            event.preventDefault();
+            $(this).closest('li').remove();
+            refreshCoachesList();
+        });
+
+        $(document).on('click', '[data-remove-player-btn]', function (event) {
+            event.preventDefault();
+            $(this).closest('li').remove();
+            refreshPlayersList();
+        });
+    });
+</script>

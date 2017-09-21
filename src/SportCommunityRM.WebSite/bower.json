@@ -7,6 +7,9 @@
     "jquery-validation": "1.17.0",
     "jquery-validation-unobtrusive": "3.2.6",
     "bootstrap-datepicker": "v1.7.1",
-    "moment": "2.18.1"
+    "moment": "2.18.1",
+    "underscore": "1.8.3",
+    "bootbox.js": "bootbox#v4.4.0",
+    "bootstrap3-typeahead": "v4.0.0"
   }
 }

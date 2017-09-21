@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace SportCommunityRM.Data.Models
 {
@@ -17,14 +16,55 @@ namespace SportCommunityRM.Data.Models
 
         public Sex Sex { get; set; }
 
+        public string FiscalCode { get; set; }
+
+        public string Address { get; set; }
+
+        public string CivicNumber { get; set; }
+        
+        public string City { get; set; }
+
+        public string PostalCode { get; set; }
+
+        public string Country { get; set; }
+
         [Required]
         public string AspNetUserId { get; set; }
 
-        public virtual ICollection<MedicalCertificate> MedicalCertificatesHistory { get; set; }
+        private ICollection<MedicalCertificate> _medicalCertificatesHistory;
+        public virtual ICollection<MedicalCertificate> MedicalCertificatesHistory
+        {
+            get
+            {
+                if (_medicalCertificatesHistory == null)
+                    _medicalCertificatesHistory = new HashSet<MedicalCertificate>();
+                return _medicalCertificatesHistory;
+            }
+            set { _medicalCertificatesHistory = value; }
+        }
 
-        public virtual ICollection<Inscription> InscriptionsHistory { get; set; }
+        private ICollection<Inscription> _inscriptionsHistory;
+        public virtual ICollection<Inscription> InscriptionsHistory
+        {
+            get
+            {
+                if (_inscriptionsHistory == null)
+                    _inscriptionsHistory = new HashSet<Inscription>();
+                return _inscriptionsHistory;
+            }
+            set { _inscriptionsHistory = value; }
+        }
 
-        //[System.ComponentModel.DataAnnotations.Schema.NotMapped]
-        public virtual ICollection<RegisteredUserTeam> Teams { get; set; }
+        private ICollection<RegisteredUserTeam> _teams;
+        public virtual ICollection<RegisteredUserTeam> Teams
+        {
+            get
+            {
+                if (_teams == null)
+                    _teams = new HashSet<RegisteredUserTeam>();
+                return _teams;
+            }
+            set { _teams = value; }
+        }
     }
 }

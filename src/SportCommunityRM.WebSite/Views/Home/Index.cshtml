@@ -3,47 +3,57 @@
     ViewData["Title"] = "Home Page";
 }
 
+<br/>
 <div class="row">
-    <div class="col-sm-12">
-        <h2>My Teams</h2>
-        <div class="table-responsive">
-            <table class="table table-hover table-bordered">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>@*Actions header*@</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (Model.RegisteredUserTeams == null || !Model.RegisteredUserTeams.Any())
-                    {
-                        <tr>
-                            <td colspan="2">No teams to display</td>
-                        </tr>
-                    }
-                    else
-                    {
-                        foreach (var team in Model.RegisteredUserTeams)
-                        {
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                My Teams
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered">
+                        <thead>
                             <tr>
-                                <td>@team.Name</td>
-                                <td>
-                                    <a role="button" class="btn btn-primary" asp-action="Detail" asp-controller="Team" asp-route-id="@team.Id" title="Detail">
-                                        <i class="glyphicon glyphicon-search"></i>
-                                    </a>
-                                </td>
+                                <th>Name</th>
+                                <th>@*Actions header*@</th>
                             </tr>
-                        }
-                    }
-                </tbody>
-            </table>
+                        </thead>
+                        <tbody>
+                            @if (Model.RegisteredUserTeams == null || !Model.RegisteredUserTeams.Any())
+                            {
+                                <tr>
+                                    <td colspan="2">No teams to display</td>
+                                </tr>
+                            }
+                            else
+                            {
+                                foreach (var team in Model.RegisteredUserTeams)
+                                {
+                                    <tr>
+                                        <td>@team.Name</td>
+                                        <td>
+                                            <a role="button" class="text-primary" asp-action="Detail" asp-controller="Team" asp-route-id="@team.Id" title="Detail">
+                                                <i class="glyphicon glyphicon-search"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
-</div>
-
-<div class="row">
-    <div class="col-sm-12">
-        <h2>My Activities</h2>
-        @await Component.InvokeAsync("Activities")
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                My Activities
+            </div>
+            <div class="panel-body">
+                @await Component.InvokeAsync("Activities")
+            </div>
+        </div>
     </div>
 </div>

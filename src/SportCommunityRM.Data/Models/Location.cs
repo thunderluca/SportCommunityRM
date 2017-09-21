@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace SportCommunityRM.Data.Models
 {
@@ -23,6 +21,16 @@ namespace SportCommunityRM.Data.Models
         [Required]
         public string Country { get; set; }
 
-        public virtual ICollection<Field> Fields { get; set; }
+        private ICollection<Field> _fields;
+        public virtual ICollection<Field> Fields
+        {
+            get
+            {
+                if (_fields == null)
+                    _fields = new HashSet<Field>();
+                return _fields;
+            }
+            set { _fields = value; }
+        }
     }
 }

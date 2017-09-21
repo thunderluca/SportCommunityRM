@@ -25,7 +25,7 @@ namespace SportCommunityRM.WebSite.ViewModels.Account
         public Sex SelectedSex { get; set; }
 
         [Required]
-        [Display(Name = "Birth Date")]
+        [Display(Name = "Birth date")]
         [DisplayFormat(DataFormatString = "{0: dd/MM/yy}", ApplyFormatInEditMode = true)]
         public DateTime BirthDate { get; set; }
 

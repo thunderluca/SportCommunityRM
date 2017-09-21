@@ -75,7 +75,7 @@ namespace SportCommunityRM.WebSite.Controllers
             var result = await this.WorkerServices.ChangeUserPasswordAsync(model);
             if (!result.Succeeded)
             {
-                AddErrors(result);
+                ModelState.AddErrors(result);
                 return View(model);
             }
 
@@ -103,7 +103,7 @@ namespace SportCommunityRM.WebSite.Controllers
             var result = await this.WorkerServices.SetUserPasswordAsync(model);
             if (!result.Succeeded)
             {
-                AddErrors(result);
+                ModelState.AddErrors(result);
                 return View(model);
             }
 

@@ -30,14 +30,14 @@ namespace SportCommunityRM.WebSite.Components
             if (string.IsNullOrWhiteSpace(userId))
                 return View();
 
-            var pagingList = await GetActivitiesPagingListAsync(
+            var activities = await GetActivitiesPagingListAsync(
                 userId,
                 filter,
                 pageSize.GetValueOrDefault(),
                 page.GetValueOrDefault(),
                 sortExpression);
 
-            return View(pagingList);
+            return View(activities);
         }
 
         private async Task<PagingList<Model.Activity>> GetActivitiesPagingListAsync(
@@ -86,8 +86,6 @@ namespace SportCommunityRM.WebSite.Components
 
         public class Model
         {
-            public PagingList<Activity> Activities { get; set; }
-
             public class Activity
             {
                 public Guid Id { get; set; }

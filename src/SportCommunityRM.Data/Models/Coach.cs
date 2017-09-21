@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace SportCommunityRM.Data.Models
 {
@@ -12,6 +11,16 @@ namespace SportCommunityRM.Data.Models
 
         public RegisteredUser RegisteredUser { get; set; }
 
-        public virtual ICollection<TeamCoach> Teams { get; set; }
+        private ICollection<TeamCoach> _teams;
+        public virtual ICollection<TeamCoach> Teams
+        {
+            get
+            {
+                if (_teams == null)
+                    _teams = new HashSet<TeamCoach>();
+                return _teams;
+            }
+            set { _teams = value; }
+        }
     }
 }

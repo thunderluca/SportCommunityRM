@@ -23,8 +23,11 @@
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
         <script src="~/lib/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
         <script src="~/lib/bootstrap-datepicker/js/locales/bootstrap-datepicker.@(twoLetterIsoLanguage).js"></script>
+        <script src="~/lib/bootstrap3-typeahead/bootstrap3-typeahead.min.js"></script>
         <script src="~/lib/moment/min/moment.min.js"></script>
         <script src="~/lib/moment/min/moment-with-locales.min.js"></script>
+        <script src="~/lib/bootbox.js/bootbox.js"></script>
+        <script src="~/lib/underscore/underscore-min.js"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
     </environment>
     <environment exclude="Development">
@@ -63,9 +66,9 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
+                    <li><a asp-area="" asp-controller="Team" asp-action="Index">Teams</a></li>
+                    @*<li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>*@
                 </ul>
                 @await Component.InvokeAsync("Login")
             </div>

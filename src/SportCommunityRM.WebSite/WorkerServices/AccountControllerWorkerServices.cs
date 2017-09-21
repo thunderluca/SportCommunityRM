@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using SportCommunityRM.Data;
 using SportCommunityRM.Data.Models;
@@ -13,32 +14,25 @@ using System.Threading.Tasks;
 
 namespace SportCommunityRM.WebSite.WorkerServices
 {
-    public class AccountControllerWorkerServices
+    public class AccountControllerWorkerServices : BaseControllerWorkerServices
     {
-        private readonly UserManager<ApplicationUser> UserManager;
         private readonly SignInManager<ApplicationUser> SignInManager;
-        private readonly SCRMContext DbContext;
-        private readonly IDatabase Database;
         private readonly IEmailSender EmailSender;
         private readonly IUrlService UrlService;
-        private readonly ILogger Logger;
 
         public AccountControllerWorkerServices(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             SCRMContext dbContext, 
             IDatabase database,
+            IHttpContextAccessor httpContextAccessor,
             IEmailSender emailSender,
             IUrlService urlService,
-            ILogger<AccountControllerWorkerServices> logger)
+            ILogger<AccountControllerWorkerServices> logger) : base(userManager, dbContext, database, httpContextAccessor, logger)
         {
-            this.UserManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             this.SignInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
-            this.DbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
-            this.Database = database ?? throw new ArgumentNullException(nameof(database));
             this.EmailSender = emailSender ?? throw new ArgumentNullException(nameof(emailSender));
             this.UrlService = urlService ?? throw new ArgumentNullException(nameof(urlService));
-            this.Logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public async Task<IdentityResult> RegisterUserAsync(RegisterViewModel viewModel)

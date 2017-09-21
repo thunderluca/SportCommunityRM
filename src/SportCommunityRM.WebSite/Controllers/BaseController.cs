@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SportCommunityRM.WebSite.ViewModels.Shared;
 using System.Diagnostics;
-using Microsoft.AspNetCore.Identity;
 
 namespace SportCommunityRM.WebSite.Controllers
 {
@@ -12,15 +11,7 @@ namespace SportCommunityRM.WebSite.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        internal void AddErrors(IdentityResult result)
-        {
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError(string.Empty, error.Description);
-            }
-        }
-
-        internal IActionResult RedirectToLocal(
+        public IActionResult RedirectToLocal(
             string returnUrl, 
             string actionName = nameof(HomeController.Index), 
             string controllerName = "Home")

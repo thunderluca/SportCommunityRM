@@ -64,11 +64,13 @@ namespace SportCommunityRM.Data
 
         public DbSet<Activity> Activities { get; set; }
 
+        public DbSet<Location> Addresses { get; set; }
+
+        public DbSet<Coach> Coaches { get; set; }
+
         public DbSet<Field> Fields { get; set; }
 
         public DbSet<Inscription> Inscriptions { get; set; }
-
-        public DbSet<Location> Addresses { get; set; }
 
         public DbSet<Match> Matches { get; set; }
 

@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
+using SportCommunityRM.Data;
+using SportCommunityRM.Data.Models;
 using SportCommunityRM.Data.ReadModel;
 using SportCommunityRM.WebSite.Controllers;
 using SportCommunityRM.WebSite.Models;
@@ -21,36 +23,40 @@ namespace SportCommunityRM.WebSite.WorkerServices
         private readonly IUrlService UrlService;
         private readonly UrlEncoder UrlEncoder;
         private readonly IEmailSender EmailSender;
-        private readonly ILogger Logger;
 
         private const string AuthenicatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
 
         public ManageControllerWorkerServices(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
+            SCRMContext dbContext,
             IDatabase database,
             IHttpContextAccessor httpContextAccessor,
             IUrlService urlService,
             UrlEncoder urlEncoder,
             IEmailSender emailSender,
-            ILogger<ManageControllerWorkerServices> logger) : base(userManager, database, httpContextAccessor)
+            ILogger<ManageControllerWorkerServices> logger) : base(userManager, dbContext, database, httpContextAccessor, logger)
         {
             this.SignInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
             this.UrlService = urlService ?? throw new ArgumentNullException(nameof(urlService));
             this.UrlEncoder = urlEncoder ?? throw new ArgumentNullException(nameof(urlEncoder));
             this.EmailSender = emailSender ?? throw new ArgumentNullException(nameof(emailSender));
-            this.Logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public async Task<IndexViewModel> GetIndexViewModelAsync(string statusMessage)
         {
             var user = await this.GetApplicationUserAsync();
 
+            var registeredUser = this.Database.RegisteredUsers.WithUserId(user.Id);
+
             return new IndexViewModel
             {
                 Username = user.UserName,
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
+                FirstName = registeredUser.FirstName,
+                LastName = registeredUser.LastName,
+                BirthDate = registeredUser.BirthDate.ToShortDateString(),
                 IsEmailConfirmed = user.EmailConfirmed,
                 StatusMessage = statusMessage
             };

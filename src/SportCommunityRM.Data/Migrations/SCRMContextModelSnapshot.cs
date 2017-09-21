@@ -64,7 +64,7 @@ namespace SportCommunityRM.Data.Migrations
 
                     b.HasIndex("RegisteredUserId");
 
-                    b.ToTable("SCRM_Coach");
+                    b.ToTable("SCRM_Coaches");
                 });
 
             modelBuilder.Entity("SportCommunityRM.Data.Models.Field", b =>
@@ -159,16 +159,28 @@ namespace SportCommunityRM.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("Address");
+
                     b.Property<string>("AspNetUserId")
                         .IsRequired();
 
                     b.Property<DateTime>("BirthDate");
 
+                    b.Property<string>("City");
+
+                    b.Property<string>("CivicNumber");
+
+                    b.Property<string>("Country");
+
                     b.Property<string>("FirstName")
                         .IsRequired();
 
+                    b.Property<string>("FiscalCode");
+
                     b.Property<string>("LastName")
                         .IsRequired();
+
+                    b.Property<string>("PostalCode");
 
                     b.Property<int>("Sex");
 
