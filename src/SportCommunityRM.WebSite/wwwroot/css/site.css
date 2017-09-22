@@ -21,55 +21,9 @@
     width: 100%;
 }
 
-.form-control-auto {
-    width: auto;
-}
-
-.inline-children > * {
-    display: inline-block;
-}
-
-.input-group-addon.primary {
-    color: #fff;
-    background-color: #286090;
-    border-color: #122b40;
-}
-
-.input-group-addon.success {
-    color: #fff;
-    background-color: #5cb85c;
-    border-color: #4cae4c;
-}
-
-.input-group-addon.info {
-    color: #fff;
-    background-color: #5bc0de;
-    border-color: #46b8da;
-}
-
-.input-group-addon.warning {
-    color: #fff;
-    background-color: #f0ad4e;
-    border-color: #eea236;
-}
-
-.input-group-addon.danger {
-    color: #fff;
-    background-color: #d9534f;
-    border-color: #d43f3a;
-}
-
 /* QR code generator */
 #qrCode {
     margin: 15px;
-}
-
-.no-padding {
-    padding: 0;
-}
-
-.panel > .panel-body .table {
-    margin-bottom: 0;
 }
 
 /* Hide/rearrange for smaller screens */
