@@ -1,6 +1,6 @@
 ﻿@model SportCommunityRM.WebSite.ViewModels.Home.IndexViewModel
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
 
 <br/>
@@ -8,7 +8,9 @@
     <div class="col-md-6">
         <div class="panel panel-default">
             <div class="panel-heading">
-                My Teams
+                <h1 class="panel-title">
+                    <i class="fa fa-group"></i> My Teams
+                </h1>
             </div>
             <div class="panel-body">
                 <div class="table-responsive">
@@ -49,7 +51,9 @@
     <div class="col-md-6">
         <div class="panel panel-default">
             <div class="panel-heading">
-                My Activities
+                <h1 class="panel-title">
+                    <i class="fa fa-calendar"></i> My Activities
+                </h1>
             </div>
             <div class="panel-body">
                 @await Component.InvokeAsync("Activities")

@@ -78,6 +78,7 @@ namespace SportCommunityRM.WebSite.Controllers
             return RedirectToAction(nameof(this.Index));
         }
 
+        [HttpGet]
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id.IsNullOrEmpty())

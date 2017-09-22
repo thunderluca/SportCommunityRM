@@ -36,6 +36,8 @@ namespace SportCommunityRM.WebSite.WorkerServices
             this.Logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
+        public const int DefaultPageSize = 10;
+
         public async Task<ApplicationUser> GetApplicationUserAsync()
         {
             var httpContextUser = this.HttpContextAccessor.HttpContext.User;

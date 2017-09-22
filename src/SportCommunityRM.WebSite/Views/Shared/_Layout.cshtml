@@ -11,6 +11,7 @@
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/lib/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css" />
+        <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.min.css" />
         <link rel="stylesheet" href="~/css/site.css" />
         <link rel="stylesheet" href="~/css/scrm.css" />
     </environment>
@@ -72,9 +73,21 @@
                 @if (SignInManager.IsSignedIn(User))
                 {
                     <ul class="nav navbar-nav">
-                        <li><a asp-area="" asp-controller="Team" asp-action="Index">Teams</a></li>
-                        @*<li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                            <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>*@
+                        <li>
+                            <a asp-area="" asp-controller="Home" asp-action="Index">
+                                Home <i class="fa fa-home"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-area="" asp-controller="Coach" asp-action="Index">
+                                Coaches <i class="fa fa-user"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-area="" asp-controller="Team" asp-action="Index">
+                                Teams <i class="fa fa-group"></i>
+                            </a>
+                        </li>
                     </ul>
                 }
                 @await Component.InvokeAsync("Login")
@@ -92,10 +105,8 @@
     <script type="text/javascript">
         $(function () {
             moment.locale('@twoLetterIsoLanguage');
-
             var options = defaultDatepickerOptions;
             options.language = '@twoLetterIsoLanguage';
-
             $('.datepicker').datepicker(options);
         });
     </script>

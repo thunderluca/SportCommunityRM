@@ -10,6 +10,7 @@
     "moment": "2.18.1",
     "underscore": "1.8.3",
     "bootbox.js": "bootbox#v4.4.0",
-    "bootstrap3-typeahead": "v4.0.0"
+    "bootstrap3-typeahead": "v4.0.0",
+    "font-awesome": "font-awsome#v4.7.0"
   }
 }

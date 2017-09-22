@@ -1,0 +1,103 @@
+﻿@model SportCommunityRM.WebSite.ViewModels.Coach.AddViewModel
+@{
+    ViewData["Title"] = "Add new coach";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <form id="coach-form" class="form-horizontal" method="post">
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="FirstName" />
+            <input type="hidden" asp-for="LastName" />
+            <input type="hidden" asp-for="BirthDate" />
+            <div class="form-group">
+                <label asp-for="Id" class="control-label col-md-3"></label>
+                <div class="col-md-9">
+                    <div class="input-group">
+                        <input id="search-user-input" type="text" autocomplete="off" class="form-control form-control-auto" />
+                        <span class="input-group-addon primary" title="Search user to promote as coach">
+                            <i class="glyphicon glyphicon-search"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="selected-user" class="control-label col-md-3">Selected user</label>
+                <div class="col-md-9">
+                    <input id="selected-user" name="selected-user" type="text" disabled value="No user selected" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-12">
+                    <button type="button" class="btn btn-danger" onclick="history.back()">Cancel</button>
+                    <input type="submit" class="btn btn-success pull-right" value="Add" />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        var searchActionUrl = '@Url.Action(nameof(CoachController.SearchUser))';
+        var $selectedUserInput = $('#selected-user');
+        var $searchUserInput = $('#search-user-input');
+
+        var users = [];
+        var map = {};
+
+        var typeaheadSourceCallback = function (query, process) {
+            if (nullOrEmptyString(query)) return;
+            users = [];
+            map = {};
+            var successCallback = function (data) {
+                _.each(data, function (user) {
+                    map[user.id] = user;
+                    users.push(user);
+                });
+
+                process(users);
+            };
+
+            var errorCallback = function (data) {
+                bootbox.alert('Error!');
+            };
+
+            var data = JSON.stringify({ Filter: query });
+
+            $.ajax({
+                url: searchActionUrl,
+                type: 'POST',
+                contentType: 'application/json',
+                data: data,
+                processData: false,
+                success: successCallback,
+                error: errorCallback
+            });
+        };
+
+        var getTypeAheadOptions = function (updaterCallback) {
+            return {
+                source: typeaheadSourceCallback,
+                updater: updaterCallback,
+                items: 20,
+                displayText: function (item) {
+                    return item.fullInfo;
+                }
+            };
+        };
+
+        var updateHiddenFields = function (item) {
+            $('#@nameof(Model.Id)').val(item.id);
+            $('#@nameof(Model.FirstName)').val(item.firstName);
+            $('#@nameof(Model.LastName)').val(item.lastName);
+            $('#@nameof(Model.BirthDate)').val(item.birthDate);
+            $selectedUserInput.val(item.fullInfo);
+        };
+
+        var searchUserOptions = getTypeAheadOptions(updateHiddenFields);
+        $searchUserInput.typeahead(searchUserOptions);
+    });
+</script>

@@ -3,11 +3,14 @@
     ViewData["Title"] = "Teams";
 }
 
+<br />
 <div class="row">
     <div class="col-md-9">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h1 class="panel-title">@ViewData["Title"]</h1>
+                <h1 class="panel-title">
+                    <i class="fa fa-group"></i> @ViewData["Title"]
+                </h1>
             </div>
             <div class="panel-body">
                 <div class="row">
@@ -68,7 +71,7 @@
 
 <script type="text/javascript">
     $(function () {
-        $('[data-delete-team-btn ]').on('click', function (event) {
+        $('[data-delete-team-btn]').on('click', function (event) {
             event.preventDefault();
             var deleteUrl = $(this).attr('href');
             bootbox.confirm('Are you sure to delete this team? All players and coaches will be removed from the deleted team.', function (result) {

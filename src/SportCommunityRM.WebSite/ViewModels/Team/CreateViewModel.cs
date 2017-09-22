@@ -8,14 +8,16 @@ namespace SportCommunityRM.WebSite.ViewModels.Team
 {
     public class CreateViewModel
     {
-        [Required]
         [Display(Name = "Name")]
+        [Required]
         public string Name { get; set; }
 
         [Display(Name = "Min. Birth Year")]
+        [Range(ushort.MinValue, ushort.MaxValue, ErrorMessage = "Insert a valid year")]
         public int? MinBirthYear { get; set; }
 
         [Display(Name = "Max. Birth Year")]
+        [Range(ushort.MinValue, ushort.MaxValue, ErrorMessage = "Insert a valid year")]
         public int? MaxBirthYear { get; set; }
 
         [Display(Name = "Players")]

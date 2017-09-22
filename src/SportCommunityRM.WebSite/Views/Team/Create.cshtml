@@ -19,14 +19,14 @@
             <div class="form-group">
                 <label asp-for="MinBirthYear" class="control-label col-md-3"></label>
                 <div class="col-md-9">
-                    <input asp-for="MinBirthYear" class="form-control" />
+                    <input type="text" asp-for="MinBirthYear" class="form-control" />
                     <span asp-validation-for="MinBirthYear" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group">
                 <label asp-for="MaxBirthYear" class="control-label col-md-3"></label>
                 <div class="col-md-9">
-                    <input asp-for="MaxBirthYear" class="form-control" />
+                    <input type="text" asp-for="MaxBirthYear" class="form-control" />
                     <span asp-validation-for="MaxBirthYear" class="text-danger"></span>
                 </div>
             </div>
@@ -35,8 +35,8 @@
                 <div class="col-md-9">
                     <div class="input-group">
                         <input id="search-player-input" type="text" autocomplete="off" class="form-control form-control-auto" />
-                        <span class="input-group-addon success" title="Add player">
-                            <i class="glyphicon glyphicon-plus"></i>
+                        <span class="input-group-addon primary" title="Add player">
+                            <i class="glyphicon glyphicon-search"></i>
                         </span>
                     </div>
                     <br/>
@@ -67,8 +67,8 @@
                 <div class="col-md-9">
                     <div class="input-group">
                         <input id="search-coach-input" type="text" autocomplete="off" class="form-control form-control-auto" />
-                        <span class="input-group-addon success" title="Add coach">
-                            <i class="glyphicon glyphicon-plus"></i>
+                        <span class="input-group-addon primary" title="Add coach">
+                            <i class="glyphicon glyphicon-search"></i>
                         </span>
                     </div>
                     <br />
@@ -141,10 +141,8 @@
         var $maxBirthDateInput = $('#@nameof(Model.MaxBirthYear)');
         var $playersList = $('#players-list');
         var $searchPlayerInput = $('#search-player-input');
-        var $addPlayerButton = $('[data-add-player-btn]');
         var $coachesList = $('#coaches-list');
         var $searchCoachInput = $('#search-coach-input');
-        var $addCoachButton = $('[data-add-coach-btn]');
 
         var users = [];
         var map = {};

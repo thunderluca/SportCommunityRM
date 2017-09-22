@@ -44,6 +44,7 @@ namespace SportCommunityRM.WebSite
             services.AddScoped<AccountControllerWorkerServices>();
             services.AddScoped<HomeControllerWorkerServices>();
             services.AddScoped<ManageControllerWorkerServices>();
+            services.AddScoped<CoachControllerWorkerServices>();
             services.AddScoped<TeamControllerWorkerServices>();
 
             services.AddMvc();
