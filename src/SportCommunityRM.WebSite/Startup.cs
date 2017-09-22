@@ -12,6 +12,10 @@ using SportCommunityRM.Data.ReadModel;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using ReflectionIT.Mvc.Paging;
 using SportCommunityRM.WebSite.WorkerServices;
+using Microsoft.AspNetCore.Mvc.Razor;
+using System.Linq;
+using Microsoft.AspNetCore.Localization;
+using System.Globalization;
 
 namespace SportCommunityRM.WebSite
 {
@@ -47,7 +51,11 @@ namespace SportCommunityRM.WebSite
             services.AddScoped<CoachControllerWorkerServices>();
             services.AddScoped<TeamControllerWorkerServices>();
 
-            services.AddMvc();
+            services.AddLocalization(options => options.ResourcesPath = nameof(Resources));
+
+            services.AddMvc()
+                .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+                .AddDataAnnotationsLocalization();
 
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
@@ -68,16 +76,24 @@ namespace SportCommunityRM.WebSite
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            var appSettings = Configuration.GetSection("AppSettings").Get<AppSettings>();
+
+            var cultureInfos = appSettings.SupportedLanguages
+                .Select(fourLettersIsoLanguage => new CultureInfo(fourLettersIsoLanguage))
+                .ToArray();
+
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture(appSettings.SupportedLanguages.First()),
+                SupportedCultures = cultureInfos,
+                SupportedUICultures = cultureInfos
+            });
+
             app.UseStaticFiles();
 
             app.UseAuthentication();
 
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-            });
+            app.UseMvcWithDefaultRoute();
         }
     }
 }

@@ -74,7 +74,7 @@
         $('[data-delete-team-btn]').on('click', function (event) {
             event.preventDefault();
             var deleteUrl = $(this).attr('href');
-            bootbox.confirm('Are you sure to delete this team? All players and coaches will be removed from the deleted team.', function (result) {
+            showConfirm('Are you sure to delete this team? All players and coaches will be removed from the deleted team.', 'Yes', 'No', function (result) {
                 if (result) window.location.href = deleteUrl;
             });
         });

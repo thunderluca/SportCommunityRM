@@ -24,24 +24,6 @@ namespace SportCommunityRM.WebSite.Controllers
             return View(model);
         }
 
-        public IActionResult About()
-        {
-            throw new NotSupportedException();
-
-            //ViewData["Message"] = "Your application description page.";
-
-            //return View();
-        }
-
-        public IActionResult Contact()
-        {
-            throw new NotSupportedException();
-
-            //ViewData["Message"] = "Your contact page.";
-
-            //return View();
-        }
-
         public async Task<IActionResult> GetActivitiesAsync(string filter, int page, string sortExpression)
         {
             var userId = this.User.GetUserId();

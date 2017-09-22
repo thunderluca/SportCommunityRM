@@ -95,7 +95,7 @@
         $('[data-delete-coach-btn]').on('click', function (event) {
             event.preventDefault();
             var deleteUrl = $(this).attr('href');
-            bootbox.confirm('Are you sure to delete this coach? All teams will be updated without the deleted coach.', function (result) {
+            showConfirm('Are you sure to delete this coach? All teams will be updated without the deleted coach.', 'Yes', 'No', function (result) {
                 if (result) window.location.href = deleteUrl;
             });
         });
@@ -103,7 +103,7 @@
         $('[data-remove-coach-btn]').on('click', function (event) {
             event.preventDefault();
             var removeUrl = $(this).attr('href');
-            bootbox.confirm('Are you sure to remove this coach from selected team?', function (result) {
+            showConfirm('Are you sure to remove this coach from selected team?', 'Yes', 'No', function (result) {
                 if (result) window.location.href = removeUrl;
             });
         });

@@ -4,7 +4,7 @@
     todayHighlight: true
 };
 
-var nullOrEmptyString = function (s) {
+function nullOrEmptyString(s) {
     return _.isNull(s) || _.isUndefined(s) || s.trim() === '';
 };
 
@@ -30,5 +30,22 @@ function executeHttpGetRequest(url, data, successCallback, errorCallback) {
         data: data,
         success: successCallback,
         error: errorCallback
+    });
+};
+
+function showConfirm(message, confirmLabel, cancelLabel, callback) {
+    bootbox.confirm({
+        message: message,
+        buttons: {
+            confirm: {
+                label: confirmLabel,
+                className: 'btn-success'
+            },
+            cancel: {
+                label: cancelLabel,
+                className: 'btn-danger'
+            }
+        },
+        callback: callback
     });
 };
