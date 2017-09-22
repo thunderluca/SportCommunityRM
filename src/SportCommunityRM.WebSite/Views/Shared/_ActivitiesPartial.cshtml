@@ -1,6 +1,6 @@
-﻿@model PagingList<SportCommunityRM.WebSite.Components.ActivitiesViewComponent.Model.Activity>
+﻿@model PagingList<SportCommunityRM.WebSite.Models.UserActivity>
 
-<div class="table-responsive">
+<div id="activities-div" class="table-responsive">
     <table class="table table-hover table-bordered">
         <thead>
             <tr>
@@ -18,7 +18,7 @@
         </thead>
         <tbody>
             @if (Model == null || !Model.Any())
-            { 
+            {
                 <tr>
                     <td colspan="4">No activities to display</td>
                 </tr>

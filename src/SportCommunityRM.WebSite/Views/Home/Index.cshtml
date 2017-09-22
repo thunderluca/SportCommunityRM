@@ -55,9 +55,30 @@
                     <i class="fa fa-calendar"></i> My Activities
                 </h1>
             </div>
-            <div class="panel-body">
-                @await Component.InvokeAsync("Activities")
+            <div id="activities-container" class="panel-body">
+                @await Html.PartialAsync("_ActivitiesPartial", Model.Activities)
             </div>
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    $(function () {
+        var getActivitiesActionUrl = '@Url.Action(nameof(IActivityController.GetActivitiesAsync))';
+        var pagingListAnchorHandler = function (event) {
+            event.preventDefault();
+            var hrefValue = $(this).attr('href').substring(1);
+            var url = getActivitiesActionUrl + hrefValue;
+            var successCallback = function (response) {
+                $('#activities-container').html(response);
+            };
+            var errorCallback = function (response) {
+                bootbox.alert('Error!');
+            };
+            executeHttpGetRequest(url, null, successCallback, errorCallback);
+        };
+
+        $(document).on('click', '#activities-container table thead th a', pagingListAnchorHandler);
+        $(document).on('click', '#activities-container nav .pagination li a', pagingListAnchorHandler);
+    });
+</script>

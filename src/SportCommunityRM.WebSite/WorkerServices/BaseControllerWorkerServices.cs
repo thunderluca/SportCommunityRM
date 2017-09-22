@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using ReflectionIT.Mvc.Paging;
 using SportCommunityRM.Data;
 using SportCommunityRM.Data.Models;
 using SportCommunityRM.Data.ReadModel;
@@ -98,6 +98,50 @@ namespace SportCommunityRM.WebSite.WorkerServices
 
             this.DbContext.Coaches.Add(newCoach);
             await this.DbContext.SaveChangesAsync();
+        }
+
+        public async Task<PagingList<UserActivity>> GetActivitiesAsync(
+            string userId,
+            string filter = null,
+            int pageSize = DefaultPageSize,
+            int page = 1,
+            string sortExpression = nameof(UserActivity.StartDate))
+        {
+            if (pageSize < DefaultPageSize)
+                pageSize = DefaultPageSize;
+
+            if (page < 1)
+                page = 1;
+
+            if (string.IsNullOrWhiteSpace(sortExpression))
+                sortExpression = nameof(UserActivity.StartDate);
+
+            var baseActivitiesQuery = (from registeredUser in this.Database.RegisteredUsers
+                                       where registeredUser.AspNetUserId == userId
+                                       from rut in registeredUser.Teams
+                                       from activity in rut.Team.Calendar
+                                       select activity);
+
+            if (!string.IsNullOrWhiteSpace(filter))
+                baseActivitiesQuery = baseActivitiesQuery.Where(activity => activity.Name.Contains(filter));
+
+            var activitiesQuery = (from activity in baseActivitiesQuery
+                                   select new UserActivity
+                                   {
+                                       Id = activity.Id,
+                                       Name = activity.Name,
+                                       StartDate = activity.StartDate,
+                                       EndDate = activity.EndDate
+                                   });
+
+            var activities = await PagingList<UserActivity>.CreateAsync(
+                activitiesQuery,
+                pageSize,
+                page,
+                sortExpression,
+                nameof(UserActivity.StartDate));
+
+            return activities;
         }
     }
 }

@@ -1,7 +1,5 @@
 ﻿using SportCommunityRM.Data.ReadModel;
 using SportCommunityRM.WebSite.ViewModels.Home;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -36,9 +34,12 @@ namespace SportCommunityRM.WebSite.WorkerServices
                              Name = rut.Team.Name
                          }).ToArray();
 
+            var activities = await this.GetActivitiesAsync(user.Id);
+
             return new IndexViewModel
             {
-                RegisteredUserTeams = teams
+                RegisteredUserTeams = teams,
+                Activities = activities
             };
         }
     }

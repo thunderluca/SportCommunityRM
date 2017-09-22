@@ -51,7 +51,7 @@ namespace SportCommunityRM.WebSite
 
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
-            services.AddPaging();
+            services.AddPaging(options => options.ViewName = "Bootstrap3");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

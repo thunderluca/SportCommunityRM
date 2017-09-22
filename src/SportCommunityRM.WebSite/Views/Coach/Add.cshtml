@@ -41,7 +41,7 @@
 
 <script type="text/javascript">
     $(function () {
-        var searchActionUrl = '@Url.Action(nameof(CoachController.SearchUser))';
+        var searchActionUrl = '@Url.Action(nameof(IUserSearchController.SearchUser))';
         var $selectedUserInput = $('#selected-user');
         var $searchUserInput = $('#search-user-input');
 
@@ -67,15 +67,7 @@
 
             var data = JSON.stringify({ Filter: query });
 
-            $.ajax({
-                url: searchActionUrl,
-                type: 'POST',
-                contentType: 'application/json',
-                data: data,
-                processData: false,
-                success: successCallback,
-                error: errorCallback
-            });
+            executeHttpPostRequest(searchActionUrl, data, successCallback, errorCallback);
         };
 
         var getTypeAheadOptions = function (updaterCallback) {

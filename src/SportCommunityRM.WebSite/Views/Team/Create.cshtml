@@ -136,7 +136,7 @@
 
 <script type="text/javascript">
     $(function () {
-        var searchActionUrl = '@Url.Action(nameof(TeamController.SearchUser))';
+        var searchActionUrl = '@Url.Action(nameof(IUserSearchController.SearchUser))';
         var $minBirthDateInput = $('#@nameof(Model.MinBirthYear)');
         var $maxBirthDateInput = $('#@nameof(Model.MaxBirthYear)');
         var $playersList = $('#players-list');
@@ -219,15 +219,7 @@
                 IdsToExclude: idsToExclude
             });
 
-            $.ajax({
-                url: searchActionUrl,
-                type: 'POST',
-                contentType: 'application/json',
-                data: data,
-                processData: false,
-                success: successCallback,
-                error: errorCallback
-            });
+            executeHttpPostRequest(searchActionUrl, data, successCallback, errorCallback);
         };
 
         var getTypeAheadOptions = function (updaterCallback, idsToExclude) {
