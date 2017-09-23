@@ -50,6 +50,7 @@ namespace SportCommunityRM.WebSite
             services.AddScoped<ManageControllerWorkerServices>();
             services.AddScoped<CoachControllerWorkerServices>();
             services.AddScoped<TeamControllerWorkerServices>();
+            services.AddScoped<UserControllerWorkerServices>();
 
             services.AddLocalization(options => options.ResourcesPath = nameof(Resources));
 

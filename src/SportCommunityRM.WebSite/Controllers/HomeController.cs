@@ -32,5 +32,10 @@ namespace SportCommunityRM.WebSite.Controllers
 
             return PartialView("_ActivitiesPartial", activities);
         }
+
+        public async Task<IActionResult> GetCalendarAsync(DateTime? startDate, DateTime? endDate)
+        {
+            return View();
+        }
     }
 }

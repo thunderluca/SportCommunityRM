@@ -18,12 +18,18 @@
     }
 
 .btn,
+.dropdown-menu,
 .form-control,
 .input-group-addon,
 .modal-content,
 .navbar-toggle,
 .panel {
     border-radius: 0;
+}
+
+.dropdown-menu {
+    padding: 0;
+    text-align: right;
 }
 
 .form-control,
@@ -103,7 +109,11 @@
     padding: 0;
 }
 
-.panel > .panel-body .table {
+.panel > .panel-body {
+    padding: 12px;
+}
+
+.panel .panel-body .table {
     margin-bottom: 0;
 }
 

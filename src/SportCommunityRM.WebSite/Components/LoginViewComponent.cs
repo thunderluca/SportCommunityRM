@@ -38,6 +38,7 @@ namespace SportCommunityRM.WebSite.Components
 
             var model = new Model
             {
+                RegisteredUserId = registeredUser.Id,
                 Username = username,
                 FirstName = registeredUser.FirstName,
                 LastName = registeredUser.LastName,
@@ -49,6 +50,8 @@ namespace SportCommunityRM.WebSite.Components
 
         public class Model
         {
+            public Guid RegisteredUserId { get; set; }
+
             public string Username { get; set; }
 
             public string FirstName { get; set; }

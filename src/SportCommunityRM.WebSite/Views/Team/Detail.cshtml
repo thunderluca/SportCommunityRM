@@ -1,0 +1,122 @@
+﻿@model SportCommunityRM.WebSite.ViewModels.Team.DetailViewModel
+@{
+    ViewData["Title"] = $"Team '{Model.Name}'";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h1 class="panel-title">
+                    <i class="fa fa-group"></i> Players
+                </h1>
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Birth date</th>
+                                <th>@*Actions header*@</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Players.IsNullOrEmpty())
+                            {
+                                <tr>
+                                    <td colspan="3">No player to display</td>
+                                </tr>
+                            }
+                            else
+                            {
+                                foreach (var player in Model.Players)
+                                { 
+                                    <tr>
+                                        <td>@player.Name</td>
+                                        <td>@player.BirthDate.ToShortDateString()</td>
+                                        <td>
+                                            <a class="text-info" asp-action="Detail" asp-controller="User" asp-route-id="@player.Id" title="Detail">
+                                                <i class="glyphicon glyphicon-search"></i>
+                                            </a>
+                                            <a data-remove-player-btn class="text-danger" asp-action="@nameof(TeamController.RemovePlayer)" asp-controller="Team" asp-route-playerId="@player.Id" asp-route-teamId="@Model.Id" title="Remove player">
+                                                <i class="glyphicon glyphicon-remove"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h1 class="panel-title">
+                    <i class="fa fa-user"></i> Coaches
+                </h1>
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>@*Actions header*@</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Coaches.IsNullOrEmpty())
+                            {
+                                <tr>
+                                    <td colspan="2">No coach to display</td>
+                                </tr>
+                            }
+                            else
+                            {
+                                foreach (var coach in Model.Coaches)
+                                {
+                                    <tr>
+                                        <td>@coach.Name</td>
+                                        <td>
+                                            <a class="text-info" asp-action="Detail" asp-controller="Coach" asp-route-id="@coach.Id" title="Detail">
+                                                <i class="glyphicon glyphicon-search"></i>
+                                            </a>
+                                            <a data-remove-coach-btn class="text-danger" asp-action="@nameof(TeamController.RemoveCoach)" asp-controller="Team" asp-route-playerId="@coach.Id" asp-route-teamId="@Model.Id" title="Remove coach">
+                                                <i class="glyphicon glyphicon-remove"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('[data-remove-player-btn]').on('click', function (event) {
+            event.preventDefault();
+            var removeUrl = $(this).attr('href');
+            showConfirm('Are you sure to remove this player from @Model.Name?', 'Yes', 'No', function (result) {
+                if (result) window.location.href = removeUrl;
+            });
+        });
+        $('[data-remove-coach-btn]').on('click', function (event) {
+            event.preventDefault();
+            var removeUrl = $(this).attr('href');
+            showConfirm('Are you sure to remove this coach from @Model.Name?', 'Yes', 'No', function (result) {
+                if (result) window.location.href = removeUrl;
+            });
+        });
+    });
+</script>

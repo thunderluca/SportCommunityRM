@@ -7,82 +7,86 @@
 <div class="row">
     <div class="col-md-9">
         <div class="panel panel-default">
-            <div class="panel-heading">
-                <h1 class="panel-title">
-                    <i class="fa fa-user"></i> @ViewData["Title"]
-                </h1>
+            <div class="panel-heading" role="tab" id="coaches-heading">
+                <a href="#coaches-collapse" role="button" data-toggle="collapse" aria-expanded="true" aria-controls="coaches-collapse">
+                    <h4 class="panel-title">
+                        <i class="fa fa-user"></i> @ViewData["Title"]
+                    </h4>
+                </a>
             </div>
-            <div class="panel-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="table-responsive">
-                            <table class="table table-hover table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Teams</th>
-                                        <th>@*Actions header*@</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @if (Model.Coaches == null || !Model.Coaches.Any())
-                                    {
+            <div class="panel-collapse collapse in" role="tabpanel" id="coaches-collapse" aria-labelledby="coaches-heading">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="table-responsive">
+                                <table class="table table-hover table-bordered">
+                                    <thead>
                                         <tr>
-                                            <td colspan="4">No coach to display</td>
+                                            <th>Name</th>
+                                            <th>Teams</th>
+                                            <th>@*Actions header*@</th>
                                         </tr>
-                                    }
-                                    else
-                                    {
-                                        foreach (var coach in Model.Coaches)
+                                    </thead>
+                                    <tbody>
+                                        @if (Model.Coaches == null || !Model.Coaches.Any())
                                         {
                                             <tr>
-                                                <td>@coach.Name</td>
-                                                <td>
-                                                    <ul class="list-unstyled">
-                                                        @if (coach.Teams == null || !coach.Teams.Any())
-                                                        {
-                                                            <li>No team to display</li>
-                                                        }
-                                                        else
-                                                        {
-                                                            foreach (var team in coach.Teams)
-                                                            {
-                                                                <li>
-                                                                    <div class="inline-children">
-                                                                        <a asp-action="Detail" asp-controller="Team" asp-route-id="@team.Id">
-                                                                            @team.Name <i class="glyphicon glyphicon-search"></i>
-                                                                        </a>
-                                                                        <a data-remove-coach-btn class="text-danger" title="Remove from team" asp-action="Remove" asp-controller="Coach" asp-route-teamId="@team.Id" asp-route-coachId="@coach.Id">
-                                                                            <i class="glyphicon glyphicon-remove"></i>
-                                                                        </a>
-                                                                    </div>
-                                                                </li>
-                                                            }
-                                                        }
-                                                    </ul>
-                                                </td>
-                                                <td>
-                                                    <a data-delete-coach-btn class="text-danger" title="Delete" asp-action="Delete" asp-controller="Coach" asp-route-id="@coach.Id">
-                                                        <i class="glyphicon glyphicon-remove"></i>
-                                                    </a>
-                                                </td>
+                                                <td colspan="4">No coach to display</td>
                                             </tr>
                                         }
-                                    }
-                                </tbody>
-                            </table>
+                                        else
+                                        {
+                                            foreach (var coach in Model.Coaches)
+                                            {
+                                                <tr>
+                                                    <td>@coach.Name</td>
+                                                    <td>
+                                                        <ul class="list-unstyled">
+                                                            @if (coach.Teams == null || !coach.Teams.Any())
+                                                            {
+                                                                <li>No team to display</li>
+                                                            }
+                                                            else
+                                                            {
+                                                                foreach (var team in coach.Teams)
+                                                                {
+                                                                    <li>
+                                                                        <div class="inline-children">
+                                                                            <a asp-action="Detail" asp-controller="Team" asp-route-id="@team.Id">
+                                                                                @team.Name <i class="glyphicon glyphicon-search"></i>
+                                                                            </a>
+                                                                            <a data-remove-coach-btn class="text-danger" title="Remove from team" asp-action="Remove" asp-controller="Coach" asp-route-teamId="@team.Id" asp-route-coachId="@coach.Id">
+                                                                                <i class="glyphicon glyphicon-remove"></i>
+                                                                            </a>
+                                                                        </div>
+                                                                    </li>
+                                                                }
+                                                            }
+                                                        </ul>
+                                                    </td>
+                                                    <td>
+                                                        <a data-delete-coach-btn class="text-danger" title="Delete" asp-action="Delete" asp-controller="Coach" asp-route-id="@coach.Id">
+                                                            <i class="glyphicon glyphicon-remove"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                            <nav>
+                                @await Component.InvokeAsync("Pager", new { pagingList = this.Model.Coaches })
+                            </nav>
                         </div>
-                        <nav>
-                            @await Component.InvokeAsync("Pager", new { pagingList = this.Model.Coaches })
-                        </nav>
                     </div>
-                </div>
-                <br />
-                <div class="row">
-                    <div class="col-md-12">
-                        <a class="btn btn-success pull-right" title="Add new coach" asp-action="Add" asp-controller="Coach">
-                            Add new coach <i class="glyphicon glyphicon-plus"></i>
-                        </a>
+                    <br />
+                    <div class="row">
+                        <div class="col-md-12">
+                            <a class="btn btn-success pull-right" title="Add new coach" asp-action="Add" asp-controller="Coach">
+                                Add new coach <i class="glyphicon glyphicon-plus"></i>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -1,6 +1,4 @@
 ﻿@{ var twoLetterIsoLanguage = System.Threading.Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName.ToLower(); }
-@inject Microsoft.AspNetCore.Identity.SignInManager<ApplicationUser> SignInManager
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -70,26 +68,7 @@
                 <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">SportCommunityRM.WebSite</a>
             </div>
             <div class="navbar-collapse collapse">
-                @if (SignInManager.IsSignedIn(User))
-                {
-                    <ul class="nav navbar-nav">
-                        <li>
-                            <a asp-area="" asp-controller="Home" asp-action="Index">
-                                Home <i class="fa fa-home"></i>
-                            </a>
-                        </li>
-                        <li>
-                            <a asp-area="" asp-controller="Coach" asp-action="Index">
-                                Coaches <i class="fa fa-user"></i>
-                            </a>
-                        </li>
-                        <li>
-                            <a asp-area="" asp-controller="Team" asp-action="Index">
-                                Teams <i class="fa fa-group"></i>
-                            </a>
-                        </li>
-                    </ul>
-                }
+                @await Html.PartialAsync("_TopNavbarPartial")
                 @await Component.InvokeAsync("Login")
             </div>
         </div>
@@ -108,6 +87,12 @@
             var options = defaultDatepickerOptions;
             options.language = '@twoLetterIsoLanguage';
             $('.datepicker').datepicker(options);
+
+            $('ul.nav li.dropdown').hover(function () {
+                $(this).find('.dropdown-menu').stop(true, true).fadeIn(200);
+            }, function () {
+                $(this).find('.dropdown-menu').stop(true, true).fadeOut(200);
+            });
         });
     </script>
 

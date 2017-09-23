@@ -38,7 +38,7 @@ namespace SportCommunityRM.WebSite.WorkerServices
 
             return new IndexViewModel
             {
-                RegisteredUserTeams = teams,
+                Teams = teams,
                 Activities = activities
             };
         }

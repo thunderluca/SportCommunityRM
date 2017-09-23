@@ -88,5 +88,38 @@ namespace SportCommunityRM.WebSite.Controllers
 
             return RedirectToAction(nameof(this.Index));
         }
+
+        [HttpGet]
+        public IActionResult Detail(Guid? id)
+        {
+            if (id.IsNullOrEmpty())
+                return NotFound();
+
+            var model = this.WorkerServices.GetDetailViewModel(id.Value);
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> RemoveCoach(Guid? teamId, Guid? coachId)
+        {
+            if (teamId.IsNullOrEmpty() || coachId.IsNullOrEmpty())
+                return NotFound();
+
+            await this.WorkerServices.RemoveCoachAsync(teamId.Value, coachId.Value);
+
+            return RedirectToAction(nameof(this.Detail), new { id = teamId.Value });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> RemovePlayer(Guid? teamId, Guid? playerId)
+        {
+            if (teamId.IsNullOrEmpty() || playerId.IsNullOrEmpty())
+                return NotFound();
+
+            await this.WorkerServices.RemovePlayerAsync(teamId.Value, playerId.Value);
+
+            return RedirectToAction(nameof(this.Detail), new { id = teamId.Value });
+        }
     }
 }

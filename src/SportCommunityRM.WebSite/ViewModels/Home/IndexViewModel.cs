@@ -7,7 +7,7 @@ namespace SportCommunityRM.WebSite.ViewModels.Home
 {
     public class IndexViewModel
     {
-        public IEnumerable<Team> RegisteredUserTeams { get; set; }
+        public IEnumerable<Team> Teams { get; set; }
 
         public PagingList<Models.UserActivity> Activities { get; set; }
 

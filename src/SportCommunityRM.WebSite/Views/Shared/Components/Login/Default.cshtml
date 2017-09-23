@@ -3,10 +3,22 @@
 {
     <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" class="navbar-right">
         <ul class="nav navbar-nav navbar-right">
-            <li>
-                <a asp-area="" asp-controller="Manage" asp-action="Index" title="Manage">
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" id="user-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                     @Model.Username <i class="fa fa-user-circle"></i>
                 </a>
+                <ul class="dropdown-menu" aria-labelledby="user-menu">
+                    <li>
+                        <a asp-action="Detail" asp-controller="User" asp-route-id="@Model.RegisteredUserId">
+                            My profile <i class="glyphicon glyphicon-search"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-action="Index" asp-controller="Manage">
+                            Manage <i class="fa fa-gear"></i>
+                        </a>
+                    </li>
+                </ul>
             </li>
             <li>
                 <button type="submit" class="btn btn-link navbar-btn navbar-link">

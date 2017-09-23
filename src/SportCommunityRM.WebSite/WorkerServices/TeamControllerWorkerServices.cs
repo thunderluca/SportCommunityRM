@@ -220,5 +220,61 @@ namespace SportCommunityRM.WebSite.WorkerServices
 
             await this.DbContext.SaveChangesAsync();
         }
+
+        public DetailViewModel GetDetailViewModel(Guid teamId)
+        {
+            var model = (from team in this.Database.Teams
+                         where team.Id == teamId
+                         let players = team.Players
+                            .Select(rut => new DetailViewModel.Player
+                            {
+                                Id = rut.RegisteredUser.Id,
+                                Name = rut.RegisteredUser.FirstName + " " + rut.RegisteredUser.LastName,
+                                BirthDate = rut.RegisteredUser.BirthDate
+                            })
+                         let coaches = team.Coaches
+                            .Select(tc => new DetailViewModel.Coach
+                            {
+                                Id = tc.Coach.Id,
+                                Name = tc.Coach.RegisteredUser.FirstName + " " + tc.Coach.RegisteredUser.LastName
+                            })
+                         select new DetailViewModel
+                         {
+                             Id = team.Id,
+                             Name = team.Name,
+                             MinBirthYear = team.MinBirthYear,
+                             MaxBirthYear = team.MaxBirthYear,
+                             Players = players,
+                             Coaches = coaches
+                         }).SingleOrDefault();
+
+            return model;
+        }
+
+        public async Task RemoveCoachAsync(Guid teamId, Guid coachId)
+        {
+            var team = this.DbContext.Teams
+                .Include(t => t.Coaches)
+                .WithId(teamId);
+
+            var coach = team.Coaches.SingleOrDefault(rut => rut.CoachId == coachId);
+            if (coach != null)
+                team.Coaches.Remove(coach);
+
+            await this.DbContext.SaveChangesAsync();
+        }
+
+        public async Task RemovePlayerAsync(Guid teamId, Guid playerId)
+        {
+            var team = this.DbContext.Teams
+                .Include(t => t.Players)
+                .WithId(teamId);
+
+            var player = team.Players.SingleOrDefault(rut => rut.RegisteredUserId == playerId);
+            if (player != null)
+                team.Players.Remove(player);
+
+            await this.DbContext.SaveChangesAsync();
+        }
     }
 }
