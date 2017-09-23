@@ -8,94 +8,102 @@
 <div class="row">
     <div class="col-md-6">
         <div class="panel panel-default">
-            <div class="panel-heading">
-                <h1 class="panel-title">
-                    <i class="fa fa-group"></i> Players
-                </h1>
+            <div class="panel-heading" role="tab" id="players-heading">
+                <a href="#players-collapse" role="button" data-toggle="collapse" aria-expanded="true" aria-controls="players-collapse">
+                    <h4 class="panel-title">
+                        <i class="fa fa-group"></i> Players (@(Model.Players?.Count() ?? 0))
+                    </h4>
+                </a>
             </div>
-            <div class="panel-body">
-                <div class="table-responsive">
-                    <table class="table table-hover table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Birth date</th>
-                                <th>@*Actions header*@</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if (Model.Players.IsNullOrEmpty())
-                            {
+            <div class="panel-collapse collapse in" role="tabpanel" id="players-collapse" aria-labelledby="players-heading">
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered">
+                            <thead>
                                 <tr>
-                                    <td colspan="3">No player to display</td>
+                                    <th>Name</th>
+                                    <th>Birth date</th>
+                                    <th>@*Actions header*@</th>
                                 </tr>
-                            }
-                            else
-                            {
-                                foreach (var player in Model.Players)
-                                { 
+                            </thead>
+                            <tbody>
+                                @if (Model.Players.IsNullOrEmpty())
+                                {
                                     <tr>
-                                        <td>@player.Name</td>
-                                        <td>@player.BirthDate.ToShortDateString()</td>
-                                        <td>
-                                            <a class="text-info" asp-action="Detail" asp-controller="User" asp-route-id="@player.Id" title="Detail">
-                                                <i class="glyphicon glyphicon-search"></i>
-                                            </a>
-                                            <a data-remove-player-btn class="text-danger" asp-action="@nameof(TeamController.RemovePlayer)" asp-controller="Team" asp-route-playerId="@player.Id" asp-route-teamId="@Model.Id" title="Remove player">
-                                                <i class="glyphicon glyphicon-remove"></i>
-                                            </a>
-                                        </td>
+                                        <td colspan="3">No player to display</td>
                                     </tr>
                                 }
-                            }
-                        </tbody>
-                    </table>
+                                else
+                                {
+                                    foreach (var player in Model.Players)
+                                    {
+                                        <tr>
+                                            <td>@player.Name</td>
+                                            <td>@player.BirthDate.ToShortDateString()</td>
+                                            <td>
+                                                <a class="text-info" asp-action="Detail" asp-controller="User" asp-route-id="@player.Id" title="Detail">
+                                                    <i class="glyphicon glyphicon-search"></i>
+                                                </a>
+                                                <a data-remove-player-btn class="text-danger" asp-action="@nameof(TeamController.RemovePlayer)" asp-controller="Team" asp-route-playerId="@player.Id" asp-route-teamId="@Model.Id" title="Remove player">
+                                                    <i class="glyphicon glyphicon-remove"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     <div class="col-md-6">
         <div class="panel panel-default">
-            <div class="panel-heading">
-                <h1 class="panel-title">
-                    <i class="fa fa-user"></i> Coaches
-                </h1>
+            <div class="panel-heading" role="tab" id="coaches-heading">
+                <a href="#coaches-collapse" role="button" data-toggle="collapse" aria-expanded="true" aria-controls="coaches-collapse">
+                    <h4 class="panel-title">
+                        <i class="fa fa-user"></i> Coaches (@(Model.Coaches?.Count() ?? 0))
+                    </h4>
+                </a>
             </div>
-            <div class="panel-body">
-                <div class="table-responsive">
-                    <table class="table table-hover table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>@*Actions header*@</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if (Model.Coaches.IsNullOrEmpty())
-                            {
+            <div class="panel-collapse collapse in" role="tabpanel" id="coaches-collapse" aria-labelledby="coaches-heading">
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered">
+                            <thead>
                                 <tr>
-                                    <td colspan="2">No coach to display</td>
+                                    <th>Name</th>
+                                    <th>@*Actions header*@</th>
                                 </tr>
-                            }
-                            else
-                            {
-                                foreach (var coach in Model.Coaches)
+                            </thead>
+                            <tbody>
+                                @if (Model.Coaches.IsNullOrEmpty())
                                 {
                                     <tr>
-                                        <td>@coach.Name</td>
-                                        <td>
-                                            <a class="text-info" asp-action="Detail" asp-controller="Coach" asp-route-id="@coach.Id" title="Detail">
-                                                <i class="glyphicon glyphicon-search"></i>
-                                            </a>
-                                            <a data-remove-coach-btn class="text-danger" asp-action="@nameof(TeamController.RemoveCoach)" asp-controller="Team" asp-route-playerId="@coach.Id" asp-route-teamId="@Model.Id" title="Remove coach">
-                                                <i class="glyphicon glyphicon-remove"></i>
-                                            </a>
-                                        </td>
+                                        <td colspan="2">No coach to display</td>
                                     </tr>
                                 }
-                            }
-                        </tbody>
-                    </table>
+                                else
+                                {
+                                    foreach (var coach in Model.Coaches)
+                                    {
+                                        <tr>
+                                            <td>@coach.Name</td>
+                                            <td>
+                                                <a class="text-info" asp-action="Detail" asp-controller="Coach" asp-route-id="@coach.Id" title="Detail">
+                                                    <i class="glyphicon glyphicon-search"></i>
+                                                </a>
+                                                <a data-remove-coach-btn class="text-danger" asp-action="@nameof(TeamController.RemoveCoach)" asp-controller="Team" asp-route-playerId="@coach.Id" asp-route-teamId="@Model.Id" title="Remove coach">
+                                                    <i class="glyphicon glyphicon-remove"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

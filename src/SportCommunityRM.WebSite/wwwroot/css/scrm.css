@@ -8,7 +8,7 @@
         text-decoration: none;
     }
 
-    a.text-default, 
+    a.text-default,
     a.text-primary,
     a.text-success,
     a.text-info,
@@ -25,6 +25,21 @@
 .navbar-toggle,
 .panel {
     border-radius: 0;
+}
+
+.btn+.btn {
+    margin-left: 15px;
+}
+
+.btn.btn-block-fluid {
+    display: inline-block;
+    white-space: nowrap;
+    width: auto;
+    margin-top: 0;
+}
+
+.container {
+    padding: 0;
 }
 
 .dropdown-menu {
@@ -79,24 +94,44 @@
     /*border-color: #d43f3a;*/
 }
 
+.login-html,
+.login-html > body {
+    height: 100%;
+    background-color: #101010;
+}
+
+    .login-html .container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #fff;
+    }
+
+        .login-html .container a:not(.btn) {
+            color: #d0d0d0;
+        }
+
+            .login-html .container a:not(.btn):hover,
+            .login-html .container a:not(.btn):focus {
+                color: #fff;
+                text-decoration: none;
+            }
+
 .navbar-collapse {
     border-top: none;
     box-shadow: none;
 }
 
-.navbar-collapse ul > li:hover,
-.navbar-collapse ul > li:hover > button {
-    background-color: #000;
-    color: #fff;
-    text-decoration: none;
-}
+    .navbar-collapse ul > li:hover,
+    .navbar-collapse ul > li:hover > button {
+        background-color: #000;
+        color: #fff;
+        text-decoration: none;
+    }
 
 .navbar-fixed-top {
     border-width: 0;
-}
-
-.navbar-nav {
-    margin: 0 -15px;
 }
 
 .navbar-toggle {
@@ -121,8 +156,40 @@
     font-weight: bold;
 }
 
+@media screen and (min-width: 1600px) {
+    .container {
+        width: 1560px;
+    }
+}
+
+@media screen and (min-width: 1400px) {
+    .container {
+        width: 1380px;
+    }
+}
+
 @media screen and (max-width: 767px) {
+    .btn + .btn {
+        margin-left: 0;
+    }
+
+    .btn.btn-block-fluid {
+        display: block;
+        white-space: normal;
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    .container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
     i.fa {
         display: none;
+    }
+
+    .navbar-nav {
+        margin: 0 -15px;
     }
 }

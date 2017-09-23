@@ -10,7 +10,7 @@
             <div class="panel-heading" role="tab" id="teams-heading">
                 <a href="#teams-collapse" role="button" data-toggle="collapse" aria-expanded="true" aria-controls="teams-collapse">
                     <h4 class="panel-title">
-                        <i class="fa fa-group"></i> My Teams
+                        <i class="fa fa-group"></i> My Teams (@(Model.Teams?.Count() ?? 0))
                     </h4>
                 </a>
             </div>
@@ -57,7 +57,7 @@
             <div class="panel-heading" role="tab" id="activities-heading">
                 <a href="#activities-collapse" role="button" data-toggle="collapse" aria-expanded="true" aria-controls="activities-collapse">
                     <h4 class="panel-title">
-                        <i class="fa fa-calendar"></i> My Activities
+                        <i class="fa fa-calendar"></i> My Activities (@(Model.Activities?.Count() ?? 0))
                     </h4>
                 </a>
             </div>
