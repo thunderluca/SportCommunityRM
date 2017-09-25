@@ -17,6 +17,22 @@
         font-size: 18px;
     }
 
+.collapse-btn.collapsed {
+    transform: rotate(180deg);
+}
+
+body {
+    background-color: #303030;
+}
+
+    body > .container > footer {
+        color: #fff;
+    }
+
+.bold {
+    font-weight: bold;
+}
+
 .btn,
 .dropdown-menu,
 .form-control,
@@ -27,7 +43,7 @@
     border-radius: 0;
 }
 
-.btn+.btn {
+.btn + .btn:not(.pull-left) {
     margin-left: 15px;
 }
 
@@ -97,7 +113,7 @@
 .login-html,
 .login-html > body {
     height: 100%;
-    background-color: #101010;
+    background-color: #303030;
 }
 
     .login-html .container {
@@ -115,7 +131,7 @@
             .login-html .container a:not(.btn):hover,
             .login-html .container a:not(.btn):focus {
                 color: #fff;
-                text-decoration: none;
+                text-decoration: underline;
             }
 
 .navbar-collapse {
@@ -169,7 +185,7 @@
 }
 
 @media screen and (max-width: 767px) {
-    .btn + .btn {
+    .btn + .btn:not(.pull-left) {
         margin-left: 0;
     }
 
@@ -187,6 +203,13 @@
 
     i.fa {
         display: none;
+    }
+
+    .login-html .container {
+        position: relative;
+        top: 0;
+        left: 0;
+        transform: none;
     }
 
     .navbar-nav {

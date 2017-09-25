@@ -8,11 +8,16 @@
     <div class="col-md-6">
         <div class="panel panel-default">
             <div class="panel-heading" role="tab" id="teams-heading">
-                <a href="#teams-collapse" role="button" data-toggle="collapse" aria-expanded="true" aria-controls="teams-collapse">
-                    <h4 class="panel-title">
-                        <i class="fa fa-group"></i> My Teams (@(Model.Teams?.Count() ?? 0))
-                    </h4>
-                </a>
+                <div class="inline-children">
+                    <a href="#teams-collapse" role="button" data-toggle="collapse" aria-expanded="true" aria-controls="teams-collapse">
+                        <h4 class="panel-title">
+                            <i class="fa fa-group"></i> My Teams (@(Model.Teams?.Count() ?? 0))
+                        </h4>
+                    </a>
+                    <a href="#teams-collapse" class="collapse-btn pull-right" role="button" data-toggle="collapse" title="Toggle" aria-expanded="true" aria-controls="teams-collapse">
+                        <i class="glyphicon glyphicon-menu-up"></i>
+                    </a>
+                </div>
             </div>
             <div class="panel-collapse collapse in" role="tabpanel" id="teams-collapse" aria-labelledby="teams-heading">
                 <div class="panel-body">
@@ -55,11 +60,16 @@
     <div class="col-md-6">
         <div class="panel panel-default">
             <div class="panel-heading" role="tab" id="activities-heading">
-                <a href="#activities-collapse" role="button" data-toggle="collapse" aria-expanded="true" aria-controls="activities-collapse">
-                    <h4 class="panel-title">
-                        <i class="fa fa-calendar"></i> My Activities (@(Model.Activities?.Count() ?? 0))
-                    </h4>
-                </a>
+                <div class="inline-children">
+                    <a href="#activities-collapse" role="button" data-toggle="collapse" aria-expanded="true" aria-controls="activities-collapse">
+                        <h4 class="panel-title">
+                            <i class="fa fa-calendar"></i> My Activities (@(Model.Activities?.Count() ?? 0))
+                        </h4>
+                    </a>
+                    <a href="#activities-collapse" class="collapse-btn pull-right" role="button" data-toggle="collapse" title="Toggle" aria-expanded="true" aria-controls="activities-collapse">
+                        <i class="glyphicon glyphicon-menu-up"></i>
+                    </a>
+                </div>
             </div>
             <div class="panel-collapse collapse in" role="tabpanel" id="activities-collapse" aria-labelledby="activities-heading">
                 <div id="activities-container" class="panel-body">
@@ -72,7 +82,6 @@
 
 <script type="text/javascript">
     $(function () {
-        var getActivitiesActionUrl = '@Url.Action(nameof(IActivityController.GetActivitiesAsync))';
         var pagingListAnchorHandler = function (event) {
             event.preventDefault();
             var hrefValue = $(this).attr('href').substring(1);
@@ -83,7 +92,7 @@
             var errorCallback = function (response) {
                 bootbox.alert('Error!');
             };
-            executeHttpGetRequest(url, null, successCallback, errorCallback);
+            executeHttpGetRequest('@Url.Action(nameof(IActivityController.GetActivitiesAsync))', null, successCallback, errorCallback);
         };
 
         $(document).on('click', '#activities-container table thead th a', pagingListAnchorHandler);
