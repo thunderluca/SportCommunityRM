@@ -1,0 +1,28 @@
+﻿@model PagingList<SportCommunityRM.WebSite.ViewModels.Shared.NewsFeedViewModel.Content>
+
+<ul class="list-unstyled">
+    @if (Model == null || Model.Count == 0)
+    {
+        <li>No news to display</li>
+    }
+    else
+    {
+        foreach (var content in Model)
+        {
+            <li>
+                <p>
+                    <div class="inline-children">
+                        <span class="bold">@content.Title</span> - @content.PublicationDate.ToShortDateString() @content.PublicationDate.ToShortTimeString()
+                    </div>
+                    @if (!string.IsNullOrWhiteSpace(content.Caption))
+                    {
+                        <span>@content.Caption</span>
+                    }
+                </p>
+            </li>
+        }
+    }
+</ul>
+<nav>
+    @await Component.InvokeAsync("Pager", new { pagingList = this.Model })
+</nav>

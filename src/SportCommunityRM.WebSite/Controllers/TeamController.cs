@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using SportCommunityRM.WebSite.WorkerServices;
 using SportCommunityRM.WebSite.ViewModels.Team;
 using SportCommunityRM.WebSite.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SportCommunityRM.WebSite.Controllers
 {
+    [Authorize]
     public class TeamController : BaseController, IUserSearchController
     {
         private readonly TeamControllerWorkerServices WorkerServices;

@@ -1,0 +1,124 @@
+﻿a {
+    color: #37773b;
+}
+
+    a:hover,
+    a:focus {
+        color: #46964a;
+        text-decoration: none;
+    }
+
+body,
+.fc-today,
+.login-html,
+.login-html > body {
+    background-color: #46964a;
+}
+
+.container > h1,
+.container > h2,
+.container > h3,
+.container > h4,
+.container > h5,
+.container > h6 {
+    color: #fff;
+}
+
+.container > div > h1,
+.container > div > h2,
+.container > div > h3,
+.container > div > h4,
+.container > div > h5,
+.container > div > h6 {
+    color: #d0d0d0;
+} 
+    
+    .fc-today.fc-other-month {
+        opacity: 0.8;
+    }
+
+.navbar-inverse,
+.navbar-inverse .navbar-collapse,
+.navbar-inverse .navbar-form {
+    background-color: #37773b;
+}
+
+    .navbar-header .navbar-brand,
+    .navbar-inverse .navbar-nav li a,
+    .navbar-inverse .navbar-nav li button {
+        color: #d3d3d3;
+    }
+
+    .navbar-inverse .navbar-nav .dropdown-menu a {
+        color: #3d8240;
+    }
+
+        .navbar-inverse .navbar-nav .dropdown-menu a:hover {
+            color: #37773b;
+        }
+
+    .btn-accent,
+    .navbar-inverse .navbar-nav li:hover,
+    .navbar-inverse .navbar-nav > .open > a,
+    .navbar-inverse .navbar-nav > .active > a,
+    .navbar-inverse .navbar-nav > .open > a:focus,
+    .navbar-inverse .navbar-nav > .active > a:focus,
+    .navbar-inverse .navbar-nav > .open > a:hover,
+    .navbar-inverse .navbar-nav > .active > a:hover,
+    .navbar-inverse .navbar-nav > .open > a:visited,
+    .navbar-inverse .navbar-nav > .active > a:visited,
+    .navbar-inverse .navbar-nav > .open > button:hover {
+        background-color: #3d8240;
+        color: #fff;
+        text-decoration: none;
+    }
+
+        .btn-accent:hover {
+            background-color: #37773b;
+            border-color: #28562b;
+            color: #fff;
+        }
+
+
+.nav-pills > li.active > a,
+.nav-pills > li.active > a:hover {
+    color: #37773b;
+}
+
+.nav-pills > li.active > a {
+    background-color: #d3d3d3;
+}
+
+    .nav-pills > li.active > a:hover {
+        background-color: #fff;
+    }
+
+.nav-pills > li:not(.active) > a {
+    background-color: #3d8240;
+    color: #d3d3d3;
+}
+
+    .nav-pills > li:not(.active) > a:hover {
+        background-color: #37773b;
+        color: #fff;
+    }
+
+footer,
+form .form-group span:not(.text-danger),
+.fc-today,
+.login-html .container,
+.login-html .container a:not(.btn):hover,
+.login-html .container a:not(.btn):focus {
+    color: #fff;
+}
+
+    form .form-group > label,
+    .login-html .container a:not(.btn) {
+        color: #d0d0d0;
+    }
+
+@media screen and (max-width: 767px) {
+    .navbar-inverse .navbar-nav .open .dropdown-menu > li > a {
+        color: #d0d0d0;
+    }
+}

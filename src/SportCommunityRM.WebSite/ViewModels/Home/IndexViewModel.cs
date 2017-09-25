@@ -1,4 +1,4 @@
-﻿using ReflectionIT.Mvc.Paging;
+﻿using SportCommunityRM.WebSite.ViewModels.Shared;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,7 +9,11 @@ namespace SportCommunityRM.WebSite.ViewModels.Home
     {
         public IEnumerable<Team> Teams { get; set; }
 
-        public PagingList<Models.UserActivity> Activities { get; set; }
+        public ActivitiesViewModel Activities { get; set; }
+
+        public CalendarViewModel Calendar { get; set; }
+
+        public NewsFeedViewModel NewsFeed { get; set; }
 
         public class Team
         {

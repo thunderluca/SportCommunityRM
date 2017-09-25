@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
+using SportCommunityRM.WebSite.Models;
 using System.Threading.Tasks;
 
 namespace SportCommunityRM.WebSite.Controllers
@@ -8,6 +8,6 @@ namespace SportCommunityRM.WebSite.Controllers
     {
         Task<IActionResult> GetActivitiesAsync(string filter, int page, string sortExpression);
 
-        Task<IActionResult> GetCalendarAsync(DateTime? startDate, DateTime? endDate);
+        Task<CalendarEvent[]> GetCalendarEventsAsync(CalendarEventsRequest request);
     }
 }

@@ -1,0 +1,76 @@
+﻿@model SportCommunityRM.WebSite.ViewModels.Shared.CalendarViewModel
+@{
+    var twoLetterIsoLanguage = System.Threading.Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName.ToLower();
+    var fullCalendarId = $"fullcalendar-{Model.Id.ToString("N")}";
+}
+<div id="@fullCalendarId"></div>
+
+<script type="text/javascript">
+    $(function () {
+        var $fullCalendar = $('#@fullCalendarId');
+        var overlap = @Model.Overlap.ToString().ToLower();
+        var editable = @Model.Editable.ToString().ToLower();
+        var selectable = @Model.Selectable.ToString().ToLower();
+        var durationEditable = @Model.DurationEditable.ToString().ToLower();
+
+        var checkIfEventExists = function (id) {
+            return _.some($fullCalendar.fullCalendar('clientEvents'), function (event) {
+                return event.id === id;
+            });
+        };
+
+        var updateCalendar = function (newEvents) {
+            if (!newEvents || newEvents.length === 0) return;
+            _.each(newEvents, function (e) {
+                $fullCalendar.fullCalendar('renderEvent', {
+                    id: e.id,
+                    title: e.title,
+                    start: e.start,
+                    end: e.end,
+                    overlap: overlap,
+                    editable: editable,
+                    durationEditable: durationEditable
+                }, !editable);
+            });
+        };
+
+        var getEvents = function (startDate, endDate) {
+            var successCallback = function (response) {
+                if (!response || response.length === 0) return;
+
+                var newEvents = _.filter(response, function (eventItem) {
+                    var eventExists = checkIfEventExists(eventItem.id);
+                    return !eventExists;
+                });
+
+                updateCalendar(newEvents);
+            };
+
+            var errorCallback = function () {
+                bootbox.alert('Error!');
+            };
+
+            var data = JSON.stringify({
+                Overlap: overlap,
+                Editable: editable,
+                DurationEditable: durationEditable,
+                StartDate: startDate,
+                EndDate: endDate
+            });
+
+            executeHttpPostRequest('@Model.DataUrl', data, successCallback, errorCallback);
+        };
+
+        var initializeCalendar = function () {
+            var fullCalendarOptions = defaultFullCalendarOptions;
+            fullCalendarOptions.locale = '@twoLetterIsoLanguage';
+            fullCalendarOptions.editable = editable;
+            fullCalendarOptions.selectable = selectable;
+            fullCalendarOptions.durationEditable = durationEditable;
+            fullCalendarOptions.events = getEvents;
+            $fullCalendar.fullCalendar(fullCalendarOptions);
+        };
+
+        initializeCalendar();
+    });
+</script>

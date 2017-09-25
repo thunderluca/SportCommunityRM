@@ -1,33 +1,15 @@
-﻿a {
-    color: #666;
+﻿a.text-default,
+a.text-primary,
+a.text-success,
+a.text-info,
+a.text-warning,
+a.text-danger {
+    font-size: 18px;
 }
-
-    a:hover,
-    a:focus {
-        color: #000;
-        text-decoration: none;
-    }
-
-    a.text-default,
-    a.text-primary,
-    a.text-success,
-    a.text-info,
-    a.text-warning,
-    a.text-danger {
-        font-size: 18px;
-    }
 
 .collapse-btn.collapsed {
     transform: rotate(180deg);
 }
-
-body {
-    background-color: #303030;
-}
-
-    body > .container > footer {
-        color: #fff;
-    }
 
 .bold {
     font-weight: bold;
@@ -43,16 +25,16 @@ body {
     border-radius: 0;
 }
 
-.btn + .btn:not(.pull-left) {
-    margin-left: 15px;
-}
+    .btn + .btn:not(.pull-left) {
+        margin-left: 15px;
+    }
 
-.btn.btn-block-fluid {
-    display: inline-block;
-    white-space: nowrap;
-    width: auto;
-    margin-top: 0;
-}
+    .btn.btn-block-fluid {
+        display: inline-block;
+        white-space: nowrap;
+        width: auto;
+        margin-top: 0;
+    }
 
 .container {
     padding: 0;
@@ -66,8 +48,10 @@ body {
 .form-control,
 .form-control:focus {
     -webkit-box-shadow: none;
+    -moz-box-shadow: none;
     box-shadow: none;
     -webkit-transition: none;
+    -o-transition: none;
     -moz-transition: none;
     transition: none;
 }
@@ -113,7 +97,6 @@ body {
 .login-html,
 .login-html > body {
     height: 100%;
-    background-color: #303030;
 }
 
     .login-html .container {
@@ -121,30 +104,17 @@ body {
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        color: #fff;
     }
 
-        .login-html .container a:not(.btn) {
-            color: #d0d0d0;
+        .login-html .container a:not(.btn):hover,
+        .login-html .container a:not(.btn):focus {
+            text-decoration: underline;
         }
-
-            .login-html .container a:not(.btn):hover,
-            .login-html .container a:not(.btn):focus {
-                color: #fff;
-                text-decoration: underline;
-            }
 
 .navbar-collapse {
     border-top: none;
     box-shadow: none;
 }
-
-    .navbar-collapse ul > li:hover,
-    .navbar-collapse ul > li:hover > button {
-        background-color: #000;
-        color: #fff;
-        text-decoration: none;
-    }
 
 .navbar-fixed-top {
     border-width: 0;
@@ -201,7 +171,8 @@ body {
         padding-right: 15px;
     }
 
-    i.fa {
+    .fa,
+    .glyphicon {
         display: none;
     }
 

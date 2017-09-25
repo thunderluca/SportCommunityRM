@@ -18,7 +18,6 @@ namespace SportCommunityRM.WebSite.WorkerServices
     {
         private readonly SignInManager<ApplicationUser> SignInManager;
         private readonly IEmailSender EmailSender;
-        private readonly IUrlService UrlService;
 
         public AccountControllerWorkerServices(
             UserManager<ApplicationUser> userManager,
@@ -28,11 +27,10 @@ namespace SportCommunityRM.WebSite.WorkerServices
             IHttpContextAccessor httpContextAccessor,
             IEmailSender emailSender,
             IUrlService urlService,
-            ILogger<AccountControllerWorkerServices> logger) : base(userManager, dbContext, database, httpContextAccessor, logger)
+            ILogger<AccountControllerWorkerServices> logger) : base(userManager, dbContext, database, httpContextAccessor, urlService, logger)
         {
             this.SignInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
             this.EmailSender = emailSender ?? throw new ArgumentNullException(nameof(emailSender));
-            this.UrlService = urlService ?? throw new ArgumentNullException(nameof(urlService));
         }
 
         public async Task<IdentityResult> RegisterUserAsync(RegisterViewModel viewModel)

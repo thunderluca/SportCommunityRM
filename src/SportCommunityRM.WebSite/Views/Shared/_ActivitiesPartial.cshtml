@@ -1,48 +1,25 @@
-﻿@model PagingList<SportCommunityRM.WebSite.Models.UserActivity>
+﻿@model SportCommunityRM.WebSite.ViewModels.Shared.ActivitiesViewModel
 
-<div id="activities-div" class="table-responsive">
-    <table class="table table-hover table-bordered">
-        <thead>
-            <tr>
-                <th>
-                    @Html.SortableHeaderFor(m => m.Name)
-                </th>
-                <th>
-                    @Html.SortableHeaderFor(m => m.StartDate)
-                </th>
-                <th>
-                    @Html.SortableHeaderFor(m => m.EndDate)
-                </th>
-                <th>@*Actions header*@</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (Model == null || !Model.Any())
-            {
-                <tr>
-                    <td colspan="4">No activities to display</td>
-                </tr>
-            }
-            else
-            {
-                foreach (var activity in Model)
-                {
-                    <tr>
-                        <td>@activity.Name</td>
-                        <td>@activity.StartDate.ToShortDateString()</td>
-                        <td>@activity.EndDate.ToShortDateString()</td>
-                        <td>
-                            <a role="button" class="btn btn-primary" asp-action="Detail" asp-controller="Activity" asp-route-id="@activity.Id" title="Detail">
-                                <i class="glyphicon glyphicon-search"></i>
-                            </a>
-                        </td>
-                    </tr>
-                }
-            }
-        </tbody>
-    </table>
+<div id="activities-container">
+    @Html.DisplayFor(model => model.Activities)
 </div>
 
-<nav>
-    @await Component.InvokeAsync("Pager", new { pagingList = this.Model })
-</nav>
+<script type="text/javascript">
+    $(function () {
+        var pagingListAnchorHandler = function (event) {
+            event.preventDefault();
+            var hrefValue = $(this).attr('href').substring(1);
+            var url = '@Url.Action(nameof(IActivityController.GetActivitiesAsync))' + hrefValue;
+            var successCallback = function (response) {
+                $('#activities-container').html(response);
+            };
+            var errorCallback = function (response) {
+                bootbox.alert('Error!');
+            };
+            executeHttpGetRequest(url, null, successCallback, errorCallback);
+        };
+
+        $(document).on('click', '#activities-container table thead th a', pagingListAnchorHandler);
+        $(document).on('click', '#activities-container nav .pagination li a', pagingListAnchorHandler);
+    });
+</script>

@@ -28,6 +28,8 @@ namespace SportCommunityRM.Data.Models
 
         public string Country { get; set; }
 
+        public string PictureId { get; set; }
+
         [Required]
         public string AspNetUserId { get; set; }
 

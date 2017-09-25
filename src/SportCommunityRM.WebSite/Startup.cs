@@ -44,6 +44,7 @@ namespace SportCommunityRM.WebSite
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddScoped<IUrlService, UrlService>();
+            services.AddScoped<IStorageService, LocalStorageService>();
 
             services.AddScoped<AccountControllerWorkerServices>();
             services.AddScoped<HomeControllerWorkerServices>();

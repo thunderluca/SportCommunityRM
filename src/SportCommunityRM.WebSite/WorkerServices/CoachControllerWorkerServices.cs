@@ -12,6 +12,7 @@ using SportCommunityRM.WebSite.ViewModels.Coach;
 using ReflectionIT.Mvc.Paging;
 using SportCommunityRM.Data.Models;
 using Microsoft.EntityFrameworkCore;
+using SportCommunityRM.WebSite.Services;
 
 namespace SportCommunityRM.WebSite.WorkerServices
 {
@@ -22,7 +23,8 @@ namespace SportCommunityRM.WebSite.WorkerServices
             SCRMContext dbContext, 
             IDatabase database, 
             IHttpContextAccessor httpContextAccessor, 
-            ILogger<BaseControllerWorkerServices> logger) : base(userManager, dbContext, database, httpContextAccessor, logger)
+            IUrlService urlService,
+            ILogger<BaseControllerWorkerServices> logger) : base(userManager, dbContext, database, httpContextAccessor, urlService, logger)
         {
         }
 

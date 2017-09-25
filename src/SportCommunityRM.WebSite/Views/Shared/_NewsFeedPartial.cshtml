@@ -1,0 +1,24 @@
+﻿@model SportCommunityRM.WebSite.ViewModels.Shared.NewsFeedViewModel
+
+<div id="news-feed-container">
+    @Html.DisplayFor(model => model.NewsFeed)
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        var pagingListAnchorHandler = function (event) {
+            event.preventDefault();
+            var hrefValue = $(this).attr('href').substring(1);
+            var url = '@Url.Action(nameof(INewsFeedController.GetFeedAsync))' + hrefValue;
+            var successCallback = function (response) {
+                $('#news-feed-container').html(response);
+            };
+            var errorCallback = function (response) {
+                bootbox.alert('Error!');
+            };
+            executeHttpGetRequest(url, null, successCallback, errorCallback);
+        };
+
+        $(document).on('click', '#news-feed-container nav .pagination li a', pagingListAnchorHandler);
+    });
+</script>

@@ -4,9 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SportCommunityRM.WebSite.WorkerServices;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SportCommunityRM.WebSite.Controllers
 {
+    [Authorize]
     public class UserController : Controller
     {
         private readonly UserControllerWorkerServices WorkerServices;
@@ -25,6 +27,15 @@ namespace SportCommunityRM.WebSite.Controllers
             var model = this.WorkerServices.GetDetailViewModel(id.Value);
 
             return View(model);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> Picture(string username)
+        {
+            var bytes = await this.WorkerServices.GetUserPictureAsync(username);
+
+            return File(bytes, "image/jpeg");
         }
     }
 }

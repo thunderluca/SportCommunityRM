@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Identity;
 using SportCommunityRM.WebSite.Models;
 using Microsoft.Extensions.Logging;
 using SportCommunityRM.Data;
+using SportCommunityRM.WebSite.ViewModels.Shared;
+using SportCommunityRM.WebSite.Services;
+using SportCommunityRM.WebSite.Controllers;
 
 namespace SportCommunityRM.WebSite.WorkerServices
 {
@@ -17,7 +20,8 @@ namespace SportCommunityRM.WebSite.WorkerServices
             SCRMContext dbContext, 
             IDatabase database, 
             IHttpContextAccessor httpContextAccessor, 
-            ILogger<HomeControllerWorkerServices> logger) : base(userManager, dbContext, database, httpContextAccessor, logger)
+            IUrlService urlService,
+            ILogger<HomeControllerWorkerServices> logger) : base(userManager, dbContext, database, httpContextAccessor, urlService, logger)
         {
         }
 
@@ -36,10 +40,20 @@ namespace SportCommunityRM.WebSite.WorkerServices
 
             var activities = await this.GetActivitiesAsync(user.Id);
 
+            var activitiesViewModel = new ActivitiesViewModel { Activities = activities };
+
+            var newsFeedContents = await this.GetFeedAsync(user.Id);
+
+            var newsFeedViewModel = new NewsFeedViewModel { NewsFeed = newsFeedContents };
+
+            var calendarViewModel = this.GetCalendarViewModel(nameof(IActivityController.GetCalendarEventsAsync), "Home");
+
             return new IndexViewModel
             {
                 Teams = teams,
-                Activities = activities
+                Activities = activitiesViewModel,
+                NewsFeed = newsFeedViewModel,
+                Calendar = calendarViewModel
             };
         }
     }

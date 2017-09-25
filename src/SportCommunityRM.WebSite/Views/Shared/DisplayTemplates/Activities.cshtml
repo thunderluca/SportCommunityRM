@@ -1,0 +1,47 @@
+﻿@model PagingList<SportCommunityRM.WebSite.ViewModels.Shared.ActivitiesViewModel.Activity>
+
+<div id="activities-div" class="table-responsive">
+    <table class="table table-hover table-bordered">
+        <thead>
+            <tr>
+                <th>
+                    @Html.SortableHeaderFor(m => m.Name)
+                </th>
+                <th>
+                    @Html.SortableHeaderFor(m => m.StartDate)
+                </th>
+                <th>
+                    @Html.SortableHeaderFor(m => m.EndDate)
+                </th>
+                <th>@*Actions header*@</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model == null || !Model.Any())
+            {
+                <tr>
+                    <td colspan="4">No activities to display</td>
+                </tr>
+            }
+            else
+            {
+                foreach (var activity in Model)
+                {
+                    <tr>
+                        <td>@activity.Name</td>
+                        <td>@activity.StartDate.ToShortDateString()</td>
+                        <td>@activity.EndDate.ToShortDateString()</td>
+                        <td>
+                            <a role="button" class="btn btn-primary" asp-action="Detail" asp-controller="Activity" asp-route-id="@activity.Id" title="Detail">
+                                <i class="glyphicon glyphicon-search"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+<nav>
+    @await Component.InvokeAsync("Pager", new { pagingList = this.Model })
+</nav>

@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using SportCommunityRM.WebSite.ViewModels.Team;
 using Microsoft.EntityFrameworkCore;
 using SportCommunityRM.Data.Models;
+using SportCommunityRM.WebSite.Services;
 
 namespace SportCommunityRM.WebSite.WorkerServices
 {
@@ -20,7 +21,8 @@ namespace SportCommunityRM.WebSite.WorkerServices
             SCRMContext dbContext,
             IDatabase database, 
             IHttpContextAccessor httpContextAccessor,
-            ILogger<TeamControllerWorkerServices> logger) : base(userManager, dbContext, database, httpContextAccessor, logger)
+            IUrlService urlService,
+            ILogger<TeamControllerWorkerServices> logger) : base(userManager, dbContext, database, httpContextAccessor, urlService, logger)
         {
         }
 

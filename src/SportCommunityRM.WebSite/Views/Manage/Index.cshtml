@@ -10,48 +10,59 @@
 <div class="row">
     <div class="col-md-6">
         <form method="post">
-            <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="FirstName"></label>
-                <br/> 
-                <span>@Html.DisplayFor(m => m.FirstName)</span>
-            </div>
-            <div class="form-group">
-                <label asp-for="LastName"></label>
-                <br /> 
-                <span>@Html.DisplayFor(m => m.LastName)</span>
-            </div>
-            <div class="form-group">
-                <label asp-for="BirthDate"></label>
-                <br /> 
-                <span>@Html.DisplayFor(m => m.BirthDate)</span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Username"></label>
-                <input asp-for="Username" class="form-control" disabled />
-            </div>
-            <div class="form-group">
-                <label asp-for="Email"></label>
-                @if (Model.IsEmailConfirmed)
-                {
-                    <div class="input-group">
-                        <input asp-for="Email" class="form-control" />
-                        <span class="input-group-addon" aria-hidden="true"><span class="glyphicon glyphicon-ok text-success"></span></span>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="FirstName"></label>
+                        <span>@Html.DisplayFor(m => m.FirstName)</span>
                     </div>
-                }
-                else
-                {
-                    <input asp-for="Email" class="form-control" />
-                    <button asp-action="SendVerificationEmail" class="btn btn-link">Send verification email</button>
-                }
-                <span asp-validation-for="Email" class="text-danger"></span>
+                    <div class="form-group">
+                        <label asp-for="LastName"></label>
+                        <span>@Html.DisplayFor(m => m.LastName)</span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="BirthDate"></label>
+                        <span>@Html.DisplayFor(m => m.BirthDate)</span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Username"></label>
+                        <span>@Html.DisplayFor(m => m.Username)</span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <img class="img-responsive img-circle pull-right" />
+                </div>
+                <div class="col-md-12">   
+                    <div class="form-group">
+                        <label asp-for="Email"></label>
+                        <div class="input-group">
+                            <input asp-for="Email" class="form-control" />
+                            @if (Model.IsEmailConfirmed)
+                            {
+                                <span class="input-group-addon" aria-hidden="true">
+                                    <span class="glyphicon glyphicon-ok text-success"></span>
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="input-group-btn" aria-hidden="true">
+                                    <button asp-action="SendVerificationEmail" class="btn btn-default">Send verification email</button>
+                                </span>
+                            }
+                        </div>
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="PhoneNumber"></label>
+                        <input asp-for="PhoneNumber" class="form-control" />
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-block-fluid btn-primary pull-right">Save</button>
+                        <button type="button" class="btn btn-block-fluid btn-danger pull-left" onclick="history.back()">Back</button>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="PhoneNumber"></label>
-                <input asp-for="PhoneNumber" class="form-control" />
-                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-            </div>
-            <button type="submit" class="btn btn-default">Save</button>
         </form>
     </div>
 </div>

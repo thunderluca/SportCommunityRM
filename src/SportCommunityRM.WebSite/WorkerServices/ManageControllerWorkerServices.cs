@@ -20,7 +20,6 @@ namespace SportCommunityRM.WebSite.WorkerServices
     public class ManageControllerWorkerServices : BaseControllerWorkerServices
     {
         private readonly SignInManager<ApplicationUser> SignInManager;
-        private readonly IUrlService UrlService;
         private readonly UrlEncoder UrlEncoder;
         private readonly IEmailSender EmailSender;
 
@@ -35,10 +34,9 @@ namespace SportCommunityRM.WebSite.WorkerServices
             IUrlService urlService,
             UrlEncoder urlEncoder,
             IEmailSender emailSender,
-            ILogger<ManageControllerWorkerServices> logger) : base(userManager, dbContext, database, httpContextAccessor, logger)
+            ILogger<ManageControllerWorkerServices> logger) : base(userManager, dbContext, database, httpContextAccessor, urlService, logger)
         {
             this.SignInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
-            this.UrlService = urlService ?? throw new ArgumentNullException(nameof(urlService));
             this.UrlEncoder = urlEncoder ?? throw new ArgumentNullException(nameof(urlEncoder));
             this.EmailSender = emailSender ?? throw new ArgumentNullException(nameof(emailSender));
         }

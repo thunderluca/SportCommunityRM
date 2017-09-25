@@ -4,11 +4,12 @@ using SportCommunityRM.WebSite.WorkerServices;
 using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using SportCommunityRM.WebSite.Models;
 
 namespace SportCommunityRM.WebSite.Controllers
 {
     [Authorize]
-    public class HomeController : BaseController, IActivityController
+    public class HomeController : BaseController, IActivityController, INewsFeedController
     {
         private readonly HomeControllerWorkerServices WorkerServices;
 
@@ -30,12 +31,32 @@ namespace SportCommunityRM.WebSite.Controllers
 
             var activities = await this.WorkerServices.GetActivitiesAsync(userId, filter, page: page, sortExpression: sortExpression);
 
-            return PartialView("_ActivitiesPartial", activities);
+            return PartialView("DisplayTemplates/Activities", activities);
         }
 
-        public async Task<IActionResult> GetCalendarAsync(DateTime? startDate, DateTime? endDate)
+        [HttpPost]
+        public async Task<CalendarEvent[]> GetCalendarEventsAsync([FromBody] CalendarEventsRequest request)
         {
-            return View();
+            var userId = this.User.GetUserId();
+
+            var newsFeedContents = await this.WorkerServices.GetUserCalendarEventsAsync(
+                userId,
+                request.Overlap,
+                request.Editable,
+                request.DurationEditable,
+                request.StartDate,
+                request.EndDate);
+
+            return newsFeedContents;
+        }
+
+        public async Task<IActionResult> GetFeedAsync(int page)
+        {
+            var userId = this.User.GetUserId();
+
+            var newsFeedContents = await this.WorkerServices.GetFeedAsync(userId, page: page);
+
+            return PartialView("DisplayTemplates/NewsFeed", newsFeedContents);
         }
     }
 }

@@ -66,13 +66,19 @@ namespace SportCommunityRM.Data
 
         public DbSet<Location> Addresses { get; set; }
 
+        public DbSet<Article> Articles { get; set; }
+
         public DbSet<Coach> Coaches { get; set; }
+
+        public DbSet<Content> Contents { get; set; }
 
         public DbSet<Field> Fields { get; set; }
 
         public DbSet<Inscription> Inscriptions { get; set; }
 
         public DbSet<Match> Matches { get; set; }
+
+        public DbSet<MatchReport> MatchesReports { get; set; }
 
         public DbSet<MedicalCertificate> MedicalCertificates { get; set; }
 

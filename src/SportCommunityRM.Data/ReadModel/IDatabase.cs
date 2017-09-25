@@ -12,13 +12,19 @@ namespace SportCommunityRM.Data.ReadModel
 
         IQueryable<Location> Addresses { get; }
 
+        IQueryable<Article> Articles { get; }
+
         IQueryable<Coach> Coaches { get; }
+
+        IQueryable<Content> Contents { get; }
 
         IQueryable<Field> Fields { get; }
 
         IQueryable<Inscription> Inscriptions { get; }
 
         IQueryable<Match> Matches { get; }
+
+        IQueryable<MatchReport> MatchesReports { get; }
 
         IQueryable<MedicalCertificate> MedicalCertificates { get; }
 

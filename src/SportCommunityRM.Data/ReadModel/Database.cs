@@ -25,9 +25,19 @@ namespace SportCommunityRM.Data.ReadModel
             get { return this.DbContext.Addresses; }
         }
 
+        public IQueryable<Article> Articles
+        {
+            get { return this.DbContext.Articles; }
+        }
+
         public IQueryable<Coach> Coaches
         {
             get { return this.DbContext.Coaches; }
+        }
+
+        public IQueryable<Content> Contents
+        {
+            get { return this.DbContext.Contents; }
         }
 
         public IQueryable<Field> Fields
@@ -43,6 +53,11 @@ namespace SportCommunityRM.Data.ReadModel
         public IQueryable<Match> Matches
         {
             get { return this.DbContext.Matches; }
+        }
+
+        public IQueryable<MatchReport> MatchesReports
+        {
+            get { return this.DbContext.MatchesReports; }
         }
 
         public IQueryable<MedicalCertificate> MedicalCertificates

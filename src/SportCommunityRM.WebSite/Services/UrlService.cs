@@ -44,10 +44,10 @@ namespace SportCommunityRM.WebSite.Services
             return callbackUrl;
         }
 
-        public string GetActionUrl(string actionName)
+        public string GetActionUrl(string actionName, string controllerName = null, string areaName = null)
         {
             var urlHelper = UrlHelperFactory.GetUrlHelper(ActionContextAccessor.ActionContext);
-            return urlHelper.Action(actionName);
+            return urlHelper.Action(actionName, controllerName, new { area = areaName });
         }
     }
 }

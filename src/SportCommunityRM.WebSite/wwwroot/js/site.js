@@ -4,6 +4,12 @@
     todayHighlight: true
 };
 
+var defaultFullCalendarOptions = {
+    editable: true,
+    selectable: true,
+    themeSystem: 'bootstrap3'
+};
+
 function nullOrEmptyString(s) {
     return _.isNull(s) || _.isUndefined(s) || s.trim() === '';
 };

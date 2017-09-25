@@ -1,11 +1,14 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using ReflectionIT.Mvc.Paging;
 using SportCommunityRM.Data;
 using SportCommunityRM.Data.Models;
 using SportCommunityRM.Data.ReadModel;
 using SportCommunityRM.WebSite.Models;
+using SportCommunityRM.WebSite.Services;
+using SportCommunityRM.WebSite.ViewModels.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +23,7 @@ namespace SportCommunityRM.WebSite.WorkerServices
         public readonly SCRMContext DbContext;
         public readonly IDatabase Database;
         public readonly IHttpContextAccessor HttpContextAccessor;
+        public readonly IUrlService UrlService;
         public readonly ILogger Logger;
 
         public BaseControllerWorkerServices(
@@ -27,22 +31,27 @@ namespace SportCommunityRM.WebSite.WorkerServices
             SCRMContext dbContext,
             IDatabase database,
             IHttpContextAccessor httpContextAccessor,
+            IUrlService urlService,
             ILogger<BaseControllerWorkerServices> logger)
         {
             this.UserManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             this.DbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             this.Database = database ?? throw new ArgumentNullException(nameof(database));
             this.HttpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
+            this.UrlService = urlService ?? throw new ArgumentNullException(nameof(urlService));
             this.Logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public const int DefaultPageSize = 10;
 
-        public async Task<ApplicationUser> GetApplicationUserAsync()
+        public async Task<ApplicationUser> GetApplicationUserAsync(string username = null)
         {
             var httpContextUser = this.HttpContextAccessor.HttpContext.User;
 
-            var user = await UserManager.GetUserAsync(httpContextUser);
+            var user = !string.IsNullOrWhiteSpace(username) 
+                ? await UserManager.FindByNameAsync(username) 
+                : await UserManager.GetUserAsync(httpContextUser);
+
             if (user == null)
                 throw new ApplicationException($"Unable to load user with ID '{httpContextUser.GetUserId()}'.");
 
@@ -100,12 +109,14 @@ namespace SportCommunityRM.WebSite.WorkerServices
             await this.DbContext.SaveChangesAsync();
         }
 
-        public async Task<PagingList<UserActivity>> GetActivitiesAsync(
+        private const string DefaultActivitiesSortExpression = nameof(ActivitiesViewModel.Activity.StartDate);
+
+        public async Task<PagingList<ActivitiesViewModel.Activity>> GetActivitiesAsync(
             string userId,
             string filter = null,
             int pageSize = DefaultPageSize,
             int page = 1,
-            string sortExpression = nameof(UserActivity.StartDate))
+            string sortExpression = DefaultActivitiesSortExpression)
         {
             if (pageSize < DefaultPageSize)
                 pageSize = DefaultPageSize;
@@ -114,7 +125,7 @@ namespace SportCommunityRM.WebSite.WorkerServices
                 page = 1;
 
             if (string.IsNullOrWhiteSpace(sortExpression))
-                sortExpression = nameof(UserActivity.StartDate);
+                sortExpression = DefaultActivitiesSortExpression;
 
             var baseActivitiesQuery = (from registeredUser in this.Database.RegisteredUsers
                                        where registeredUser.AspNetUserId == userId
@@ -126,7 +137,7 @@ namespace SportCommunityRM.WebSite.WorkerServices
                 baseActivitiesQuery = baseActivitiesQuery.Where(activity => activity.Name.Contains(filter));
 
             var activitiesQuery = (from activity in baseActivitiesQuery
-                                   select new UserActivity
+                                   select new ActivitiesViewModel.Activity
                                    {
                                        Id = activity.Id,
                                        Name = activity.Name,
@@ -134,14 +145,146 @@ namespace SportCommunityRM.WebSite.WorkerServices
                                        EndDate = activity.EndDate
                                    });
 
-            var activities = await PagingList<UserActivity>.CreateAsync(
+            var activities = await PagingList<ActivitiesViewModel.Activity>.CreateAsync(
                 activitiesQuery,
                 pageSize,
                 page,
                 sortExpression,
-                nameof(UserActivity.StartDate));
+                DefaultActivitiesSortExpression);
 
             return activities;
+        }
+
+        private const string DefaultNewsFeedSortExpression = "-" + nameof(NewsFeedViewModel.Content.PublicationDate);
+
+        public async Task<PagingList<NewsFeedViewModel.Content>> GetFeedAsync(
+            string userId,
+            string filter = null,
+            int pageSize = DefaultPageSize,
+            int page = 1,
+            string sortExpression = DefaultNewsFeedSortExpression)
+        {
+            if (pageSize < DefaultPageSize)
+                pageSize = DefaultPageSize;
+
+            if (page < 1)
+                page = 1;
+
+            if (string.IsNullOrWhiteSpace(sortExpression))
+                sortExpression = DefaultNewsFeedSortExpression;
+
+            var baseNewsFeedContentsQuery = this.Database.Contents;
+
+            if (!string.IsNullOrWhiteSpace(filter))
+                baseNewsFeedContentsQuery = baseNewsFeedContentsQuery.Where(content => content.Title.Contains(filter));
+
+            var newsFeedContentsQuery = (from content in baseNewsFeedContentsQuery
+                                         let caption = content.Caption == null || content.Caption == "" 
+                                            ? content.Body.Substring(0, 1000) 
+                                            : content.Caption
+                                         let matchReportContentType = content is MatchReport
+                                         select new NewsFeedViewModel.Content
+                                         {
+                                             Id = content.Id,
+                                             Title = content.Title,
+                                             Caption = caption,
+                                             PublicationDate = content.PublicationDate,
+                                             Type = matchReportContentType 
+                                                ? NewsFeedViewModel.ContentType.MatchReport 
+                                                : NewsFeedViewModel.ContentType.Article
+                                         });
+
+            var newsFeedContents = await PagingList<NewsFeedViewModel.Content>.CreateAsync(
+                newsFeedContentsQuery, 
+                pageSize, 
+                page, 
+                sortExpression,
+                DefaultNewsFeedSortExpression);
+
+            return newsFeedContents;
+        }
+
+        public CalendarViewModel GetCalendarViewModel(
+            string actionName, 
+            string controllerName = null, 
+            string areaName = null,
+            bool editable = false,
+            bool selectable = false)
+        {
+            var dataUrl = this.UrlService.GetActionUrl(actionName, controllerName, areaName);
+
+            return new CalendarViewModel
+            {
+                DataUrl = dataUrl,
+                Editable = editable,
+                Selectable = selectable
+            };
+        }
+
+        public async Task<CalendarEvent[]> GetUserCalendarEventsAsync(
+            string userId,
+            bool overlap,
+            bool editable,
+            bool durationEditable,
+            DateTime? startDate = null, 
+            DateTime? endDate = null)
+        {
+            var calendarEventsQuery = (from registeredUser in this.Database.RegisteredUsers
+                                       where registeredUser.AspNetUserId == userId
+                                       from rut in registeredUser.Teams
+                                       from activity in rut.Team.Calendar
+                                       select activity);
+
+            var calendarEvents = await GetCalendarEventsAsync(calendarEventsQuery, overlap, editable, durationEditable, startDate, endDate);
+
+            return calendarEvents;
+        }
+
+        public async Task<CalendarEvent[]> GetTeamCalendarEventsAsync(
+            Guid teamId,
+            bool overlap,
+            bool editable,
+            bool durationEditable,
+            DateTime? startDate = null,
+            DateTime? endDate = null)
+        {
+            var calendarEventsQuery = (from team in this.Database.Teams
+                                       where team.Id == teamId
+                                       from activity in team.Calendar
+                                       select activity);
+
+            var calendarEvents = await GetCalendarEventsAsync(calendarEventsQuery, overlap, editable, durationEditable, startDate, endDate);
+
+            return calendarEvents;
+        }
+
+        private async Task<CalendarEvent[]> GetCalendarEventsAsync(
+            IQueryable<Activity> baseCalendarEventsQuery,
+            bool overlap,
+            bool editable,
+            bool durationEditable,
+            DateTime? startDate = null,
+            DateTime? endDate = null)
+        {
+            if (startDate.HasValue)
+                baseCalendarEventsQuery = baseCalendarEventsQuery.Where(a => a.StartDate >= startDate.Value);
+
+            if (endDate.HasValue)
+                baseCalendarEventsQuery = baseCalendarEventsQuery.Where(a => a.EndDate <= endDate.Value);
+
+            var calendarEvents = await (from activity in baseCalendarEventsQuery
+                                        select new CalendarEvent
+                                        {
+                                            Id = activity.Id,
+                                            Title = activity.Name,
+                                            Start = activity.StartDate.ToString("yyyy-MM-dd HH:mm:ss"),
+                                            End = activity.EndDate.ToString("yyyy-MM-dd HH:mm:ss"),
+                                            Overlap = overlap,
+                                            Editable = editable,
+                                            DurationEditable = durationEditable
+                                        }).ToArrayAsync();
+
+            return calendarEvents;
         }
     }
 }
