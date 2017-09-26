@@ -55,6 +55,17 @@ namespace SportCommunityRM.WebSite.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpPost]
+        public async Task<IActionResult> UploadPicture(IndexViewModel model)
+        {
+            if (model == null || string.IsNullOrWhiteSpace(model.CroppedImage))
+                return RedirectToAction(nameof(this.Index));
+
+            var result = await this.WorkerServices.StoreProfilePictureAsync(model.CroppedImage);
+            
+            return RedirectToAction(nameof(this.Index));
+        }
+
         [HttpGet]
         public async Task<IActionResult> ChangePassword()
         {

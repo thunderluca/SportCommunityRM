@@ -10,7 +10,7 @@
             <div class="panel-heading" role="tab" id="teams-heading">
                 <a href="#teams-collapse" role="button" data-toggle="collapse" aria-expanded="true" aria-controls="teams-collapse">
                     <h4 class="panel-title">
-                        <i class="fa fa-group"></i> @ViewData["Title"] (@(Model.Teams?.Count() ?? 0))
+                        <i class="fa fa-group"></i> @ViewData["Title"]
                     </h4>
                 </a>
             </div>
@@ -44,7 +44,7 @@
                                                     <td>@team.PlayersCount</td>
                                                     <td>@team.CoachesCount</td>
                                                     <td>
-                                                        <a class="text-info" title="Detail" asp-action="Detail" asp-controller="Team" asp-route-id="@team.Id">
+                                                        <a class="text-accent" title="Detail" asp-action="Detail" asp-controller="Team" asp-route-id="@team.Id">
                                                             <i class="glyphicon glyphicon-search"></i>
                                                         </a>
                                                         <a data-edit-team-btn class="text-primary" title="Edit" asp-action="Edit" asp-controller="Team" asp-route-id="@team.Id">

@@ -5,10 +5,10 @@
     ViewData.AddActivePage(ManageNavPages.Index);
 }
 
-<h4>@ViewData["Title"]</h4>
+<br />
 @Html.Partial("_StatusMessage", Model.StatusMessage)
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-12">
         <form method="post">
             <div class="row">
                 <div class="col-md-6">
@@ -28,11 +28,16 @@
                         <label asp-for="Username"></label>
                         <span>@Html.DisplayFor(m => m.Username)</span>
                     </div>
-                </div>
-                <div class="col-md-6">
-                    <img class="img-responsive img-circle pull-right" />
-                </div>
-                <div class="col-md-12">   
+                    <div class="form-group">
+                        <label asp-for="CroppedImage"></label>
+                        <div class="input-group">
+                            <input type="file" id="local-file-input" name="local-file-input" accept="image/*" class="form-control" />
+                            <span class="input-group-btn">
+                                <button data-update-pic-btn asp-action="UploadPicture" class="btn btn-accent" disabled type="submit">Update image</button>
+                            </span>
+                        </div>
+                        <input type="hidden" asp-for="CroppedImage" />
+                    </div>
                     <div class="form-group">
                         <label asp-for="Email"></label>
                         <div class="input-group">
@@ -46,7 +51,7 @@
                             else
                             {
                                 <span class="input-group-btn" aria-hidden="true">
-                                    <button asp-action="SendVerificationEmail" class="btn btn-default">Send verification email</button>
+                                    <button asp-action="SendVerificationEmail" class="btn btn-primary">Send verification email</button>
                                 </span>
                             }
                         </div>
@@ -57,9 +62,28 @@
                         <input asp-for="PhoneNumber" class="form-control" />
                         <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                     </div>
+                </div>
+                <div class="col-md-6">
+                    <div id="data-crop-preview-group" class="form-group" style="display: none;">
+                        <div class="circle-mask large pull-left">
+                            <img id="crop-box-img" class="img-responsive" alt="User Picture Preview" />
+                        </div>
+                        <div class="crop-controls pull-left">
+                            <span>Zoom</span>
+                            <a id="crop-zoom-out-btn" class="btn btn-default">-</a>
+                            <a id="crop-zoom-in-btn" class="btn btn-default">+</a>
+                            <button id="cancel-crop-btn" type="button" class="btn btn-danger">Cancel</button>
+                            <button id="confirm-crop-btn" type="button" class="btn btn-success">Confirm</button>
+                        </div>
+                    </div>
+                    <div id="data-final-preview-group" class="form-group">
+                        <img id="user-picture-preview" src="@Model.PictureUrl" alt="User picture" class="img-circle img-responsive img-square large" />
+                    </div>
+                </div>
+                <div class="col-md-12">
                     <div class="form-group">
-                        <button type="submit" class="btn btn-block-fluid btn-primary pull-right">Save</button>
-                        <button type="button" class="btn btn-block-fluid btn-danger pull-left" onclick="history.back()">Back</button>
+                        <button type="button" class="btn btn-block-fluid btn-danger" onclick="history.back()">Back</button>
+                        <button type="submit" class="btn btn-block-fluid btn-primary">Save</button>
                     </div>
                 </div>
             </div>
@@ -69,4 +93,72 @@
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script src="~/lib/hammerjs/hammer.min.js"></script>
+    <script src="~/lib/jquery-hammerjs/jquery.hammer.min.js"></script>
+    <script src="~/lib/jquery-mousewheel/jquery.mousewheel.min.js"></script>
+    <script src="~/lib/cropbox/jquery.cropbox.js"></script>
 }
+
+<script type="text/javascript">
+    $(function () {
+        var $cropBoxImg = $('#crop-box-img');
+        var $userPicturePreview = $('#user-picture-preview');
+        var $fileInput = $('#local-file-input');
+        var $croppedImageInput = $('#@nameof(Model.CroppedImage)');
+
+        var updateCropbox = function () {
+            $cropBoxImg.cropbox({
+                width: 300,
+                height: 300,
+                showControls: 'never'
+            }).on('cropbox', function (event, results, img) {
+                var imgData = img.getDataURL();
+                $croppedImageInput.val(imgData);
+            });
+        };
+
+        $fileInput.on('change', function () {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $cropBoxImg.attr('src', e.target.result);
+                updateCropbox();
+                $('[id="data-final-preview-group"]').fadeOut(100, function () {
+                    $('[id="data-crop-preview-group"]').fadeIn(100)
+                });
+            };
+            reader.readAsDataURL(this.files[0]);
+            this.files = [];
+        });
+
+        $('#cancel-crop-btn').on('click', function (event) {
+            event.preventDefault();
+            $('[id="data-crop-preview-group"]').fadeOut(100, function () {
+                $('[id="data-final-preview-group"]').fadeIn(100)
+            });
+            $croppedImageInput.val('');
+            $('[data-update-pic-btn]').prop('disabled', true);
+        });
+
+        $('#confirm-crop-btn').on('click', function (event) {
+            event.preventDefault();
+            var imgData = $croppedImageInput.val();
+            $userPicturePreview.attr('src', imgData);
+            $('[id="data-crop-preview-group"]').fadeOut(100, function () {
+                $('[id="data-final-preview-group"]').fadeIn(100)
+            });
+            $('[data-update-pic-btn]').removeAttr('disabled');
+        });
+
+        $('#crop-zoom-in-btn').on('click', function () {
+            var crop = $cropBoxImg.data('cropbox');
+            crop.zoomIn();
+            crop.update();
+        });
+
+        $('#crop-zoom-out-btn').on('click', function () {
+            var crop = $cropBoxImg.data('cropbox');
+            crop.zoomOut();
+            crop.update();
+        });
+    });
+</script>

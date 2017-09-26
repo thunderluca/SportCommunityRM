@@ -3,15 +3,14 @@
     ViewData["Title"] = $"Team '{Model.Name}'";
 }
 
-<h2>@ViewData["Title"]</h2>
-
+<br />
 <div class="row">
     <div class="col-md-6">
         <div class="panel panel-default">
             <div class="panel-heading" role="tab" id="players-heading">
                 <a href="#players-collapse" role="button" data-toggle="collapse" aria-expanded="true" aria-controls="players-collapse">
                     <h4 class="panel-title">
-                        <i class="fa fa-group"></i> Players (@(Model.Players?.Count() ?? 0))
+                        <i class="fa fa-group"></i> Players
                     </h4>
                 </a>
             </div>
@@ -41,7 +40,7 @@
                                             <td>@player.Name</td>
                                             <td>@player.BirthDate.ToShortDateString()</td>
                                             <td>
-                                                <a class="text-info" asp-action="Detail" asp-controller="User" asp-route-id="@player.Id" title="Detail">
+                                                <a class="text-accent" asp-action="Detail" asp-controller="User" asp-route-id="@player.Id" title="Detail">
                                                     <i class="glyphicon glyphicon-search"></i>
                                                 </a>
                                                 <a data-remove-player-btn class="text-danger" asp-action="@nameof(TeamController.RemovePlayer)" asp-controller="Team" asp-route-playerId="@player.Id" asp-route-teamId="@Model.Id" title="Remove player">
@@ -63,7 +62,7 @@
             <div class="panel-heading" role="tab" id="coaches-heading">
                 <a href="#coaches-collapse" role="button" data-toggle="collapse" aria-expanded="true" aria-controls="coaches-collapse">
                     <h4 class="panel-title">
-                        <i class="fa fa-user"></i> Coaches (@(Model.Coaches?.Count() ?? 0))
+                        <i class="fa fa-user"></i> Coaches
                     </h4>
                 </a>
             </div>
@@ -91,7 +90,7 @@
                                         <tr>
                                             <td>@coach.Name</td>
                                             <td>
-                                                <a class="text-info" asp-action="Detail" asp-controller="Coach" asp-route-id="@coach.Id" title="Detail">
+                                                <a class="text-accent" asp-action="Detail" asp-controller="Coach" asp-route-id="@coach.Id" title="Detail">
                                                     <i class="glyphicon glyphicon-search"></i>
                                                 </a>
                                                 <a data-remove-coach-btn class="text-danger" asp-action="@nameof(TeamController.RemoveCoach)" asp-controller="Team" asp-route-playerId="@coach.Id" asp-route-teamId="@Model.Id" title="Remove coach">

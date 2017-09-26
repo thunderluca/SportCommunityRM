@@ -16,7 +16,7 @@ namespace SportCommunityRM.WebSite.Services
             this.Logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        private static string RootPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonPictures), "users");
+        private static string RootPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "users");
 
         private void EnsureRootPathExists()
         {
@@ -39,13 +39,35 @@ namespace SportCommunityRM.WebSite.Services
             return bytes;
         }
 
-        public async Task<bool> StoreDataAsync(string fileId, byte[] bytes)
+        public async Task<string> StoreFileAsync(string fileId, byte[] bytes)
         {
-            var filePath = CreateFilePath(fileId);
+            this.EnsureRootPathExists();
 
+            var filePath = CreateFilePath(fileId);
+            
             try
             {
                 await File.WriteAllBytesAsync(filePath, bytes);
+                return filePath;
+            }
+            catch (Exception exception)
+            {
+                Logger.LogError(exception, exception.Message);
+                return null;
+            }
+        }
+
+        public bool DeleteFile(string fileId)
+        {
+            this.EnsureRootPathExists();
+
+            var filePath = CreateFilePath(fileId);
+
+            if (!File.Exists(filePath)) return true;
+
+            try
+            {
+                File.Delete(filePath);
                 return true;
             }
             catch (Exception exception)

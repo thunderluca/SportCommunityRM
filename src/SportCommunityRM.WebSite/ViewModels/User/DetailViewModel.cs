@@ -13,6 +13,8 @@ namespace SportCommunityRM.WebSite.ViewModels.User
 
         public string LastName { get; set; }
 
+        public string PictureUrl { get; set; }
+
         public string Name => $"{FirstName} {LastName}";
 
         public DateTime BirthDate { get; set; }

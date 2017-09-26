@@ -27,8 +27,7 @@ namespace SportCommunityRM.WebSite
         }
 
         public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
+        
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
@@ -40,8 +39,7 @@ namespace SportCommunityRM.WebSite
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
-
-            // Add application services.
+        
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddScoped<IUrlService, UrlService>();
             services.AddScoped<IStorageService, LocalStorageService>();
@@ -63,8 +61,7 @@ namespace SportCommunityRM.WebSite
 
             services.AddPaging(options => options.ViewName = "Bootstrap3");
         }
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())

@@ -10,8 +10,8 @@ using SportCommunityRM.WebSite.ViewModels.User;
 using SportCommunityRM.WebSite.Services;
 using System.Threading.Tasks;
 using SportCommunityRM.Data.Models;
-using SkiaSharp;
-using System.IO;
+using SportCommunityRM.WebSite.Helpers;
+using SportCommunityRM.WebSite.Controllers;
 
 namespace SportCommunityRM.WebSite.WorkerServices
 {
@@ -31,8 +31,10 @@ namespace SportCommunityRM.WebSite.WorkerServices
             this.StorageService = storageService ?? throw new ArgumentNullException(nameof(storageService));
         }
 
-        public DetailViewModel GetDetailViewModel(Guid registeredUserId)
+        public async Task<DetailViewModel> GetDetailViewModelAsync(Guid registeredUserId)
         {
+            var user = await this.GetApplicationUserAsync();
+
             var model = (from registeredUser in this.Database.RegisteredUsers
                          where registeredUser.Id == registeredUserId
                          let teams = registeredUser.Teams
@@ -50,10 +52,13 @@ namespace SportCommunityRM.WebSite.WorkerServices
                              Teams = teams
                          }).SingleOrDefault();
 
+            if (model != null)
+                model.PictureUrl = UrlService.GetActionUrl(nameof(UserController.Picture), "User", new { username = user.UserName });
+
             return model;
         }
 
-        public async Task<byte[]> GetUserPictureAsync(string username)
+        public async Task<byte[]> GetUserPictureAsync(string username, int? size = null)
         {
             if (string.IsNullOrWhiteSpace(username))
                 return null;
@@ -65,47 +70,12 @@ namespace SportCommunityRM.WebSite.WorkerServices
                 return null;
 
             var bytes = await this.StorageService.GetFileBytesAsync(registeredUser.PictureId);
+            if (bytes == null) return bytes;
+
+            if (size.HasValue && size.Value >= 1 && size.Value <= byte.MaxValue)
+                bytes = await ImagesHelper.ResizeImageAsync(bytes, size.Value, quality: 70);
+
             return bytes;
-        }
-
-        private static async Task<byte[]> ResizeImageAsync(byte[] originalBuffer, int size, int quality)
-        {
-            using (var inputMemoryStream = new MemoryStream())
-            {
-                await inputMemoryStream.WriteAsync(originalBuffer, 0, originalBuffer.Length);
-
-                using (var inputStream = new SKManagedStream(inputMemoryStream))
-                {
-                    using (var original = SKBitmap.Decode(inputStream))
-                    {
-                        var scaled = ScaledSize(original.Width, original.Height, size);
-
-                        using (var resized = original.Resize(new SKImageInfo(scaled.width, scaled.height), SKBitmapResizeMethod.Lanczos3))
-                        {
-                            if (resized == null) return null;
-
-                            using (var image = SKImage.FromBitmap(resized))
-                            {
-                                using (var outputMemoryStream = new MemoryStream())
-                                {
-                                    await Task.Run(() => image.Encode(SKEncodedImageFormat.Jpeg, quality).SaveTo(outputMemoryStream));
-
-                                    return outputMemoryStream.ToArray();
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        private static (int width, int height) ScaledSize(int inWidth, int inHeight, int outSize)
-        {
-            var width = inWidth > inHeight ? outSize : (int)Math.Round(inWidth * outSize / (double)inHeight);
-            var height = inWidth > inHeight ? (int)Math.Round(inHeight * outSize / (double)inWidth) : outSize;
-
-            return (width, height);
-
         }
     }
 }

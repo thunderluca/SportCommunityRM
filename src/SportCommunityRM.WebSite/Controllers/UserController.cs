@@ -19,23 +19,23 @@ namespace SportCommunityRM.WebSite.Controllers
         }
 
         [HttpGet]
-        public IActionResult Detail(Guid? id)
+        public async Task<IActionResult> Detail(Guid? id)
         {
             if (id.IsNullOrEmpty())
                 return NotFound();
 
-            var model = this.WorkerServices.GetDetailViewModel(id.Value);
+            var model = await this.WorkerServices.GetDetailViewModelAsync(id.Value);
 
             return View(model);
         }
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Picture(string username)
+        public async Task<IActionResult> Picture(string username, int? size)
         {
-            var bytes = await this.WorkerServices.GetUserPictureAsync(username);
+            var bytes = await this.WorkerServices.GetUserPictureAsync(username, size);
 
-            return File(bytes, "image/jpeg");
+            return File(bytes ?? new byte[0], "image/jpeg");
         }
     }
 }

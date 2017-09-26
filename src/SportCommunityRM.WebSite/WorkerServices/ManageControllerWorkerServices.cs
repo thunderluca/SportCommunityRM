@@ -6,6 +6,7 @@ using SportCommunityRM.Data;
 using SportCommunityRM.Data.Models;
 using SportCommunityRM.Data.ReadModel;
 using SportCommunityRM.WebSite.Controllers;
+using SportCommunityRM.WebSite.Helpers;
 using SportCommunityRM.WebSite.Models;
 using SportCommunityRM.WebSite.Services;
 using SportCommunityRM.WebSite.ViewModels.Manage;
@@ -22,6 +23,7 @@ namespace SportCommunityRM.WebSite.WorkerServices
         private readonly SignInManager<ApplicationUser> SignInManager;
         private readonly UrlEncoder UrlEncoder;
         private readonly IEmailSender EmailSender;
+        private readonly IStorageService StorageService;
 
         private const string AuthenicatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
 
@@ -34,11 +36,13 @@ namespace SportCommunityRM.WebSite.WorkerServices
             IUrlService urlService,
             UrlEncoder urlEncoder,
             IEmailSender emailSender,
+            IStorageService storageService,
             ILogger<ManageControllerWorkerServices> logger) : base(userManager, dbContext, database, httpContextAccessor, urlService, logger)
         {
             this.SignInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
             this.UrlEncoder = urlEncoder ?? throw new ArgumentNullException(nameof(urlEncoder));
             this.EmailSender = emailSender ?? throw new ArgumentNullException(nameof(emailSender));
+            this.StorageService = storageService ?? throw new ArgumentNullException(nameof(storageService));
         }
 
         public async Task<IndexViewModel> GetIndexViewModelAsync(string statusMessage)
@@ -47,10 +51,13 @@ namespace SportCommunityRM.WebSite.WorkerServices
 
             var registeredUser = this.Database.RegisteredUsers.WithUserId(user.Id);
 
+            var pictureUrl = this.UrlService.GetActionUrl(nameof(UserController.Picture), "User", new { username = user.UserName });
+            
             return new IndexViewModel
             {
                 Username = user.UserName,
                 Email = user.Email,
+                PictureUrl = pictureUrl,
                 PhoneNumber = user.PhoneNumber,
                 FirstName = registeredUser.FirstName,
                 LastName = registeredUser.LastName,
@@ -88,6 +95,38 @@ namespace SportCommunityRM.WebSite.WorkerServices
             var callbackUrl = await this.UrlService.GenerateEmailConfirmationLinkAsync(user);
 
             await EmailSender.SendEmailConfirmationAsync(user.Email, callbackUrl);
+        }
+
+        public async Task<bool> StoreProfilePictureAsync(string base64Image)
+        {
+            var user = await this.GetApplicationUserAsync();
+
+            try
+            {
+                var bytes = ImagesHelper.GetImageBytesFromBase64String(base64Image);
+                if (bytes.IsNullOrEmpty()) return false;
+ 
+                var fileId = Guid.NewGuid().ToString("N");
+
+                var filePath = await this.StorageService.StoreFileAsync(fileId, bytes);
+                if (string.IsNullOrWhiteSpace(filePath))
+                    return false;
+
+                var registeredUser = this.DbContext.RegisteredUsers.WithUserId(user.Id);
+                var oldFileId = registeredUser.PictureId;
+                registeredUser.PictureId = fileId;
+                this.DbContext.SaveChanges();
+
+                if (!string.IsNullOrWhiteSpace(oldFileId))
+                    this.StorageService.DeleteFile(oldFileId);
+
+                return true;
+            }
+            catch (Exception exception)
+            {
+                Logger.LogError(exception, exception.Message);
+                return false;
+            }
         }
 
         public async Task<ChangePasswordViewModel> GetChangePasswordViewModelAsync(string statusMessage)

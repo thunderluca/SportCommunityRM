@@ -9,6 +9,6 @@ namespace SportCommunityRM.WebSite.Services
 
         Task<string> GenerateForgotPasswordLinkAsync(ApplicationUser user);
 
-        string GetActionUrl(string actionName, string controllerName = null, string areaName = null);
+        string GetActionUrl(string actionName, string controllerName = null, object values = null);
     }
 }

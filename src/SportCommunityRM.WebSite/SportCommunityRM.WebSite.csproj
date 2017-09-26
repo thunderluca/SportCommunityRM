@@ -5,16 +5,21 @@
     <UserSecretsId>aspnet-SportCommunityRM.WebSite-18202C10-D503-4024-AC40-1ECD03FEED31</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Content Remove="Views\Manage\BakLayout.cshtml" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.ResponseCaching" Version="2.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="2.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.0" PrivateAssets="All" />
     <PackageReference Include="ReflectionIT.Mvc.Paging" Version="2.0.1" />
-    <PackageReference Include="SkiaSharp" Version="1.59.1" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0001" />
   </ItemGroup>
 
   <ItemGroup>
