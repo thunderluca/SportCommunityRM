@@ -105,7 +105,7 @@ body,
     }
 
 footer,
-form .form-group span:not(.text-danger),
+.form-group span:not(.text-danger),
 .fc-today,
 .login-html .container,
 .login-html .container a:not(.btn):hover,
@@ -113,7 +113,7 @@ form .form-group span:not(.text-danger),
     color: #fff;
 }
 
-    form .form-group > label,
+    .form-group > label,
     .login-html .container a:not(.btn) {
         color: #d0d0d0;
     }

@@ -45,6 +45,9 @@ a.text-danger {
     position: relative;
     margin: 0 auto;
     overflow: hidden;
+    display: block;
+    max-width: 100%;
+    height: auto;
 }
 
     .circle-mask:after {
