@@ -244,6 +244,8 @@ namespace SportCommunityRM.WebSite.WorkerServices
                          select new DetailViewModel
                          {
                              Id = team.Id,
+                             PictureId = team.PictureId,
+                             BackgroundPictureId = team.BackgroundPictureId,
                              Name = team.Name,
                              MinBirthYear = team.MinBirthYear,
                              MaxBirthYear = team.MaxBirthYear,

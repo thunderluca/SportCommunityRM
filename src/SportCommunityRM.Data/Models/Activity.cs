@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace SportCommunityRM.Data.Models
 {
@@ -24,5 +23,17 @@ namespace SportCommunityRM.Data.Models
         public Guid? TeamId { get; set; }
 
         public virtual Team Team { get; set; }
+
+        private ICollection<Media> _medias;
+        public ICollection<Media> Medias
+        {
+            get
+            {
+                if (_medias == null)
+                    _medias = new HashSet<Media>();
+                return _medias;
+            }
+            set { _medias = value; }
+        }
     }
 }

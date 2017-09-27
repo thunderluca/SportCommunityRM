@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace SportCommunityRM.WebSite.Controllers
 {
     [Authorize]
-    public class TeamController : BaseController, IUserSearchController
+    public class TeamController : BaseController, IUserSearchController, IPictureController
     {
         private readonly TeamControllerWorkerServices WorkerServices;
 
@@ -122,6 +122,24 @@ namespace SportCommunityRM.WebSite.Controllers
             await this.WorkerServices.RemovePlayerAsync(teamId.Value, playerId.Value);
 
             return RedirectToAction(nameof(this.Detail), new { id = teamId.Value });
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> Picture(Guid teamId, int? size)
+        {
+            var bytes = await this.WorkerServices.GetTeamPictureAsync(teamId, size);
+
+            return File(bytes ?? new byte[0], "image/jpeg");
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetPicture(string pictureId, int? size)
+        {
+            var bytes = await this.WorkerServices.GetPictureAsync(pictureId, size);
+
+            return File(bytes ?? new byte[0], "image/jpeg");
         }
     }
 }

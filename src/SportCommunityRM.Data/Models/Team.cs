@@ -14,6 +14,8 @@ namespace SportCommunityRM.Data.Models
 
         public string PictureId { get; set; }
 
+        public string BackgroundPictureId { get; set; }
+
         private ICollection<RegisteredUserTeam> _players;
         public virtual ICollection<RegisteredUserTeam> Players
         {

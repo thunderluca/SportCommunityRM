@@ -30,6 +30,8 @@ namespace SportCommunityRM.Data.Models
 
         public string PictureId { get; set; }
 
+        public string BackgroundPictureId { get; set; }
+
         [Required]
         public string AspNetUserId { get; set; }
 
@@ -79,6 +81,18 @@ namespace SportCommunityRM.Data.Models
                 return _matchScores;
             }
             set { _matchScores = value; }
+        }
+
+        private ICollection<RegisteredUserMediaTag> _taggedMedia;
+        public virtual ICollection<RegisteredUserMediaTag> TaggedMedia
+        {
+            get
+            {
+                if (_taggedMedia == null)
+                    _taggedMedia = new HashSet<RegisteredUserMediaTag>();
+                return _taggedMedia;
+            }
+            set { _taggedMedia = value; }
         }
     }
 }

@@ -1,8 +1,8 @@
 ﻿@{ 
-    var twoLetterIsoLanguage = System.Threading.Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName.ToLower(); 
+    var twoLetterIsoLanguage = System.Threading.Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName.ToLower();
 }
 <!DOCTYPE html>
-<html>
+<html class="parallax-html">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -60,10 +60,9 @@
                 asp-fallback-src="~/lib/bootstrap-datepicker/js/locales/bootstrap-datepicker.@(twoLetterIsoLanguage).js"></script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
-
 </head>
 <body>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
+    <nav class="navbar navbar-inverse navbar-fixed-top" style="margin-bottom: 0">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -80,10 +79,7 @@
             </div>
         </div>
     </nav>
-    <div class="container">
-        @RenderBody()
-        @Html.Partial("_FooterPartial")
-    </div>
+    @RenderBody()
 
     <script type="text/javascript">
         $(function () {

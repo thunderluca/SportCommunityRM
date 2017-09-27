@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SportCommunityRM.WebSite.ViewModels.User
 {
@@ -19,7 +17,9 @@ namespace SportCommunityRM.WebSite.ViewModels.User
         [Display(Name = "Birth date")]
         public DateTime BirthDate { get; set; }
 
-        public string PictureUrl { get; set; }
+        public string PictureId { get; set; }
+
+        public string BackgroundPictureId { get; set; }
 
         public string Name => $"{FirstName} {LastName}";
 

@@ -8,6 +8,10 @@ namespace SportCommunityRM.WebSite.ViewModels.Team
     {
         public Guid Id { get; set; }
 
+        public string PictureId { get; set; }
+
+        public string BackgroundPictureId { get; set; }
+
         [Display(Name = "Name")]
         public string Name { get; set; }
 

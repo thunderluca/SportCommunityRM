@@ -1,33 +1,49 @@
 ﻿@model SportCommunityRM.WebSite.ViewModels.User.DetailViewModel
 @{
+    Layout = "_ParallaxLayout";
     ViewData["Title"] = Model.Name;
     var birthDate = Model.BirthDate.ToShortDateString();
+    var pictureUrl = Url.Action(nameof(IPictureController.GetPicture), new { pictureId = Model.PictureId });
+    var backgroundPictureUrl = Url.Action(nameof(IPictureController.GetPicture), new { pictureId = Model.BackgroundPictureId });
 }
 
-<br/>
-<div class="row">
-    <div class="col-xs-6">
-        <div class="form-group">
-            <label asp-for="FirstName"></label>
-            <span>@Html.DisplayFor(model => model.FirstName)</span>
-        </div>
-        <div class="form-group">
-            <label asp-for="LastName"></label>
-            <span>@Html.DisplayFor(model => model.LastName)</span>
-        </div>
-        <div class="form-group">
-            <label asp-for="BirthDate"></label>
-            <span>@Html.DisplayFor(model => birthDate)</span>
+<style type="text/css">
+    .parallax-html .parallax-header::before {
+        background-image: url('/images/team_test.jpg');
+    }
+</style>
+
+<header class="parallax-header">
+    <div class="parallax-container row">
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-7 col-sm-9">
+                    <h1>@ViewData["Title"]</h1>
+                    <div class="form-group">
+                        <label asp-for="FirstName"></label>
+                        <span>@Html.DisplayFor(model => model.FirstName)</span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="LastName"></label>
+                        <span>@Html.DisplayFor(model => model.LastName)</span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="BirthDate"></label>
+                        <span>@Html.DisplayFor(model => birthDate)</span>
+                    </div>
+                </div>
+                <div class="col-md-5 col-sm-3">
+                    <img src="@pictureUrl" alt="User picture" class="img-responsive img-circle img-square parallax-title-picture" />
+                </div>
+            </div>
         </div>
     </div>
-    <div class="col-xs-6">
+</header>
+
+<main class="parallax-container row">
+    <div class="col-md-6">
         <div class="form-group">
-            <img src="@Model.PictureUrl" alt="User picture" class="img-circle img-responsive img-square" />
-        </div>
-    </div>
-    <div class="col-md-6 col-xs-12">
-        <div class="form-group">
-            <div class="panel panel-default">
+            <div class="panel panel-accent">
                 <div class="panel-heading" role="tab" id="teams-heading">
                     <div class="inline-children">
                         <a href="#teams-collapse" role="button" data-toggle="collapse" aria-expanded="true" aria-controls="teams-collapse">
@@ -84,4 +100,7 @@
             <button type="button" class="btn btn-block-fluid btn-danger" onclick="history.back()">Back</button>
         </div>
     </div>
-</div>
+    <div class="col-md-12">
+        @Html.Partial("_FooterPartial")
+    </div>
+</main>

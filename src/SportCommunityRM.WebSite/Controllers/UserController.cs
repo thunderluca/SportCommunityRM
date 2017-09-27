@@ -10,7 +10,7 @@ using SportCommunityRM.WebSite.Models;
 namespace SportCommunityRM.WebSite.Controllers
 {
     [Authorize]
-    public class UserController : BaseController, IActivityController, INewsFeedController
+    public class UserController : BaseController, IActivityController, INewsFeedController, IPictureController
     {
         private readonly UserControllerWorkerServices WorkerServices;
 
@@ -83,9 +83,9 @@ namespace SportCommunityRM.WebSite.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Picture(Guid id, int? size)
+        public async Task<IActionResult> GetPicture(string pictureId, int? size)
         {
-            var bytes = await this.WorkerServices.GetUserPictureAsync(id, size);
+            var bytes = await this.WorkerServices.GetPictureAsync(pictureId, size);
 
             return File(bytes ?? new byte[0], "image/jpeg");
         }

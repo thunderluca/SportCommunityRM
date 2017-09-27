@@ -1,11 +1,11 @@
 ﻿a,
 .text-accent {
-    color: #006eb2;
+    color: #37773b;
 }
 
     a:hover,
     a:focus {
-        color: #0081cc;
+        color: #46964a;
         text-decoration: none;
     }
 
@@ -13,7 +13,7 @@ body,
 .fc-today,
 .login-html,
 .login-html > body {
-    background-color: #0081cc;
+    background-color: #46964a;
 }
 
 .container > h1,
@@ -32,16 +32,16 @@ body,
 .container > div > h5,
 .container > div > h6 {
     color: #d0d0d0;
-}
-
-.fc-today.fc-other-month {
-    opacity: 0.8;
-}
+} 
+    
+    .fc-today.fc-other-month {
+        opacity: 0.8;
+    }
 
 .navbar-inverse,
 .navbar-inverse .navbar-collapse,
 .navbar-inverse .navbar-form {
-    background-color: #006eb2;
+    background-color: #37773b;
 }
 
     .navbar-header .navbar-brand,
@@ -51,11 +51,11 @@ body,
     }
 
     .navbar-inverse .navbar-nav .dropdown-menu a {
-        color: #0075ba;
+        color: #3d8240;
     }
 
         .navbar-inverse .navbar-nav .dropdown-menu a:hover {
-            color: #006eb2;
+            color: #37773b;
         }
 
     .btn-accent,
@@ -69,21 +69,21 @@ body,
     .navbar-inverse .navbar-nav > .open > a:visited,
     .navbar-inverse .navbar-nav > .active > a:visited,
     .navbar-inverse .navbar-nav > .open > button:hover {
-        background-color: #0075ba;
+        background-color: #3d8240;
         color: #fff;
         text-decoration: none;
     }
 
         .btn-accent:hover {
-            background-color: #006eb2;
-            border-color: #005a8e;
+            background-color: #37773b;
+            border-color: #28562b;
             color: #fff;
         }
 
 
 .nav-pills > li.active > a,
 .nav-pills > li.active > a:hover {
-    color: #006eb2;
+    color: #37773b;
 }
 
 .nav-pills > li.active > a {
@@ -95,12 +95,12 @@ body,
     }
 
 .nav-pills > li:not(.active) > a {
-    background-color: #0075ba;
+    background-color: #3d8240;
     color: #d3d3d3;
 }
 
     .nav-pills > li:not(.active) > a:hover {
-        background-color: #006eb2;
+        background-color: #37773b;
         color: #fff;
     }
 
@@ -117,26 +117,6 @@ footer,
     .login-html .container a:not(.btn) {
         color: #d0d0d0;
     }
-
-.panel.panel-accent {
-    border-color: #005a8e;
-}
-
-    .panel.panel-accent .panel-heading {
-        background-color: #006eb2;
-    }
-
-        .panel.panel-accent .panel-heading a {
-            color: #d3d3d3;
-        }
-
-            .panel.panel-accent .panel-heading a:hover {
-                color: #fff;
-            }
-
-.parallax-html .parallax-header .parallax-container {
-    background-color: #006eb2;
-}
 
 @media screen and (max-width: 767px) {
     .navbar-inverse .navbar-nav .open .dropdown-menu > li > a {

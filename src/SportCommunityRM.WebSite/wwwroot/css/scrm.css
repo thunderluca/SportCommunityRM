@@ -18,7 +18,8 @@ a.text-danger {
 .input-group-addon,
 .modal-content,
 .navbar-toggle,
-.panel {
+.panel,
+.panel-heading {
     border-radius: 0;
 }
 
@@ -82,6 +83,7 @@ a.text-danger {
 .dropdown-menu {
     padding: 0;
     text-align: right;
+    min-width: unset;
 }
 
 .form-control,
@@ -190,11 +192,15 @@ a.text-danger {
     padding: 18px 16px;
 }
 
+.no-margin {
+    margin: 0;
+}
+
 .no-padding {
     padding: 0;
 }
 
-.panel > .panel-body {
+.panel .panel-body {
     padding: 12px;
 }
 
@@ -205,6 +211,99 @@ a.text-danger {
 .panel-heading, .panel-heading .panel-title {
     font-weight: bold;
 }
+
+.parallax-html {
+    height: 100%;
+    overflow: hidden;
+}
+
+    .parallax-html body {
+        height: 100%;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        padding-top: 30px;
+        padding-bottom: 0;
+        -webkit-perspective: 1px;
+        perspective: 1px;
+        -webkit-transform-style: preserve-3d;
+        transform-style: preserve-3d;
+    }
+
+    .parallax-html .parallax-header {
+        padding: 2vw 0 3vw;
+        min-height: 10vw;
+        transform-style: inherit;
+        width: 100vw;
+    }
+
+    .parallax-html main.parallax-container {
+        margin: 2vw;
+        padding: 0 1vw;
+    }
+
+        .parallax-html .parallax-header .parallax-container {
+            padding: 1vw;
+            margin: 2vw 5vw 0 4vw;
+        }
+
+        .parallax-html .parallax-header .parallax-title-picture {
+            max-height: 16vw;
+            width: auto;
+        }
+
+        .parallax-html .parallax-header .parallax-container,
+        .parallax-html .parallax-header .parallax-title-picture,
+        .parallax-html main hr,
+        .parallax-html main .panel,
+        .parallax-html main .btn {
+            box-shadow: 0 2px 2px #000;
+        }
+
+        .parallax-html main .btn.btn-danger {
+            box-shadow: 0 2px 2px #d43f3a;
+        }
+    
+    .parallax-html .parallax-header, 
+    .parallax-html .parallax-footer {
+        color: #fff;
+        position: relative;
+        text-shadow: 0 2px 2px #000;
+    }
+
+    .parallax-html .parallax-header,
+    .parallax-html .parallax-footer,
+    .parallax-html main .form-group > label,
+    .parallax-html main .form-group > span {
+        text-shadow: 0 2px 2px #000;
+    }
+
+        .parallax-html .parallax-header, 
+        .parallax-html .parallax-header:before {
+            background: 50% 50% / cover;
+        }
+
+            .parallax-html .parallax-header::before {
+                background-size: cover;
+                content: '';
+                opacity: 0.5;
+                display: block;
+                min-height: 100vh;
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                -webkit-transform-origin: center center 0;
+                -webkit-transform: translateZ(-1px) scale(2);
+                transform-origin: center center 0;
+                transform: translateZ(-1px) scale(2);
+                z-index: -1;
+            }
+
+            .parallax-html .parallax-header + main {
+                position: relative;
+                z-index: 2;
+            }
 
 .pull-left + .pull-left {
     margin-top: 12px;
@@ -222,6 +321,19 @@ a.text-danger {
     }
 }
 
+@media screen and (max-width: 991px) {
+    .parallax-html .parallax-header .parallax-container {
+        margin-top: 3vw;
+        padding: 1vw 2vw 2vw;
+        margin: 2vw 5vw 0 3vw;
+    }
+
+    .parallax-html main.parallax-container {
+        margin: 2vw 1vw;
+        padding: 0;
+    } 
+} 
+
 @media screen and (max-width: 767px) {
     .btn + .btn:not(.pull-left) {
         margin-left: 0;
@@ -234,10 +346,10 @@ a.text-danger {
         margin-bottom: 15px;
     }
 
-    .dropdown-menu > li > .btn-link{
+    .dropdown-menu > li > .btn-link {
         text-align: left;
-    } 
-    
+    }
+
     .container {
         padding-left: 15px;
         padding-right: 15px;
@@ -254,7 +366,7 @@ a.text-danger {
         left: 0;
         transform: none;
     }
-
+    
     .navbar-nav {
         margin: 0 -15px;
     }

@@ -13,9 +13,10 @@ using System;
 namespace SportCommunityRM.Data.Migrations
 {
     [DbContext(typeof(SCRMContext))]
-    partial class SCRMContextModelSnapshot : ModelSnapshot
+    [Migration("20170927091821_Initial8")]
+    partial class Initial8
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -184,24 +185,6 @@ namespace SportCommunityRM.Data.Migrations
                     b.ToTable("SCRM_MatchScore");
                 });
 
-            modelBuilder.Entity("SportCommunityRM.Data.Models.Media", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<Guid?>("ActivityId");
-
-                    b.Property<string>("FileId");
-
-                    b.Property<string>("Name");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ActivityId");
-
-                    b.ToTable("SCRM_Media");
-                });
-
             modelBuilder.Entity("SportCommunityRM.Data.Models.MedicalCertificate", b =>
                 {
                     b.Property<Guid>("Id")
@@ -259,19 +242,6 @@ namespace SportCommunityRM.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("SCRM_RegisteredUsers");
-                });
-
-            modelBuilder.Entity("SportCommunityRM.Data.Models.RegisteredUserMediaTag", b =>
-                {
-                    b.Property<Guid>("RegisteredUserId");
-
-                    b.Property<Guid>("MediaId");
-
-                    b.HasKey("RegisteredUserId", "MediaId");
-
-                    b.HasIndex("MediaId");
-
-                    b.ToTable("SCRM_RegisteredUserMediaTag");
                 });
 
             modelBuilder.Entity("SportCommunityRM.Data.Models.RegisteredUserTeam", b =>
@@ -437,31 +407,11 @@ namespace SportCommunityRM.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("SportCommunityRM.Data.Models.Media", b =>
-                {
-                    b.HasOne("SportCommunityRM.Data.Models.Activity", "Activity")
-                        .WithMany("Medias")
-                        .HasForeignKey("ActivityId");
-                });
-
             modelBuilder.Entity("SportCommunityRM.Data.Models.MedicalCertificate", b =>
                 {
                     b.HasOne("SportCommunityRM.Data.Models.RegisteredUser", "User")
                         .WithMany("MedicalCertificatesHistory")
                         .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("SportCommunityRM.Data.Models.RegisteredUserMediaTag", b =>
-                {
-                    b.HasOne("SportCommunityRM.Data.Models.Media", "Media")
-                        .WithMany("TaggedUsers")
-                        .HasForeignKey("MediaId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("SportCommunityRM.Data.Models.RegisteredUser", "RegisteredUser")
-                        .WithMany("TaggedMedia")
-                        .HasForeignKey("RegisteredUserId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("SportCommunityRM.Data.Models.RegisteredUserTeam", b =>

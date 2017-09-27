@@ -48,6 +48,19 @@ namespace SportCommunityRM.Data
                 .WithMany(m => m.MatchScores)
                 .HasForeignKey(ms => ms.MatchId);
 
+            modelBuilder.Entity<RegisteredUserMediaTag>()
+                .HasKey(rumt => new { rumt.RegisteredUserId, rumt.MediaId });
+
+            modelBuilder.Entity<RegisteredUserMediaTag>()
+                .HasOne(rumt => rumt.Media)
+                .WithMany(m => m.TaggedUsers)
+                .HasForeignKey(rumt => rumt.MediaId);
+
+            modelBuilder.Entity<RegisteredUserMediaTag>()
+                .HasOne(rumt => rumt.RegisteredUser)
+                .WithMany(r => r.TaggedMedia)
+                .HasForeignKey(rumt => rumt.RegisteredUserId);
+
             modelBuilder.Entity<RegisteredUserTeam>()
                 .HasKey(rut => new { rut.RegisteredUserId, rut.TeamId });
 

@@ -49,7 +49,7 @@ namespace SportCommunityRM.WebSite.WorkerServices
 
             var newsFeedViewModel = new NewsFeedViewModel { NewsFeed = newsFeedContents };
 
-            var calendarViewModel = this.GetCalendarViewModel(nameof(IActivityController.GetCalendarEventsAsync), "Home");
+            var calendarViewModel = this.GetCalendarViewModel(nameof(IActivityController.GetCalendarEventsAsync), "User");
 
             return new IndexViewModel
             {
@@ -78,11 +78,10 @@ namespace SportCommunityRM.WebSite.WorkerServices
                              FirstName = registeredUser.FirstName,
                              LastName = registeredUser.LastName,
                              BirthDate = registeredUser.BirthDate,
+                             PictureId = registeredUser.PictureId,
+                             BackgroundPictureId = registeredUser.BackgroundPictureId,
                              Teams = teams
                          }).SingleOrDefault();
-
-            if (model != null)
-                model.PictureUrl = UrlService.GetActionUrl(nameof(UserController.Picture), "User", new { username = user.UserName });
 
             return model;
         }
@@ -95,15 +94,6 @@ namespace SportCommunityRM.WebSite.WorkerServices
             var user = await this.GetApplicationUserAsync(username);
 
             var registeredUser = this.Database.RegisteredUsers.WithUserId(user.Id);
-            if (registeredUser == null || string.IsNullOrWhiteSpace(registeredUser.PictureId))
-                return null;
-
-            return await this.GetPictureAsync(registeredUser.PictureId);
-        }
-
-        public async Task<byte[]> GetUserPictureAsync(Guid registeredUserId, int? size = null)
-        {
-            var registeredUser = this.Database.RegisteredUsers.WithId(registeredUserId);
             if (registeredUser == null || string.IsNullOrWhiteSpace(registeredUser.PictureId))
                 return null;
 
