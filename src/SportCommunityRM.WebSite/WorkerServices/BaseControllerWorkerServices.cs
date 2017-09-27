@@ -6,6 +6,7 @@ using ReflectionIT.Mvc.Paging;
 using SportCommunityRM.Data;
 using SportCommunityRM.Data.Models;
 using SportCommunityRM.Data.ReadModel;
+using SportCommunityRM.WebSite.Helpers;
 using SportCommunityRM.WebSite.Models;
 using SportCommunityRM.WebSite.Services;
 using SportCommunityRM.WebSite.ViewModels.Shared;
@@ -24,6 +25,7 @@ namespace SportCommunityRM.WebSite.WorkerServices
         public readonly IDatabase Database;
         public readonly IHttpContextAccessor HttpContextAccessor;
         public readonly IUrlService UrlService;
+        public readonly IStorageService StorageService;
         public readonly ILogger Logger;
 
         public BaseControllerWorkerServices(
@@ -32,6 +34,7 @@ namespace SportCommunityRM.WebSite.WorkerServices
             IDatabase database,
             IHttpContextAccessor httpContextAccessor,
             IUrlService urlService,
+            IStorageService storageService,
             ILogger<BaseControllerWorkerServices> logger)
         {
             this.UserManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
@@ -39,6 +42,7 @@ namespace SportCommunityRM.WebSite.WorkerServices
             this.Database = database ?? throw new ArgumentNullException(nameof(database));
             this.HttpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
             this.UrlService = urlService ?? throw new ArgumentNullException(nameof(urlService));
+            this.StorageService = storageService ?? throw new ArgumentNullException(nameof(storageService));
             this.Logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
@@ -285,6 +289,17 @@ namespace SportCommunityRM.WebSite.WorkerServices
                                         }).ToArrayAsync();
 
             return calendarEvents;
+        }
+
+        public async Task<byte[]> GetPictureAsync(string pictureId, int? size = null)
+        {
+            var bytes = await this.StorageService.GetFileBytesAsync(pictureId);
+            if (bytes == null) return bytes;
+
+            if (size.HasValue && size.Value >= 1 && size.Value <= byte.MaxValue)
+                bytes = await ImagesHelper.ResizeImageAsync(bytes, size.Value, quality: 70);
+
+            return bytes;
         }
     }
 }

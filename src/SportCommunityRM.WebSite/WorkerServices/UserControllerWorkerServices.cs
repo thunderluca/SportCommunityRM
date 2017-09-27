@@ -10,15 +10,13 @@ using SportCommunityRM.WebSite.ViewModels.User;
 using SportCommunityRM.WebSite.Services;
 using System.Threading.Tasks;
 using SportCommunityRM.Data.Models;
-using SportCommunityRM.WebSite.Helpers;
 using SportCommunityRM.WebSite.Controllers;
+using SportCommunityRM.WebSite.ViewModels.Shared;
 
 namespace SportCommunityRM.WebSite.WorkerServices
 {
     public class UserControllerWorkerServices : BaseControllerWorkerServices
     {
-        private readonly IStorageService StorageService;
-
         public UserControllerWorkerServices(
             UserManager<ApplicationUser> userManager, 
             SCRMContext dbContext, 
@@ -26,9 +24,40 @@ namespace SportCommunityRM.WebSite.WorkerServices
             IHttpContextAccessor httpContextAccessor, 
             IUrlService urlService,
             IStorageService storageService,
-            ILogger<BaseControllerWorkerServices> logger) : base(userManager, dbContext, database, httpContextAccessor, urlService, logger)
+            ILogger<UserControllerWorkerServices> logger) : base(userManager, dbContext, database, httpContextAccessor, urlService, storageService, logger)
         {
-            this.StorageService = storageService ?? throw new ArgumentNullException(nameof(storageService));
+        }
+
+        public async Task<IndexViewModel> GetIndexViewModelAsync()
+        {
+            var user = await this.GetApplicationUserAsync();
+
+            var teams = (from registeredUser in this.Database.RegisteredUsers
+                         where registeredUser.AspNetUserId == user.Id
+                         from rut in registeredUser.Teams
+                         select new IndexViewModel.Team
+                         {
+                             Id = rut.Team.Id,
+                             Name = rut.Team.Name
+                         }).ToArray();
+
+            var activities = await this.GetActivitiesAsync(user.Id);
+
+            var activitiesViewModel = new ActivitiesViewModel { Activities = activities };
+
+            var newsFeedContents = await this.GetFeedAsync(user.Id);
+
+            var newsFeedViewModel = new NewsFeedViewModel { NewsFeed = newsFeedContents };
+
+            var calendarViewModel = this.GetCalendarViewModel(nameof(IActivityController.GetCalendarEventsAsync), "Home");
+
+            return new IndexViewModel
+            {
+                Teams = teams,
+                Activities = activitiesViewModel,
+                NewsFeed = newsFeedViewModel,
+                Calendar = calendarViewModel
+            };
         }
 
         public async Task<DetailViewModel> GetDetailViewModelAsync(Guid registeredUserId)
@@ -69,13 +98,16 @@ namespace SportCommunityRM.WebSite.WorkerServices
             if (registeredUser == null || string.IsNullOrWhiteSpace(registeredUser.PictureId))
                 return null;
 
-            var bytes = await this.StorageService.GetFileBytesAsync(registeredUser.PictureId);
-            if (bytes == null) return bytes;
+            return await this.GetPictureAsync(registeredUser.PictureId);
+        }
 
-            if (size.HasValue && size.Value >= 1 && size.Value <= byte.MaxValue)
-                bytes = await ImagesHelper.ResizeImageAsync(bytes, size.Value, quality: 70);
+        public async Task<byte[]> GetUserPictureAsync(Guid registeredUserId, int? size = null)
+        {
+            var registeredUser = this.Database.RegisteredUsers.WithId(registeredUserId);
+            if (registeredUser == null || string.IsNullOrWhiteSpace(registeredUser.PictureId))
+                return null;
 
-            return bytes;
+            return await this.GetPictureAsync(registeredUser.PictureId);
         }
     }
 }

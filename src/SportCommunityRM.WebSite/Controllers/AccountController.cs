@@ -62,7 +62,7 @@ namespace SportCommunityRM.WebSite.Controllers
             if (result.Succeeded)
             {
                 Logger.LogInformation("User logged in.");
-                return RedirectToLocal(returnUrl);
+                return RedirectToLocal(returnUrl, controllerName: "User");
             }
             if (result.RequiresTwoFactor)
             {

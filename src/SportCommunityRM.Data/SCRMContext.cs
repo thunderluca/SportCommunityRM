@@ -35,6 +35,19 @@ namespace SportCommunityRM.Data
             foreach (var type in modelBuilder.Model.GetEntityTypes())
                 modelBuilder.Entity(type.ClrType).ToTable(GetFormattedLookupTableName("SCRM", typeof(SCRMContext), type.ClrType));
 
+            modelBuilder.Entity<MatchScore>()
+                .HasKey(ms => new { ms.RegisteredUserId, ms.MatchId });
+
+            modelBuilder.Entity<MatchScore>()
+                .HasOne(ms => ms.RegisteredUser)
+                .WithMany(ru => ru.MatchScores)
+                .HasForeignKey(ms => ms.RegisteredUserId);
+
+            modelBuilder.Entity<MatchScore>()
+                .HasOne(ms => ms.Match)
+                .WithMany(m => m.MatchScores)
+                .HasForeignKey(ms => ms.MatchId);
+
             modelBuilder.Entity<RegisteredUserTeam>()
                 .HasKey(rut => new { rut.RegisteredUserId, rut.TeamId });
 

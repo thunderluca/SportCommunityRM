@@ -12,6 +12,8 @@ namespace SportCommunityRM.Data.Models
 
         public int? MaxBirthYear { get; set; }
 
+        public string PictureId { get; set; }
+
         private ICollection<RegisteredUserTeam> _players;
         public virtual ICollection<RegisteredUserTeam> Players
         {

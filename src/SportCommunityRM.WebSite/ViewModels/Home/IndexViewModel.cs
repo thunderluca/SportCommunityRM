@@ -1,26 +1,59 @@
-﻿using SportCommunityRM.WebSite.ViewModels.Shared;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace SportCommunityRM.WebSite.ViewModels.Home
 {
     public class IndexViewModel
     {
-        public IEnumerable<Team> Teams { get; set; }
+        public IEnumerable<Content> PinnedContents { get; set; }
 
-        public ActivitiesViewModel Activities { get; set; }
+        public IEnumerable<Content> Contents { get; set; }
 
-        public CalendarViewModel Calendar { get; set; }
+        public IEnumerable<Event> WeekEvents { get; set; }
 
-        public NewsFeedViewModel NewsFeed { get; set; }
+        public IEnumerable<Scorer> TopScorers { get; set; }
 
-        public class Team
+        public class Content
         {
             public Guid Id { get; set; }
 
-            [Display(Name = "Name")]
+            public string Title { get; set; }
+
+            public string Caption { get; set; }
+
+            public DateTime PublicationDate { get; set; }
+
+            public string Thumbnail { get; set; }
+
+            public ContentType Type { get; set; }
+        }
+
+        public enum ContentType
+        {
+            Article = 0,
+            MatchReport = 1
+        }
+
+        public class Event
+        {
+            public Guid Id { get; set; }
+
             public string Name { get; set; }
+
+            public DateTime StartDate { get; set; }
+
+            public DateTime EndDate { get; set; }
+        }
+
+        public class Scorer
+        {
+            public Guid Id { get; set; }
+
+            public string FirstName { get; set; }
+
+            public string LastName { get; set; }
+
+            public int Points { get; set; }
         }
     }
 }

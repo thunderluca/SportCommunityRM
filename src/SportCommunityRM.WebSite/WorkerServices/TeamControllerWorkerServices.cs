@@ -22,7 +22,8 @@ namespace SportCommunityRM.WebSite.WorkerServices
             IDatabase database, 
             IHttpContextAccessor httpContextAccessor,
             IUrlService urlService,
-            ILogger<TeamControllerWorkerServices> logger) : base(userManager, dbContext, database, httpContextAccessor, urlService, logger)
+            IStorageService storageService,
+            ILogger<TeamControllerWorkerServices> logger) : base(userManager, dbContext, database, httpContextAccessor, urlService, storageService, logger)
         {
         }
 
@@ -277,6 +278,15 @@ namespace SportCommunityRM.WebSite.WorkerServices
                 team.Players.Remove(player);
 
             await this.DbContext.SaveChangesAsync();
+        }
+
+        public async Task<byte[]> GetTeamPictureAsync(Guid teamId, int? size = null)
+        {
+            var team = this.Database.Teams.WithId(teamId);
+            if (team == null || string.IsNullOrWhiteSpace(team.PictureId))
+                return null;
+
+            return await this.GetPictureAsync(team.PictureId);
         }
     }
 }

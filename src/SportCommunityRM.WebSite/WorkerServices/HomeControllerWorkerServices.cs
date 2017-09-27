@@ -1,15 +1,13 @@
-﻿using SportCommunityRM.Data.ReadModel;
-using SportCommunityRM.WebSite.ViewModels.Home;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using SportCommunityRM.WebSite.Models;
 using Microsoft.Extensions.Logging;
 using SportCommunityRM.Data;
-using SportCommunityRM.WebSite.ViewModels.Shared;
+using SportCommunityRM.Data.ReadModel;
+using SportCommunityRM.WebSite.ViewModels.Home;
+using SportCommunityRM.WebSite.Models;
 using SportCommunityRM.WebSite.Services;
-using SportCommunityRM.WebSite.Controllers;
+using System.Linq;
+using SportCommunityRM.Data.Models;
 
 namespace SportCommunityRM.WebSite.WorkerServices
 {
@@ -21,39 +19,68 @@ namespace SportCommunityRM.WebSite.WorkerServices
             IDatabase database, 
             IHttpContextAccessor httpContextAccessor, 
             IUrlService urlService,
-            ILogger<HomeControllerWorkerServices> logger) : base(userManager, dbContext, database, httpContextAccessor, urlService, logger)
+            IStorageService storageService,
+            ILogger<HomeControllerWorkerServices> logger) : base(userManager, dbContext, database, httpContextAccessor, urlService, storageService, logger)
         {
         }
 
-        public async Task<IndexViewModel> GetIndexViewModelAsync()
+        public IndexViewModel GetIndexViewModel(
+            int pinnedContentsCount = 5,
+            int contentsCount = 10,
+            int weekEventsCount = 20,
+            int topScorersCount = 10)
         {
-            var user = await this.GetApplicationUserAsync();
+            var pinnedContents = (from content in this.Database.Contents.Pinned()
+                                  orderby content.PublicationDate descending
+                                  select new IndexViewModel.Content
+                                  {
+                                      Id = content.Id,
+                                      Title = content.Title,
+                                      Caption = content.Caption,
+                                      PublicationDate = content.PublicationDate,
+                                      Type = content is Article ? IndexViewModel.ContentType.Article : IndexViewModel.ContentType.MatchReport
+                                  }).Take(pinnedContentsCount).ToArray();
 
-            var teams = (from registeredUser in this.Database.RegisteredUsers
-                         where registeredUser.AspNetUserId == user.Id
-                         from rut in registeredUser.Teams
-                         select new IndexViewModel.Team
-                         {
-                             Id = rut.Team.Id,
-                             Name = rut.Team.Name
-                         }).ToArray();
+            var contents = (from content in this.Database.Contents.NotPinned()
+                            orderby content.PublicationDate descending
+                            select new IndexViewModel.Content
+                            {
+                                Id = content.Id,
+                                Title = content.Title,
+                                Caption = content.Caption,
+                                PublicationDate = content.PublicationDate,
+                                Type = content is Article ? IndexViewModel.ContentType.Article : IndexViewModel.ContentType.MatchReport
+                            }).Take(contentsCount).ToArray();
 
-            var activities = await this.GetActivitiesAsync(user.Id);
+            var weekEvents = (from team in this.Database.Teams
+                              from activity in team.Calendar
+                              where activity is Match || activity is Tournament
+                              orderby activity.StartDate ascending
+                              select new IndexViewModel.Event
+                              {
+                                  Id = activity.Id,
+                                  Name = activity.Name,
+                                  StartDate = activity.StartDate,
+                                  EndDate = activity.EndDate
+                              }).Take(weekEventsCount).ToArray();
 
-            var activitiesViewModel = new ActivitiesViewModel { Activities = activities };
-
-            var newsFeedContents = await this.GetFeedAsync(user.Id);
-
-            var newsFeedViewModel = new NewsFeedViewModel { NewsFeed = newsFeedContents };
-
-            var calendarViewModel = this.GetCalendarViewModel(nameof(IActivityController.GetCalendarEventsAsync), "Home");
+            var topScorers = (from registeredUser in this.Database.RegisteredUsers
+                              let points = registeredUser.MatchScores.Sum(ms => ms.Points)
+                              orderby points descending
+                              select new IndexViewModel.Scorer
+                              {
+                                  Id = registeredUser.Id,
+                                  FirstName = registeredUser.FirstName,
+                                  LastName = registeredUser.LastName,
+                                  Points = points
+                              }).Take(topScorersCount).ToArray();
 
             return new IndexViewModel
             {
-                Teams = teams,
-                Activities = activitiesViewModel,
-                NewsFeed = newsFeedViewModel,
-                Calendar = calendarViewModel
+                Contents = contents,
+                PinnedContents = pinnedContents,
+                WeekEvents = weekEvents,
+                TopScorers = topScorers
             };
         }
     }

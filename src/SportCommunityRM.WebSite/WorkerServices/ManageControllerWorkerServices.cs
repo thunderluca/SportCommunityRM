@@ -23,7 +23,6 @@ namespace SportCommunityRM.WebSite.WorkerServices
         private readonly SignInManager<ApplicationUser> SignInManager;
         private readonly UrlEncoder UrlEncoder;
         private readonly IEmailSender EmailSender;
-        private readonly IStorageService StorageService;
 
         private const string AuthenicatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
 
@@ -37,12 +36,11 @@ namespace SportCommunityRM.WebSite.WorkerServices
             UrlEncoder urlEncoder,
             IEmailSender emailSender,
             IStorageService storageService,
-            ILogger<ManageControllerWorkerServices> logger) : base(userManager, dbContext, database, httpContextAccessor, urlService, logger)
+            ILogger<ManageControllerWorkerServices> logger) : base(userManager, dbContext, database, httpContextAccessor, urlService, storageService, logger)
         {
             this.SignInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
             this.UrlEncoder = urlEncoder ?? throw new ArgumentNullException(nameof(urlEncoder));
             this.EmailSender = emailSender ?? throw new ArgumentNullException(nameof(emailSender));
-            this.StorageService = storageService ?? throw new ArgumentNullException(nameof(storageService));
         }
 
         public async Task<IndexViewModel> GetIndexViewModelAsync(string statusMessage)

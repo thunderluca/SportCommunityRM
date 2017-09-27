@@ -13,9 +13,10 @@ using System;
 namespace SportCommunityRM.Data.Migrations
 {
     [DbContext(typeof(SCRMContext))]
-    partial class SCRMContextModelSnapshot : ModelSnapshot
+    [Migration("20170927064310_Initial6")]
+    partial class Initial6
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -84,10 +85,6 @@ namespace SportCommunityRM.Data.Migrations
                     b.Property<bool>("IsPinned");
 
                     b.Property<DateTime?>("LastModifiedDate");
-
-                    b.Property<string>("PictureId");
-
-                    b.Property<string>("PictureUrl");
 
                     b.Property<DateTime>("PublicationDate");
 
@@ -265,8 +262,6 @@ namespace SportCommunityRM.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired();
-
-                    b.Property<string>("PictureId");
 
                     b.HasKey("Id");
 

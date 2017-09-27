@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -24,7 +23,8 @@ namespace SportCommunityRM.WebSite.WorkerServices
             IDatabase database, 
             IHttpContextAccessor httpContextAccessor, 
             IUrlService urlService,
-            ILogger<BaseControllerWorkerServices> logger) : base(userManager, dbContext, database, httpContextAccessor, urlService, logger)
+            IStorageService storageService,
+            ILogger<CoachControllerWorkerServices> logger) : base(userManager, dbContext, database, httpContextAccessor, urlService, storageService, logger)
         {
         }
 

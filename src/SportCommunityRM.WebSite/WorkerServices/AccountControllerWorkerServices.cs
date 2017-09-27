@@ -27,7 +27,8 @@ namespace SportCommunityRM.WebSite.WorkerServices
             IHttpContextAccessor httpContextAccessor,
             IEmailSender emailSender,
             IUrlService urlService,
-            ILogger<AccountControllerWorkerServices> logger) : base(userManager, dbContext, database, httpContextAccessor, urlService, logger)
+            IStorageService storageService,
+            ILogger<AccountControllerWorkerServices> logger) : base(userManager, dbContext, database, httpContextAccessor, urlService, storageService, logger)
         {
             this.SignInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
             this.EmailSender = emailSender ?? throw new ArgumentNullException(nameof(emailSender));

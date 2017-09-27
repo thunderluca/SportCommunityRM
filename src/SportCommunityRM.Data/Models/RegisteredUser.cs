@@ -68,5 +68,17 @@ namespace SportCommunityRM.Data.Models
             }
             set { _teams = value; }
         }
+
+        private ICollection<MatchScore> _matchScores;
+        public virtual ICollection<MatchScore> MatchScores
+        {
+            get
+            {
+                if (_matchScores == null)
+                    _matchScores = new HashSet<MatchScore>();
+                return _matchScores;
+            }
+            set { _matchScores = value; }
+        }
     }
 }
