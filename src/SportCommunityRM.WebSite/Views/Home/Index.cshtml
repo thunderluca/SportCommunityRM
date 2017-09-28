@@ -142,7 +142,12 @@
 </main>
 
 <script type="text/javascript">
-    $(function () {
-
+    var $newsListGroup = $('.news-list .list-group');
+    $newsListGroup.resize(function () {
+        var newListGroupHeight = $newsListGroup.height();
+        $('#news-carousel .item').each(function (index, item) {
+            $(item).css('max-height', newListGroupHeight);
+        });
     });
+    $newsListGroup.resize();
 </script>
