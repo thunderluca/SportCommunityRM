@@ -1,24 +1,24 @@
 ﻿@model PagingList<SportCommunityRM.WebSite.ViewModels.Shared.NewsFeedViewModel.Content>
 
-<ul class="list-unstyled">
-    @if (Model == null || Model.Count == 0)
-    {
-        <li>No news to display</li>
-    }
-    else
+<ul class="list-unstyled content-list">
+    @if (!Model.IsNullOrEmpty())
     {
         foreach (var content in Model)
         {
-            <li>
-                <p>
-                    <div class="inline-children">
-                        <span class="bold">@content.Title</span> - @content.PublicationDate.ToShortDateString() @content.PublicationDate.ToShortTimeString()
+            <li style="background-image: url('@content.Thumbnail');">
+                <div class="content-item row no-margin">
+                    <div class="content-option col-sm-6 col-sm-offset-6" role="option">
+                        <a asp-action="Detail" asp-controller="Content" asp-route-id="@content.Id">
+                            <p>
+                                <h4 class="bold">@content.Title</h4>
+                                @if (!string.IsNullOrWhiteSpace(content.Caption))
+                                {
+                                    <span>@content.Caption</span>
+                                }
+                            </p>
+                        </a>
                     </div>
-                    @if (!string.IsNullOrWhiteSpace(content.Caption))
-                    {
-                        <span>@content.Caption</span>
-                    }
-                </p>
+                </div>
             </li>
         }
     }

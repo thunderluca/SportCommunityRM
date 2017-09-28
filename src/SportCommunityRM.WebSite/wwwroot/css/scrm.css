@@ -1,4 +1,8 @@
-﻿a.text-accent,
+﻿* {
+    background-repeat: no-repeat;
+}
+
+a.text-accent,
 a.text-default,
 a.text-primary,
 a.text-success,
@@ -8,18 +12,28 @@ a.text-danger {
     font-size: 18px;
 }
 
+.badge.big {
+    border-radius: 50%;
+    font-size: 32px;
+    padding: 7px 14px;
+}
+
 .bold {
     font-weight: bold;
 }
 
 .btn,
+.carousel-indicators li,
 .dropdown-menu,
 .form-control,
 .input-group-addon,
+.list-group-item:first-child,
+.list-group-item:last-child,
 .modal-content,
 .navbar-toggle,
 .panel,
-.panel-heading {
+.panel-heading,
+.panel-footer {
     border-radius: 0;
 }
 
@@ -40,7 +54,6 @@ a.text-danger {
         vertical-align: middle;
         text-align: right;
     }
-
 
 .circle-mask {
     position: relative;
@@ -79,6 +92,70 @@ a.text-danger {
 .container {
     padding: 0;
 }
+
+.content-carousel {
+    padding: 0;
+}
+
+.news-container {
+    padding: 0px;
+}
+
+    .news-container .news-list {
+        height: 100%;
+        z-index: 20;
+        padding: 0px;
+    }
+
+        .news-container .news-list + .carousel {
+            margin-right: 10px;
+        }
+
+.content-carousel .carousel-inner div.item img {
+    padding: 0px;
+    background: #ff0;
+}
+
+.content-carousel .carousel-caption {
+    bottom: 0px;
+    text-align: left;
+    padding: 5px;
+    left: 0px;
+}
+
+.news-container .list-group-item {
+    padding: 0;
+    cursor: pointer;
+    min-height: 9vw;
+    background-position: center;
+    background-size: cover;
+    background-color: transparent;
+}
+
+    .news-container .list-group-item .carousel-caption {
+        text-align: right;
+        right: 5%;
+        bottom: 0;
+        left: 0;
+        padding-bottom: 0;
+    }
+
+.content-list li {
+    margin-bottom: 10px;
+    max-height: 15vw;
+    background-position: center;
+    background-size: cover;
+}
+
+.content-list .content-item {
+    min-height: 10vw;
+}
+
+    .content-list .content-item .content-option {
+        padding: 20px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 
 .dropdown-menu {
     padding: 0;
@@ -204,9 +281,9 @@ a.text-danger {
     padding: 12px;
 }
 
-.panel .panel-body .table {
-    margin-bottom: 0;
-}
+    .panel .panel-body .table {
+        margin-bottom: 0;
+    }
 
 .panel-heading, .panel-heading .panel-title {
     font-weight: bold;
@@ -230,7 +307,7 @@ a.text-danger {
     }
 
     .parallax-html .parallax-header {
-        padding: 2vw 0 3vw;
+        padding: 2vw 0;
         min-height: 10vw;
         transform-style: inherit;
         width: 100vw;
@@ -241,72 +318,100 @@ a.text-danger {
         padding: 0 1vw;
     }
 
-        .parallax-html .parallax-header .parallax-container {
-            padding: 1vw;
-            margin: 2vw 5vw 0 4vw;
-        }
+    .parallax-html .parallax-header .parallax-container {
+        padding: 1vw;
+        margin: 2vw 5vw 0 4vw;
+    }
 
-        .parallax-html .parallax-header .parallax-title-picture {
-            max-height: 16vw;
-            width: auto;
-        }
+    .parallax-html .parallax-header .parallax-title-picture {
+        max-height: 16vw;
+        width: auto;
+    }
 
-        .parallax-html .parallax-header .parallax-container,
-        .parallax-html .parallax-header .parallax-title-picture,
-        .parallax-html main hr,
-        .parallax-html main .panel,
-        .parallax-html main .btn {
-            box-shadow: 0 2px 2px #000;
-        }
+    .login-html hr,
+    .login-html .form-group .form-control,
+    .parallax-html .parallax-header .parallax-container,
+    .parallax-html .parallax-header .parallax-title-picture,
+    .parallax-html main hr,
+    .parallax-html main .panel,
+    .parallax-html main .btn {
+        box-shadow: 0 2px 2px #000;
+    }
 
+        .login-html .btn.btn-danger,
         .parallax-html main .btn.btn-danger {
             box-shadow: 0 2px 2px #d43f3a;
         }
-    
-    .parallax-html .parallax-header, 
-    .parallax-html .parallax-footer {
-        color: #fff;
-        position: relative;
-        text-shadow: 0 2px 2px #000;
-    }
+
+.login-html .btn.btn-primary {
+    box-shadow: 0 2px 2px #122b40;
+}
+
+.login-html .btn.btn-success {
+    box-shadow: 0 2px 2px #4cae4c;
+}
+
+.parallax-html .parallax-header,
+.parallax-html .parallax-footer {
+    color: #fff;
+    position: relative;
+    text-shadow: 0 2px 2px #000;
+}
+
+.login-html h1,
+.login-html h2,
+.login-html h3,
+.login-html h4,
+.login-html h5,
+.login-html h6,
+.login-html p,
+.login-html .form-group > label,
+.login-html .form-group > span,
+.parallax-html .parallax-header,
+.parallax-html .parallax-footer,
+.parallax-html main .form-group > label,
+.parallax-html main .form-group > span {
+    text-shadow: 0 2px 2px #000;
+}
 
     .parallax-html .parallax-header,
-    .parallax-html .parallax-footer,
-    .parallax-html main .form-group > label,
-    .parallax-html main .form-group > span {
-        text-shadow: 0 2px 2px #000;
+    .parallax-html .parallax-header:before {
+        background: 50% 50% / cover;
     }
 
-        .parallax-html .parallax-header, 
-        .parallax-html .parallax-header:before {
-            background: 50% 50% / cover;
+        .parallax-html .parallax-header::before {
+            background-size: cover;
+            content: '';
+            opacity: 0.5;
+            display: block;
+            min-height: 100vh;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            -webkit-transform-origin: center center 0;
+            -webkit-transform: translateZ(-1px) scale(2);
+            transform-origin: center center 0;
+            transform: translateZ(-1px) scale(2);
+            z-index: -1;
         }
 
-            .parallax-html .parallax-header::before {
-                background-size: cover;
-                content: '';
-                opacity: 0.5;
-                display: block;
-                min-height: 100vh;
-                position: absolute;
-                top: 0;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                -webkit-transform-origin: center center 0;
-                -webkit-transform: translateZ(-1px) scale(2);
-                transform-origin: center center 0;
-                transform: translateZ(-1px) scale(2);
-                z-index: -1;
-            }
-
-            .parallax-html .parallax-header + main {
-                position: relative;
-                z-index: 2;
-            }
+        .parallax-html .parallax-header + main {
+            position: relative;
+            z-index: 2;
+        }
 
 .pull-left + .pull-left {
     margin-top: 12px;
+}
+
+.scorers-list li {
+    margin-bottom: 20px;
+}
+
+.top-margin-10 {
+    margin-top: 10px;
 }
 
 @media screen and (min-width: 1600px) {
@@ -324,15 +429,15 @@ a.text-danger {
 @media screen and (max-width: 991px) {
     .parallax-html .parallax-header .parallax-container {
         margin-top: 3vw;
-        padding: 1vw 2vw 2vw;
+        padding: 2vw;
         margin: 2vw 5vw 0 3vw;
     }
 
     .parallax-html main.parallax-container {
         margin: 2vw 1vw;
         padding: 0;
-    } 
-} 
+    }
+}
 
 @media screen and (max-width: 767px) {
     .btn + .btn:not(.pull-left) {
@@ -350,13 +455,49 @@ a.text-danger {
         text-align: left;
     }
 
+    .content-carousel .carousel-caption {
+        right: 0;
+        display: block;
+        text-align: center;
+    }
+
+    .content-carousel {
+        margin-bottom: 20px;
+    }
+
+    .content-list .content-item .content-option {
+        padding: 0 8px;
+        text-align: right;
+        white-space: nowrap;
+    }
+
+        .content-list .content-item .content-option h1,
+        .content-list .content-item .content-option h2,
+        .content-list .content-item .content-option h3,
+        .content-list .content-item .content-option h4,
+        .content-list .content-item .content-option h5,
+        .content-list .content-item .content-option h6 {
+            margin-bottom: 4px;
+            margin-top: 4px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+    .content-carousel + .news-list > .list-group {
+        margin-bottom: 0;
+    }
+
+    .content-list .content-item {
+        max-height: 12vw;
+    }
+
     .container {
         padding-left: 15px;
         padding-right: 15px;
     }
 
     .fa,
-    .glyphicon {
+    .glyphicon:not(.glyphicon-menu-up) {
         display: none;
     }
 
@@ -366,8 +507,20 @@ a.text-danger {
         left: 0;
         transform: none;
     }
-    
+
     .navbar-nav {
         margin: 0 -15px;
+    }
+
+    .news-container .list-group-item .carousel-caption {
+        padding-bottom: 0;
+    }
+
+    .parallax-html .parallax-header .parallax-container {
+        margin-right: 6vw;
+    }
+
+    .parallax-html .parallax-header {
+        padding-top: 4vw;
     }
 }

@@ -74,9 +74,16 @@ namespace SportCommunityRM.WebSite.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Picture(string username, int? size)
+        public async Task<IActionResult> UserPicture(string username, int? size)
         {
             var bytes = await this.WorkerServices.GetUserPictureAsync(username, size);
+
+            return File(bytes ?? new byte[0], "image/jpeg");
+        }
+
+        public async Task<IActionResult> UserIdPicture(Guid id, int? size)
+        {
+            var bytes = await this.WorkerServices.GetUserPictureByIdAsync(id, size);
 
             return File(bytes ?? new byte[0], "image/jpeg");
         }

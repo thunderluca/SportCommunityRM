@@ -49,7 +49,7 @@ namespace SportCommunityRM.WebSite.WorkerServices
 
             var registeredUser = this.Database.RegisteredUsers.WithUserId(user.Id);
 
-            var pictureUrl = this.UrlService.GetActionUrl(nameof(UserController.Picture), "User", new { username = user.UserName });
+            var pictureUrl = this.UrlService.GetActionUrl(nameof(UserController.UserPicture), "User", new { username = user.UserName });
             
             return new IndexViewModel
             {

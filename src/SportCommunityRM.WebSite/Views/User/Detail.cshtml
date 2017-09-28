@@ -9,7 +9,7 @@
 
 <style type="text/css">
     .parallax-html .parallax-header::before {
-        background-image: url('/images/team_test.jpg');
+        background: linear-gradient(to bottom, transparent, #0081cc 90%), url('/images/team_test.jpg') no-repeat;
     }
 </style>
 
@@ -42,63 +42,59 @@
 
 <main class="parallax-container row">
     <div class="col-md-6">
-        <div class="form-group">
-            <div class="panel panel-accent">
-                <div class="panel-heading" role="tab" id="teams-heading">
-                    <div class="inline-children">
-                        <a href="#teams-collapse" role="button" data-toggle="collapse" aria-expanded="true" aria-controls="teams-collapse">
-                            <h4 class="panel-title">
-                                <i class="fa fa-group"></i> Teams
-                            </h4>
-                        </a>
-                        <a href="#teams-collapse" class="collapse-btn bold pull-right" role="button" data-toggle="collapse" title="Toggle" aria-expanded="true" aria-controls="teams-collapse">
-                            <i class="glyphicon glyphicon-menu-up"></i>
-                        </a>
-                    </div>
+        <div class="panel panel-accent">
+            <div class="panel-heading" role="tab" id="teams-heading">
+                <div class="inline-children">
+                    <a href="#teams-collapse" role="button" data-toggle="collapse" aria-expanded="true" aria-controls="teams-collapse">
+                        <h4 class="panel-title">
+                            <i class="fa fa-group"></i> Teams
+                        </h4>
+                    </a>
+                    <a href="#teams-collapse" class="collapse-btn bold pull-right" role="button" data-toggle="collapse" title="Toggle" aria-expanded="true" aria-controls="teams-collapse">
+                        <i class="glyphicon glyphicon-menu-up"></i>
+                    </a>
                 </div>
-                <div class="panel-collapse collapse in" role="tabpanel" id="teams-collapse" aria-labelledby="teams-heading">
-                    <div class="panel-body">
-                        <div class="table-responsive">
-                            <table class="table table-hover table-bordered">
-                                <thead>
+            </div>
+            <div class="panel-collapse collapse in" role="tabpanel" id="teams-collapse" aria-labelledby="teams-heading">
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>@*Actions header*@</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.Teams.IsNullOrEmpty())
+                                {
                                     <tr>
-                                        <th>Name</th>
-                                        <th>@*Actions header*@</th>
+                                        <td colspan="2">No team to display</td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    @if (Model.Teams.IsNullOrEmpty())
+                                }
+                                else
+                                {
+                                    foreach (var team in Model.Teams)
                                     {
                                         <tr>
-                                            <td colspan="2">No team to display</td>
+                                            <td>@team.Name</td>
+                                            <td>
+                                                <a class="text-accent" asp-action="Detail" asp-controller="Team" asp-route-id="@team.Id" title="Detail">
+                                                    <i class="glyphicon glyphicon-search"></i>
+                                                </a>
+                                            </td>
                                         </tr>
                                     }
-                                    else
-                                    {
-                                        foreach (var team in Model.Teams)
-                                        {
-                                            <tr>
-                                                <td>@team.Name</td>
-                                                <td>
-                                                    <a class="text-accent" asp-action="Detail" asp-controller="Team" asp-route-id="@team.Id" title="Detail">
-                                                        <i class="glyphicon glyphicon-search"></i>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        }
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
+                                }
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <div class="col-md-12">
-        <div class="form-group">
-            <button type="button" class="btn btn-block-fluid btn-danger" onclick="history.back()">Back</button>
-        </div>
+        <button type="button" class="btn btn-block-fluid btn-danger" onclick="history.back()">Back</button>
     </div>
     <div class="col-md-12">
         @Html.Partial("_FooterPartial")

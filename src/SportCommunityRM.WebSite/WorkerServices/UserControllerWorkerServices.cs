@@ -99,5 +99,16 @@ namespace SportCommunityRM.WebSite.WorkerServices
 
             return await this.GetPictureAsync(registeredUser.PictureId);
         }
+
+        public async Task<byte[]> GetUserPictureByIdAsync(Guid id, int? size = null)
+        {
+            if (id.IsNullOrEmpty()) return null;
+            
+            var registeredUser = this.Database.RegisteredUsers.WithId(id);
+            if (registeredUser == null || string.IsNullOrWhiteSpace(registeredUser.PictureId))
+                return null;
+
+            return await this.GetPictureAsync(registeredUser.PictureId);
+        }
     }
 }

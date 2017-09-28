@@ -5,7 +5,7 @@
         <ul class="nav navbar-nav navbar-right">
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle no-padding" id="user-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    @Model.Username <img alt="@Model.Username" class="img-circle img-square x-small hidden-xs" src="@Url.Action(nameof(UserController.Picture), "User", new { username = Model.Username, size = 20 })" />
+                    @Model.Username <img alt="@Model.Username" class="img-circle img-square x-small hidden-xs" src="@Url.Action(nameof(UserController.UserPicture), "User", new { username = Model.Username, size = 20 })" />
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="user-menu">
                     <li>

@@ -17,6 +17,8 @@ namespace SportCommunityRM.WebSite.ViewModels.Shared
 
             public string Caption { get; set; }
 
+            public string Thumbnail { get; set; }
+
             public DateTime PublicationDate { get; set; }
 
             public ContentType Type { get; set; }

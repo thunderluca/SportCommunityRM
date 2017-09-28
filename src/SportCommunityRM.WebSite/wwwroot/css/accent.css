@@ -16,6 +16,14 @@ body,
     background-color: #0081cc;
 }
 
+.carousel-indicators li {
+    background-color: #005a8e;
+}
+
+    .carousel-indicators li.active {
+        background-color: #0081cc;
+    }
+
 .container > h1,
 .container > h2,
 .container > h3,
@@ -32,6 +40,26 @@ body,
 .container > div > h5,
 .container > div > h6 {
     color: #d0d0d0;
+}
+
+.content-list li {
+    background-color: #006eb2;
+    color: #fff;
+}
+
+    .content-list li a,
+    .scorers-list li a {
+        color: #d3d3d3;
+    }
+
+        .content-list li a:hover,
+        .scorers-list li a:hover,
+        .scorers-list li h1 {
+            color: #fff;
+        }
+
+.content-list .content-item {
+    background-image: linear-gradient(to right, transparent, #006eb2 50%);
 }
 
 .fc-today.fc-other-month {
@@ -104,6 +132,12 @@ body,
         color: #fff;
     }
 
+.news-container .list-group-item {
+    border-width: 0 4px 10px 4px;
+    border-color: #006eb2;
+    border-style: solid;
+}
+
 footer,
 .form-group span:not(.text-danger),
 .fc-today,
@@ -113,7 +147,7 @@ footer,
     color: #fff;
 }
 
-    .form-group > label,
+    html:not(.login-html) .form-group > label,
     .login-html .container a:not(.btn) {
         color: #d0d0d0;
     }
@@ -134,12 +168,61 @@ footer,
                 color: #fff;
             }
 
+    .panel.panel-accent .panel-collapse .panel-body,
+    .panel.panel-accent .panel-collapse .panel-footer {
+        background-color: #0081cc;
+    }
+
+        .panel.panel-accent .panel-collapse .panel-body .table,
+        .panel.panel-accent .panel-collapse .panel-body [id^=fullcalendar] .fc-view-container {
+            background-color: #fff;
+        }
+
+        .panel.panel-accent .panel-collapse .panel-body [id^=fullcalendar] .fc-left {
+            color: #fff;
+        }
+
+    .panel.panel-accent .panel-collapse .panel-footer {
+        border-top-color: #006eb2;
+    }
+
 .parallax-html .parallax-header .parallax-container {
     background-color: #006eb2;
 }
 
+.login-html .btn.btn-accent,
+.parallax-html main .btn.btn-accent {
+    box-shadow: 0 2px 2px #0075ba;
+}
+
+.scorers-list li .badge {
+    opacity: 0.7;
+}
+
+    .scorers-list li .badge.rank1 {
+        background-color: #ffd700;
+        opacity: 1.0;
+    }
+
+    .scorers-list li .badge.rank2 {
+        background-color: #c0c0c0;
+        ;
+        opacity: 1.0;
+    }
+
+    .scorers-list li .badge.rank3 {
+        background-color: #cd7f32;
+        opacity: 1.0;
+    }
+
 @media screen and (max-width: 767px) {
     .navbar-inverse .navbar-nav .open .dropdown-menu > li > a {
         color: #d0d0d0;
+    }
+
+    .news-container .list-group-item {
+        border-width: 0 0 10px 0;
+        border-color: #006eb2;
+        border-style: solid;
     }
 }

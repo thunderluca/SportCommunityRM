@@ -6,7 +6,7 @@
 <br/>
 <div class="row">
     <div class="col-md-6">
-        <div class="panel panel-default">
+        <div class="panel panel-accent">
             <div class="panel-heading" role="tab" id="teams-heading">
                 <div class="inline-children">
                     <a href="#teams-collapse" role="button" data-toggle="collapse" aria-expanded="true" aria-controls="teams-collapse">
@@ -57,31 +57,34 @@
             </div>
         </div>
     </div>
-    <div class="col-md-6">
-        <div class="panel panel-default">
-            <div class="panel-heading" role="tab" id="activities-heading">
-                <div class="inline-children">
-                    <a href="#activities-collapse" role="button" data-toggle="collapse" aria-expanded="true" aria-controls="activities-collapse">
-                        <h4 class="panel-title">
-                            <i class="fa fa-list"></i> My Activities
-                        </h4>
-                    </a>
-                    <a href="#activities-collapse" class="collapse-btn bold pull-right" role="button" data-toggle="collapse" title="Toggle" aria-expanded="true" aria-controls="activities-collapse">
-                        <i class="glyphicon glyphicon-menu-up"></i>
-                    </a>
+    @if (!Model.Activities.Activities.IsNullOrEmpty())
+    {
+        <div class="col-md-6">
+            <div class="panel panel-accent">
+                <div class="panel-heading" role="tab" id="activities-heading">
+                    <div class="inline-children">
+                        <a href="#activities-collapse" role="button" data-toggle="collapse" aria-expanded="true" aria-controls="activities-collapse">
+                            <h4 class="panel-title">
+                                <i class="fa fa-list"></i> My Activities
+                            </h4>
+                        </a>
+                        <a href="#activities-collapse" class="collapse-btn bold pull-right" role="button" data-toggle="collapse" title="Toggle" aria-expanded="true" aria-controls="activities-collapse">
+                            <i class="glyphicon glyphicon-menu-up"></i>
+                        </a>
+                    </div>
                 </div>
-            </div>
-            <div class="panel-collapse collapse in" role="tabpanel" id="activities-collapse" aria-labelledby="activities-heading">
-                <div class="panel-body">
-                    @await Html.PartialAsync("_ActivitiesPartial", Model.Activities)
+                <div class="panel-collapse collapse in" role="tabpanel" id="activities-collapse" aria-labelledby="activities-heading">
+                    <div class="panel-body">
+                        @await Html.PartialAsync("_ActivitiesPartial", Model.Activities)
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    }
 </div>
 <div class="row">
     <div class="col-md-6">
-        <div class="panel panel-default">
+        <div class="panel panel-accent">
             <div class="panel-heading" role="tab" id="calendar-heading">
                 <div class="inline-children">
                     <a href="#calendar-collapse" role="button" data-toggle="collapse" aria-expanded="true" aria-controls="calendar-collapse">
@@ -101,25 +104,28 @@
             </div>
         </div>
     </div>
-    <div class="col-md-6">
-        <div class="panel panel-default">
-            <div class="panel-heading" role="tab" id="feed-heading">
-                <div class="inline-children">
-                    <a href="#feed-collapse" role="button" data-toggle="collapse" aria-expanded="true" aria-controls="feed-collapse">
-                        <h4 class="panel-title">
-                            <i class="fa fa-newspaper-o"></i> News Feed
-                        </h4>
-                    </a>
-                    <a href="#feed-collapse" class="collapse-btn bold pull-right" role="button" data-toggle="collapse" title="Toggle" aria-expanded="true" aria-controls="feed-collapse">
-                        <i class="glyphicon glyphicon-menu-up"></i>
-                    </a>
+    @if (!Model.NewsFeed.NewsFeed.IsNullOrEmpty())
+    {
+        <div class="col-md-6">
+            <div class="panel panel-accent">
+                <div class="panel-heading" role="tab" id="feed-heading">
+                    <div class="inline-children">
+                        <a href="#feed-collapse" role="button" data-toggle="collapse" aria-expanded="true" aria-controls="feed-collapse">
+                            <h4 class="panel-title">
+                                <i class="fa fa-newspaper-o"></i> News Feed
+                            </h4>
+                        </a>
+                        <a href="#feed-collapse" class="collapse-btn bold pull-right" role="button" data-toggle="collapse" title="Toggle" aria-expanded="true" aria-controls="feed-collapse">
+                            <i class="glyphicon glyphicon-menu-up"></i>
+                        </a>
+                    </div>
                 </div>
-            </div>
-            <div class="panel-collapse collapse in" role="tabpanel" id="feed-collapse" aria-labelledby="feed-heading">
-                <div class="panel-body">
-                    @await Html.PartialAsync("_NewsFeedPartial", Model.NewsFeed)
+                <div class="panel-collapse collapse in" role="tabpanel" id="feed-collapse" aria-labelledby="feed-heading">
+                    <div class="panel-body">
+                        @await Html.PartialAsync("_NewsFeedPartial", Model.NewsFeed)
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    }
 </div>

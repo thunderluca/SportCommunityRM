@@ -52,20 +52,21 @@ namespace SportCommunityRM.WebSite.WorkerServices
                                 Type = content is Article ? IndexViewModel.ContentType.Article : IndexViewModel.ContentType.MatchReport
                             }).Take(contentsCount).ToArray();
 
-            var weekEvents = (from team in this.Database.Teams
-                              from activity in team.Calendar
-                              where activity is Match || activity is Tournament
-                              orderby activity.StartDate ascending
-                              select new IndexViewModel.Event
-                              {
-                                  Id = activity.Id,
-                                  Name = activity.Name,
-                                  StartDate = activity.StartDate,
-                                  EndDate = activity.EndDate
-                              }).Take(weekEventsCount).ToArray();
+            //var weekEvents = (from team in this.Database.Teams
+            //                  from activity in team.Calendar
+            //                  where activity is Match || activity is Tournament
+            //                  orderby activity.StartDate ascending
+            //                  select new IndexViewModel.Event
+            //                  {
+            //                      Id = activity.Id,
+            //                      Name = activity.Name,
+            //                      StartDate = activity.StartDate,
+            //                      EndDate = activity.EndDate
+            //                  }).Take(weekEventsCount).ToArray();
 
             var topScorers = (from registeredUser in this.Database.RegisteredUsers
                               let points = registeredUser.MatchScores.Sum(ms => ms.Points)
+                              where points > 0
                               orderby points descending
                               select new IndexViewModel.Scorer
                               {
@@ -79,7 +80,7 @@ namespace SportCommunityRM.WebSite.WorkerServices
             {
                 Contents = contents,
                 PinnedContents = pinnedContents,
-                WeekEvents = weekEvents,
+                //WeekEvents = weekEvents,
                 TopScorers = topScorers
             };
         }

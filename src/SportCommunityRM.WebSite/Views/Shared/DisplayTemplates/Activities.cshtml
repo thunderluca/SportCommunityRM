@@ -17,7 +17,7 @@
             </tr>
         </thead>
         <tbody>
-            @if (Model == null || !Model.Any())
+            @if (Model.IsNullOrEmpty())
             {
                 <tr>
                     <td colspan="4">No activities to display</td>

@@ -8,7 +8,7 @@
 
 <style type="text/css">
     .parallax-html .parallax-header::before {
-        background-image: url('/images/team_test.jpg');
+        background: linear-gradient(to bottom, transparent, #0081cc 90%), url('/images/team_test.jpg') no-repeat;
     }
 </style>
 
@@ -137,9 +137,7 @@
         </div>
     </div>
     <div class="col-md-12">
-        <div class="form-group">
-            <button type="button" class="btn btn-block-fluid btn-danger" onclick="history.back()">Back</button>
-        </div>
+        <button type="button" class="btn btn-block-fluid btn-danger" onclick="history.back()">Back</button>
     </div>
     <div class="col-md-12">
         @Html.Partial("_FooterPartial")

@@ -76,7 +76,7 @@ namespace SportCommunityRM.WebSite
             }
 
             var appSettings = Configuration.GetSection("AppSettings").Get<AppSettings>();
-
+            
             var cultureInfos = appSettings.SupportedLanguages
                 .Select(fourLettersIsoLanguage => new CultureInfo(fourLettersIsoLanguage))
                 .ToArray();

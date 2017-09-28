@@ -11,7 +11,7 @@ namespace SportCommunityRM.WebSite.ViewModels.Home
 
         public IEnumerable<Event> WeekEvents { get; set; }
 
-        public IEnumerable<Scorer> TopScorers { get; set; }
+        public IList<Scorer> TopScorers { get; set; }
 
         public class Content
         {
@@ -52,6 +52,8 @@ namespace SportCommunityRM.WebSite.ViewModels.Home
             public string FirstName { get; set; }
 
             public string LastName { get; set; }
+
+            public string Name => $"{FirstName} {LastName}";
 
             public int Points { get; set; }
         }
