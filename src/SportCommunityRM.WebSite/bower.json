@@ -12,8 +12,6 @@
     "bootbox.js": "bootbox#v4.4.0",
     "bootstrap3-typeahead": "v4.0.0",
     "font-awesome": "font-awsome#v4.7.0",
-    "animate.css": "v3.1.0",
-    "select2": "4.0.3",
     "fullcalendar": "v3.5.1",
     "qrcode.js": "qrcode-js#*",
     "cropbox": "v0.1.9",

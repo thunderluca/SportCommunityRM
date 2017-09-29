@@ -5,143 +5,139 @@
     var backgroundPictureUrl = Url.Action(nameof(IPictureController.GetPicture), new { pictureId = Model.BackgroundPictureId });
 }
 
-<style type="text/css">
-    .parallax-html .parallax-header::before {
-        background: linear-gradient(to bottom, transparent, #0081cc 90%), url('/images/team_test.jpg') center no-repeat;
-    }
-</style>
+@section ParallaxBgStyleSection{
+    <style type="text/css">
+        .parallax-html .parallax-header::before {
+            background: linear-gradient(to bottom, transparent, #0081cc 90%), url('/images/team_test.jpg') center no-repeat;
+        }
+    </style>
+}
 
-<header class="parallax-header">
-    <div class="parallax-container row">
-        <div class="col-md-8">
-            <h1>@ViewData["Title"]</h1>
-        </div>
-        <div class="col-md-4 hidden-xs">
-            <img src="/images/team_test.jpg" class="img-responsive parallax-title-picture" />
-            @*<img src="@pictureUrl" class="pull-right img-responsive parallax-title-picture" />*@
-        </div>
+@section HeaderSection{
+    <div class="col-md-8">
+        <h1>@ViewData["Title"]</h1>
     </div>
-</header>
-<main class="parallax-container row">
-    <div class="col-md-6">
-        <div class="panel panel-accent">
-            <div class="panel-heading" role="tab" id="players-heading">
-                <div class="inline-children">
-                    <a href="#players-collapse" role="button" data-toggle="collapse" aria-expanded="true" aria-controls="players-collapse">
-                        <h4 class="panel-title">
-                            <i class="fa fa-group"></i> Players
-                        </h4>
-                    </a>
-                    <a href="#players-collapse" class="collapse-btn bold pull-right" role="button" data-toggle="collapse" title="Toggle" aria-expanded="true" aria-controls="players-collapse">
-                        <i class="glyphicon glyphicon-menu-up"></i>
-                    </a>
-                </div>
+    <div class="col-md-4 hidden-xs">
+        <img src="/images/team_test.jpg" class="img-responsive parallax-title-picture" />
+        @*<img src="@pictureUrl" class="pull-right img-responsive parallax-title-picture" />*@
+    </div>
+}
+
+<div class="col-md-6">
+    <div class="panel panel-accent">
+        <div class="panel-heading" role="tab" id="players-heading">
+            <div class="inline-children">
+                <a href="#players-collapse" role="button" data-toggle="collapse" aria-expanded="true" aria-controls="players-collapse">
+                    <h4 class="panel-title">
+                        <i class="fa fa-group"></i> Players
+                    </h4>
+                </a>
+                <a href="#players-collapse" class="collapse-btn bold pull-right" role="button" data-toggle="collapse" title="Toggle" aria-expanded="true" aria-controls="players-collapse">
+                    <i class="glyphicon glyphicon-menu-up"></i>
+                </a>
             </div>
-            <div class="panel-collapse collapse in" role="tabpanel" id="players-collapse" aria-labelledby="players-heading">
-                <div class="panel-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover table-bordered">
-                            <thead>
+        </div>
+        <div class="panel-collapse collapse in" role="tabpanel" id="players-collapse" aria-labelledby="players-heading">
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Birth date</th>
+                                <th>@*Actions header*@</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Players.IsNullOrEmpty())
+                            {
                                 <tr>
-                                    <th>Name</th>
-                                    <th>Birth date</th>
-                                    <th>@*Actions header*@</th>
+                                    <td colspan="3">No player to display</td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                @if (Model.Players.IsNullOrEmpty())
+                            }
+                            else
+                            {
+                                foreach (var player in Model.Players)
                                 {
                                     <tr>
-                                        <td colspan="3">No player to display</td>
+                                        <td>@player.Name</td>
+                                        <td>@player.BirthDate.ToShortDateString()</td>
+                                        <td>
+                                            <a class="text-accent" asp-action="Detail" asp-controller="User" asp-route-id="@player.Id" title="Detail">
+                                                <i class="glyphicon glyphicon-search"></i>
+                                            </a>
+                                            <a data-remove-player-btn class="text-danger" asp-action="@nameof(TeamController.RemovePlayer)" asp-controller="Team" asp-route-playerId="@player.Id" asp-route-teamId="@Model.Id" title="Remove player">
+                                                <i class="glyphicon glyphicon-remove"></i>
+                                            </a>
+                                        </td>
                                     </tr>
                                 }
-                                else
-                                {
-                                    foreach (var player in Model.Players)
-                                    {
-                                        <tr>
-                                            <td>@player.Name</td>
-                                            <td>@player.BirthDate.ToShortDateString()</td>
-                                            <td>
-                                                <a class="text-accent" asp-action="Detail" asp-controller="User" asp-route-id="@player.Id" title="Detail">
-                                                    <i class="glyphicon glyphicon-search"></i>
-                                                </a>
-                                                <a data-remove-player-btn class="text-danger" asp-action="@nameof(TeamController.RemovePlayer)" asp-controller="Team" asp-route-playerId="@player.Id" asp-route-teamId="@Model.Id" title="Remove player">
-                                                    <i class="glyphicon glyphicon-remove"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    }
-                                }
-                            </tbody>
-                        </table>
-                    </div>
+                            }
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-md-6">
-        <div class="panel panel-accent">
-            <div class="panel-heading" role="tab" id="coaches-heading">
-                <div class="inline-children">
-                    <a href="#coaches-collapse" role="button" data-toggle="collapse" aria-expanded="true" aria-controls="coaches-collapse">
-                        <h4 class="panel-title">
-                            <i class="fa fa-user"></i> Coaches
-                        </h4>
-                    </a>
-                    <a href="#coaches-collapse" class="collapse-btn bold pull-right" role="button" data-toggle="collapse" title="Toggle" aria-expanded="true" aria-controls="coaches-collapse">
-                        <i class="glyphicon glyphicon-menu-up"></i>
-                    </a>
-                </div>
+</div>
+<div class="col-md-6">
+    <div class="panel panel-accent">
+        <div class="panel-heading" role="tab" id="coaches-heading">
+            <div class="inline-children">
+                <a href="#coaches-collapse" role="button" data-toggle="collapse" aria-expanded="true" aria-controls="coaches-collapse">
+                    <h4 class="panel-title">
+                        <i class="fa fa-user"></i> Coaches
+                    </h4>
+                </a>
+                <a href="#coaches-collapse" class="collapse-btn bold pull-right" role="button" data-toggle="collapse" title="Toggle" aria-expanded="true" aria-controls="coaches-collapse">
+                    <i class="glyphicon glyphicon-menu-up"></i>
+                </a>
             </div>
-            <div class="panel-collapse collapse in" role="tabpanel" id="coaches-collapse" aria-labelledby="coaches-heading">
-                <div class="panel-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover table-bordered">
-                            <thead>
+        </div>
+        <div class="panel-collapse collapse in" role="tabpanel" id="coaches-collapse" aria-labelledby="coaches-heading">
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>@*Actions header*@</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Coaches.IsNullOrEmpty())
+                            {
                                 <tr>
-                                    <th>Name</th>
-                                    <th>@*Actions header*@</th>
+                                    <td colspan="2">No coach to display</td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                @if (Model.Coaches.IsNullOrEmpty())
+                            }
+                            else
+                            {
+                                foreach (var coach in Model.Coaches)
                                 {
                                     <tr>
-                                        <td colspan="2">No coach to display</td>
+                                        <td>@coach.Name</td>
+                                        <td>
+                                            <a class="text-accent" asp-action="Detail" asp-controller="Coach" asp-route-id="@coach.Id" title="Detail">
+                                                <i class="glyphicon glyphicon-search"></i>
+                                            </a>
+                                            <a data-remove-coach-btn class="text-danger" asp-action="@nameof(TeamController.RemoveCoach)" asp-controller="Team" asp-route-playerId="@coach.Id" asp-route-teamId="@Model.Id" title="Remove coach">
+                                                <i class="glyphicon glyphicon-remove"></i>
+                                            </a>
+                                        </td>
                                     </tr>
                                 }
-                                else
-                                {
-                                    foreach (var coach in Model.Coaches)
-                                    {
-                                        <tr>
-                                            <td>@coach.Name</td>
-                                            <td>
-                                                <a class="text-accent" asp-action="Detail" asp-controller="Coach" asp-route-id="@coach.Id" title="Detail">
-                                                    <i class="glyphicon glyphicon-search"></i>
-                                                </a>
-                                                <a data-remove-coach-btn class="text-danger" asp-action="@nameof(TeamController.RemoveCoach)" asp-controller="Team" asp-route-playerId="@coach.Id" asp-route-teamId="@Model.Id" title="Remove coach">
-                                                    <i class="glyphicon glyphicon-remove"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    }
-                                }
-                            </tbody>
-                        </table>
-                    </div>
+                            }
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-md-12">
-        <button type="button" class="btn btn-block-fluid btn-danger" onclick="history.back()">Back</button>
-    </div>
-    <div class="col-md-12">
-        @Html.Partial("_FooterPartial")
-    </div>
-</main>
+</div>
+<div class="col-md-12">
+    <button type="button" class="btn btn-block-fluid btn-danger" onclick="history.back()">Back</button>
+</div>
 
 <script type="text/javascript">
     $(function () {

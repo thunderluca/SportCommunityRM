@@ -1,118 +1,118 @@
 ﻿@using SportCommunityRM.WebSite.ViewModels.Team
 @model EditViewModel
-@{ 
+@{
     ViewData["Title"] = "Edit team";
 }
 
-<style type="text/css">
-    .parallax-html .parallax-header::before {
-        background: linear-gradient(to bottom, transparent, #0081cc 90%), url('/images/team_test.jpg') center no-repeat;
-    }
-</style>
+@section ParallaxBgStyleSection{
+    <style type="text/css">
+        .parallax-html .parallax-header::before {
+            background: linear-gradient(to bottom, transparent, #0081cc 90%), url('/images/team_test.jpg') center no-repeat;
+        }
+    </style>
+}
 
-<header class="parallax-header">
-    <div class="parallax-container row">
+@section HeaderSection{
+    <div class="col-md-8">
         <h2>@ViewData["Title"]</h2>
     </div>
-</header>
+}
 
-<main class="parallax-container row">
-    <div class="col-md-6">
-        <form class="form-horizontal" method="post">
-            <div class="form-group">
-                <label asp-for="Name" class="control-label col-md-3"></label>
-                <div class="col-md-9">
-                    <input asp-for="Name" class="form-control" />
-                    <span asp-validation-for="Name" class="text-danger"></span>
-                </div>
+<div class="col-md-6">
+    <form class="form-horizontal" method="post">
+        <div class="form-group">
+            <label asp-for="Name" class="control-label col-md-3"></label>
+            <div class="col-md-9">
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="MinBirthYear" class="control-label col-md-3"></label>
-                <div class="col-md-9">
-                    <input type="text" asp-for="MinBirthYear" class="form-control" />
-                    <span asp-validation-for="MinBirthYear" class="text-danger"></span>
-                </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="MinBirthYear" class="control-label col-md-3"></label>
+            <div class="col-md-9">
+                <input type="text" asp-for="MinBirthYear" class="form-control" />
+                <span asp-validation-for="MinBirthYear" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="MaxBirthYear" class="control-label col-md-3"></label>
-                <div class="col-md-9">
-                    <input type="text" asp-for="MaxBirthYear" class="form-control" />
-                    <span asp-validation-for="MaxBirthYear" class="text-danger"></span>
-                </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="MaxBirthYear" class="control-label col-md-3"></label>
+            <div class="col-md-9">
+                <input type="text" asp-for="MaxBirthYear" class="form-control" />
+                <span asp-validation-for="MaxBirthYear" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Players" class="control-label col-md-3"></label>
-                <div class="col-md-9">
-                    <div class="input-group">
-                        <input id="search-player-input" type="text" autocomplete="off" class="form-control form-control-auto" />
-                        <span class="input-group-addon success" title="Add player">
-                            <i class="glyphicon glyphicon-plus"></i>
-                        </span>
-                    </div>
-                    <br />
-                    <ul id="players-list" class="list-unstyled">
-                        @if (Model.Players != null && Model.Players.Length > 0)
+        </div>
+        <div class="form-group">
+            <label asp-for="Players" class="control-label col-md-3"></label>
+            <div class="col-md-9">
+                <div class="input-group">
+                    <input id="search-player-input" type="text" autocomplete="off" class="form-control form-control-auto" />
+                    <span class="input-group-addon success" title="Add player">
+                        <i class="glyphicon glyphicon-plus"></i>
+                    </span>
+                </div>
+                <br />
+                <ul id="players-list" class="list-unstyled">
+                    @if (Model.Players != null && Model.Players.Length > 0)
+                    {
+                        for (var i = 0; i < Model.Players.Length; i++)
                         {
-                            for (var i = 0; i < Model.Players.Length; i++)
-                            {
-                                <li>
-                                    <input id="@Html.IdFor(m => Model.Players[i].Id)" name="@Html.NameFor(m => Model.Players[i].Id)" type="hidden" value="@Html.ValueFor(m => Model.Players[i].Id)" />
-                                    <input id="@Html.IdFor(m => Model.Players[i].FirstName)" name="@Html.NameFor(m => Model.Players[i].FirstName)" type="hidden" value="@Html.ValueFor(m => Model.Players[i].FirstName)" />
-                                    <input id="@Html.IdFor(m => Model.Players[i].LastName)" name="@Html.NameFor(m => Model.Players[i].LastName)" type="hidden" value="@Html.ValueFor(m => Model.Players[i].LastName)" />
-                                    <input id="@Html.IdFor(m => Model.Players[i].BirthDate)" name="@Html.NameFor(m => Model.Players[i].BirthDate)" type="hidden" value="@Html.ValueFor(m => Model.Players[i].BirthDate)" />
-                                    <div class="inline-children">
-                                        <span>@Model.Players[i].FullInfo</span>
-                                        <a role="button" href="#" data-remove-player-btn type="button" class="text-danger" title="Remove player">
-                                            <i class="glyphicon glyphicon-remove"></i>
-                                        </a>
-                                    </div>
-                                </li>
-                            }
+                            <li>
+                                <input id="@Html.IdFor(m => Model.Players[i].Id)" name="@Html.NameFor(m => Model.Players[i].Id)" type="hidden" value="@Html.ValueFor(m => Model.Players[i].Id)" />
+                                <input id="@Html.IdFor(m => Model.Players[i].FirstName)" name="@Html.NameFor(m => Model.Players[i].FirstName)" type="hidden" value="@Html.ValueFor(m => Model.Players[i].FirstName)" />
+                                <input id="@Html.IdFor(m => Model.Players[i].LastName)" name="@Html.NameFor(m => Model.Players[i].LastName)" type="hidden" value="@Html.ValueFor(m => Model.Players[i].LastName)" />
+                                <input id="@Html.IdFor(m => Model.Players[i].BirthDate)" name="@Html.NameFor(m => Model.Players[i].BirthDate)" type="hidden" value="@Html.ValueFor(m => Model.Players[i].BirthDate)" />
+                                <div class="inline-children">
+                                    <span>@Model.Players[i].FullInfo</span>
+                                    <a role="button" href="#" data-remove-player-btn type="button" class="text-danger" title="Remove player">
+                                        <i class="glyphicon glyphicon-remove"></i>
+                                    </a>
+                                </div>
+                            </li>
                         }
-                    </ul>
-                </div>
+                    }
+                </ul>
             </div>
-            <div class="form-group">
-                <label asp-for="Coaches" class="control-label col-md-3"></label>
-                <div class="col-md-9">
-                    <div class="input-group">
-                        <input id="search-coach-input" type="text" autocomplete="off" class="form-control form-control-auto" />
-                        <span class="input-group-addon success" title="Add coach">
-                            <i class="glyphicon glyphicon-plus"></i>
-                        </span>
-                    </div>
-                    <br />
-                    <ul id="coaches-list" class="list-unstyled">
-                        @if (Model.Coaches != null && Model.Coaches.Length > 0)
+        </div>
+        <div class="form-group">
+            <label asp-for="Coaches" class="control-label col-md-3"></label>
+            <div class="col-md-9">
+                <div class="input-group">
+                    <input id="search-coach-input" type="text" autocomplete="off" class="form-control form-control-auto" />
+                    <span class="input-group-addon success" title="Add coach">
+                        <i class="glyphicon glyphicon-plus"></i>
+                    </span>
+                </div>
+                <br />
+                <ul id="coaches-list" class="list-unstyled">
+                    @if (Model.Coaches != null && Model.Coaches.Length > 0)
+                    {
+                        for (var i = 0; i < Model.Coaches.Length; i++)
                         {
-                            for (var i = 0; i < Model.Coaches.Length; i++)
-                            {
-                                <li>
-                                    <input id="@Html.IdFor(m => Model.Coaches[i].Id)" name="@Html.NameFor(m => Model.Coaches[i].Id)" type="hidden" value="@Html.ValueFor(m => Model.Coaches[i].Id)" />
-                                    <input id="@Html.IdFor(m => Model.Coaches[i].FirstName)" name="@Html.NameFor(m => Model.Coaches[i].FirstName)" type="hidden" value="@Html.ValueFor(m => Model.Coaches[i].FirstName)" />
-                                    <input id="@Html.IdFor(m => Model.Coaches[i].LastName)" name="@Html.NameFor(m => Model.Coaches[i].LastName)" type="hidden" value="@Html.ValueFor(m => Model.Coaches[i].LastName)" />
-                                    <input id="@Html.IdFor(m => Model.Coaches[i].BirthDate)" name="@Html.NameFor(m => Model.Coaches[i].BirthDate)" type="hidden" value="@Html.ValueFor(m => Model.Coaches[i].BirthDate)" />
-                                    <div class="inline-children">
-                                        <span>@Model.Coaches[i].FullInfo</span>
-                                        <a role="button" href="#" data-remove-coach-btn type="button" class="text-danger" title="Remove coach">
-                                            <i class="glyphicon glyphicon-remove"></i>
-                                        </a>
-                                    </div>
-                                </li>
-                            }
+                            <li>
+                                <input id="@Html.IdFor(m => Model.Coaches[i].Id)" name="@Html.NameFor(m => Model.Coaches[i].Id)" type="hidden" value="@Html.ValueFor(m => Model.Coaches[i].Id)" />
+                                <input id="@Html.IdFor(m => Model.Coaches[i].FirstName)" name="@Html.NameFor(m => Model.Coaches[i].FirstName)" type="hidden" value="@Html.ValueFor(m => Model.Coaches[i].FirstName)" />
+                                <input id="@Html.IdFor(m => Model.Coaches[i].LastName)" name="@Html.NameFor(m => Model.Coaches[i].LastName)" type="hidden" value="@Html.ValueFor(m => Model.Coaches[i].LastName)" />
+                                <input id="@Html.IdFor(m => Model.Coaches[i].BirthDate)" name="@Html.NameFor(m => Model.Coaches[i].BirthDate)" type="hidden" value="@Html.ValueFor(m => Model.Coaches[i].BirthDate)" />
+                                <div class="inline-children">
+                                    <span>@Model.Coaches[i].FullInfo</span>
+                                    <a role="button" href="#" data-remove-coach-btn type="button" class="text-danger" title="Remove coach">
+                                        <i class="glyphicon glyphicon-remove"></i>
+                                    </a>
+                                </div>
+                            </li>
                         }
-                    </ul>
-                </div>
+                    }
+                </ul>
             </div>
-            <div class="form-group">
-                <div class="col-md-12">
-                    <button type="button" class="btn btn-danger" onclick="history.back()">Cancel</button>
-                    <input type="submit" class="btn btn-success pull-right" value="Edit" />
-                </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-12">
+                <button type="button" class="btn btn-danger" onclick="history.back()">Cancel</button>
+                <input type="submit" class="btn btn-success pull-right" value="Edit" />
             </div>
-        </form>
-    </div>
-</main>
+        </div>
+    </form>
+</div>
 
 <script type="text/html" id="new-player-template">
     <li>
@@ -125,7 +125,7 @@
             <a role="button" href="#" data-remove-player-btn type="button" class="text-danger" title="Remove player">
                 <i class="glyphicon glyphicon-remove"></i>
             </a>
-        </div>  
+        </div>
     </li>
 </script>
 
@@ -140,7 +140,7 @@
             <a role="button" href="#" data-remove-coach-btn type="button" class="text-danger" title="Remove coach">
                 <i class="glyphicon glyphicon-remove"></i>
             </a>
-        </div>     
+        </div>
     </li>
 </script>
 

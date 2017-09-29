@@ -3,142 +3,137 @@
     ViewData["Title"] = "Home";
 }
 
-<style type="text/css">
-    .parallax-html .parallax-header::before {
-        background: linear-gradient(to bottom, transparent, #0081cc 90%), url('/images/team_test.jpg') center no-repeat;
-    }
-</style>
+@section ParallaxBgStyleSection{
+    <style type="text/css">
+        .parallax-html .parallax-header::before {
+            background: linear-gradient(to bottom, transparent, #0081cc 90%), url('/images/team_test.jpg') center no-repeat;
+        }
+    </style>
+}
 
-<header class="parallax-header">
-    <div class="parallax-container row">
-        <div class="news-container">
-            <div id="news-carousel" class="carousel slide content-carousel col-sm-9" data-ride="carousel" data-interval="6000">
-                <div class="carousel-inner">
-                    @for (var i = 0; i < 4; i++)
-                    {
-                        var activeClass = i == 0 ? "active" : string.Empty;
-                        <div class="item @activeClass">
-                            <img src="/images/team_test.jpg" alt="ASP.NET" class="img-responsive" />
-                            <div class="carousel-caption" role="option">
-                                <p>This an awesome and beautiful caption test text for a great fake article.</p>
-                            </div>
+@section HeaderSection{
+    <div class="news-container">
+        <div id="news-carousel" class="carousel slide content-carousel col-sm-9" data-ride="carousel" data-interval="6000">
+            <div class="carousel-inner">
+                @for (var i = 0; i < 4; i++)
+                {
+                    var activeClass = i == 0 ? "active" : string.Empty;
+                    <div class="item @activeClass">
+                        <img src="/images/team_test.jpg" alt="ASP.NET" class="img-responsive" />
+                        <div class="carousel-caption" role="option">
+                            <p>This an awesome and beautiful caption test text for a great fake article.</p>
                         </div>
-                    }
-                </div>
-            </div>
-            <div class="news-list col-sm-3">
-                <ul class="list-group">
-                    @for (var i = 0; i < 4; i++)
-                    {
-                        <li class="list-group-item" data-target="#news-carousel" data-slide-to="@i" style="background-image: url('/images/team_test.jpg');">
-                            <div class="carousel-caption" role="option">
-                                <p>Title</p>
-                            </div>
-                        </li>
-                    }
-                </ul>
+                    </div>
+                }
             </div>
         </div>
+        <div class="news-list col-sm-3">
+            <ul class="list-group">
+                @for (var i = 0; i < 4; i++)
+                {
+                    <li class="list-group-item" data-target="#news-carousel" data-slide-to="@i" style="background-image: url('/images/team_test.jpg');">
+                        <div class="carousel-caption" role="option">
+                            <p>Title</p>
+                        </div>
+                    </li>
+                }
+            </ul>
+        </div>
     </div>
-</header>
+}
 
-<main class="parallax-container row">
-    @if (!Model.Contents.IsNullOrEmpty())
-    {
-        <div class="col-md-6">
-            <div class="panel panel-accent">
-                <div class="panel-heading" role="tab" id="news-heading">
-                    <div class="inline-children">
-                        <a href="#news-collapse" role="button" data-toggle="collapse" aria-expanded="true" aria-controls="news-collapse">
-                            <h4 class="panel-title">
-                                <i class="fa fa-newspaper-o"></i> News & Articles
-                            </h4>
-                        </a>
-                        <a href="#news-collapse" class="collapse-btn bold pull-right" role="button" data-toggle="collapse" title="Toggle" aria-expanded="true" aria-controls="news-collapse">
-                            <i class="glyphicon glyphicon-menu-up"></i>
-                        </a>
-                    </div>
+@if (!Model.Contents.IsNullOrEmpty())
+{
+    <div class="col-md-6">
+        <div class="panel panel-accent">
+            <div class="panel-heading" role="tab" id="news-heading">
+                <div class="inline-children">
+                    <a href="#news-collapse" role="button" data-toggle="collapse" aria-expanded="true" aria-controls="news-collapse">
+                        <h4 class="panel-title">
+                            <i class="fa fa-newspaper-o"></i> News & Articles
+                        </h4>
+                    </a>
+                    <a href="#news-collapse" class="collapse-btn bold pull-right" role="button" data-toggle="collapse" title="Toggle" aria-expanded="true" aria-controls="news-collapse">
+                        <i class="glyphicon glyphicon-menu-up"></i>
+                    </a>
                 </div>
-                <div class="panel-collapse collapse in" role="tabpanel" id="news-collapse" aria-labelledby="teams-heading">
-                    <div class="panel-body">
-                        <ul class="list-unstyled content-list">
-                            @foreach (var content in Model.Contents)
-                            {
-                                <li style="background-image: url('@content.Thumbnail');">
-                                    <div class="content-item row no-margin">
-                                        <div class="content-option col-sm-6 col-sm-offset-6" role="option">
-                                            <a asp-action="Detail" asp-controller="Content" asp-route-id="@content.Id">
-                                                <p>
-                                                    <h4 class="bold">@content.Title</h4>
-                                                    @if (!string.IsNullOrWhiteSpace(content.Caption))
-                                                    {
-                                                        <span>@content.Caption</span>
-                                                    }
-                                                </p>
-                                            </a>
-                                        </div>
+            </div>
+            <div class="panel-collapse collapse in" role="tabpanel" id="news-collapse" aria-labelledby="teams-heading">
+                <div class="panel-body">
+                    <ul class="list-unstyled content-list">
+                        @foreach (var content in Model.Contents)
+                        {
+                            <li style="background-image: url('@content.Thumbnail');">
+                                <div class="content-item row no-margin">
+                                    <div class="content-option col-sm-6 col-sm-offset-6" role="option">
+                                        <a asp-action="Detail" asp-controller="Content" asp-route-id="@content.Id">
+                                            <p>
+                                                <h4 class="bold">@content.Title</h4>
+                                                @if (!string.IsNullOrWhiteSpace(content.Caption))
+                                                {
+                                                    <span>@content.Caption</span>
+                                                }
+                                            </p>
+                                        </a>
                                     </div>
-                                </li>
-                            }
-                        </ul>
-                    </div>
+                                </div>
+                            </li>
+                        }
+                    </ul>
                 </div>
             </div>
         </div>
-    }
-    @if (!Model.TopScorers.IsNullOrEmpty())
-    {
-        <div class="col-md-6">
-            <div class="panel panel-accent">
-                <div class="panel-heading" role="tab" id="news-heading">
-                    <div class="inline-children">
-                        <a href="#scorers-collapse" role="button" data-toggle="collapse" aria-expanded="true" aria-controls="news-scorers">
-                            <h4 class="panel-title">
-                                <i class="fa fa-trophy"></i> Top Scorers
-                            </h4>
-                        </a>
-                        <a href="#scorers-collapse" class="collapse-btn bold pull-right" role="button" data-toggle="collapse" title="Toggle" aria-expanded="true" aria-controls="scorers-collapse">
-                            <i class="glyphicon glyphicon-menu-up"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="panel-collapse collapse in" role="tabpanel" id="scorers-collapse" aria-labelledby="scorers-heading">
-                    <div class="panel-body">
-                        <ul class="list-unstyled scorers-list">
-                            @for (var i = 0; i < Model.TopScorers.Count; i++)
-                            {
-                                var pictureUrl = Url.Action(nameof(UserController.UserIdPicture), "User", new { id = Model.TopScorers[i].Id });
-                                <li>
-                                    <div class="scorer-item row no-margin">
-                                        <div class="col-xs-2">
-                                            <h1 class="vertical-aligned badge big bold text-center rank@(i + 1)">
-                                                @(i + 1)
-                                            </h1>
-                                        </div>
-                                        <div class="col-xs-3">
-                                            <img src="@pictureUrl" alt="Scorer Picture" class="img-circle img-responsive top-margin-10" />
-                                        </div>
-                                        <div class="col-xs-7">
-                                            <a asp-action="Detail" asp-controller="User" asp-route-id="@Model.TopScorers[i].Id">
-                                                <p>
-                                                    <h4>@Model.TopScorers[i].Name</h4>
-                                                    <h2>@Model.TopScorers[i].Points</h2>
-                                                </p>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </li>
-                            }
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    }
-    <div class="col-md-12">
-        @Html.Partial("_FooterPartial")
     </div>
-</main>
+}
+@if (!Model.TopScorers.IsNullOrEmpty())
+{
+    <div class="col-md-6">
+        <div class="panel panel-accent">
+            <div class="panel-heading" role="tab" id="news-heading">
+                <div class="inline-children">
+                    <a href="#scorers-collapse" role="button" data-toggle="collapse" aria-expanded="true" aria-controls="news-scorers">
+                        <h4 class="panel-title">
+                            <i class="fa fa-trophy"></i> Top Scorers
+                        </h4>
+                    </a>
+                    <a href="#scorers-collapse" class="collapse-btn bold pull-right" role="button" data-toggle="collapse" title="Toggle" aria-expanded="true" aria-controls="scorers-collapse">
+                        <i class="glyphicon glyphicon-menu-up"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="panel-collapse collapse in" role="tabpanel" id="scorers-collapse" aria-labelledby="scorers-heading">
+                <div class="panel-body">
+                    <ul class="list-unstyled scorers-list">
+                        @for (var i = 0; i < Model.TopScorers.Count; i++)
+                        {
+                            var pictureUrl = Url.Action(nameof(UserController.UserIdPicture), "User", new { id = Model.TopScorers[i].Id });
+                            <li>
+                                <div class="scorer-item row no-margin">
+                                    <div class="col-xs-2">
+                                        <h1 class="vertical-aligned badge big bold text-center rank@(i + 1)">
+                                            @(i + 1)
+                                        </h1>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <img src="@pictureUrl" alt="Scorer Picture" class="img-circle img-responsive top-margin-10" />
+                                    </div>
+                                    <div class="col-xs-7">
+                                        <a asp-action="Detail" asp-controller="User" asp-route-id="@Model.TopScorers[i].Id">
+                                            <p>
+                                                <h4>@Model.TopScorers[i].Name</h4>
+                                                <h2>@Model.TopScorers[i].Points</h2>
+                                            </p>
+                                        </a>
+                                    </div>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
 <script type="text/javascript">
     var $newsListGroup = $('.news-list .list-group');

@@ -80,7 +80,21 @@
             </div>
         </div>
     </nav>
-    @RenderBody()
+
+    @RenderSection("ParallaxBgStyleSection")
+
+    <header class="parallax-header">
+        <div class="parallax-container row">
+            @RenderSection("HeaderSection")
+        </div>
+    </header>
+
+    <main class="parallax-container row">
+        @RenderBody()
+        <div class="col-md-12">
+            @Html.Partial("_FooterPartial")
+        </div>
+    </main>
 
     <script type="text/javascript">
         $(function () {

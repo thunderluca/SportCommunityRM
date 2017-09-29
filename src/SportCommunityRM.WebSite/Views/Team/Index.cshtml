@@ -3,94 +3,92 @@
     ViewData["Title"] = "Teams";
 }
 
-<style type="text/css">
-    .parallax-html .parallax-header::before {
-        background: linear-gradient(to bottom, transparent, #0081cc 90%), url('/images/team_test.jpg') center no-repeat;
-    }
-</style>
+@section ParallaxBgStyleSection{
+    <style type="text/css">
+        .parallax-html .parallax-header::before {
+            background: linear-gradient(to bottom, transparent, #0081cc 90%), url('/images/team_test.jpg') center no-repeat;
+        }
+    </style>
+}
 
-<header class="parallax-header">
-    <div class="parallax-container row">
-        <h2>@ViewData["Title"]</h2>
-    </div>
-</header>
+@section HeaderSection{
+    <h2>@ViewData["Title"]</h2>
+}
 
-<main class="parallax-container row">
-    <div class="col-md-12">
-        <div class="panel panel-accent">
-            <div class="panel-heading" role="tab" id="teams-heading">
-                <div class="inline-children">
-                    <a href="#teams-collapse" role="button" data-toggle="collapse" aria-expanded="true" aria-controls="teams-collapse">
-                        <h4 class="panel-title">
-                            <i class="fa fa-group"></i> @ViewData["Title"]
-                        </h4>
-                    </a>
-                    <a href="#teams-collapse" class="collapse-btn bold pull-right" role="button" data-toggle="collapse" title="Toggle" aria-expanded="true" aria-controls="teams-collapse">
-                        <i class="glyphicon glyphicon-menu-up"></i>
-                    </a>
-                </div>
+<div class="col-md-12">
+    <div class="panel panel-accent">
+        <div class="panel-heading" role="tab" id="teams-heading">
+            <div class="inline-children">
+                <a href="#teams-collapse" role="button" data-toggle="collapse" aria-expanded="true" aria-controls="teams-collapse">
+                    <h4 class="panel-title">
+                        <i class="fa fa-group"></i> @ViewData["Title"]
+                    </h4>
+                </a>
+                <a href="#teams-collapse" class="collapse-btn bold pull-right" role="button" data-toggle="collapse" title="Toggle" aria-expanded="true" aria-controls="teams-collapse">
+                    <i class="glyphicon glyphicon-menu-up"></i>
+                </a>
             </div>
-            <div class="panel-collapse collapse in" role="tabpanel" id="teams-collapse" aria-labelledby="teams-heading">
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="table-responsive">
-                                <table class="table table-hover table-bordered">
-                                    <thead>
+        </div>
+        <div class="panel-collapse collapse in" role="tabpanel" id="teams-collapse" aria-labelledby="teams-heading">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Players count</th>
+                                        <th>Coaches count</th>
+                                        <th>@*Actions header*@</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.Teams == null || !Model.Teams.Any())
+                                    {
                                         <tr>
-                                            <th>Name</th>
-                                            <th>Players count</th>
-                                            <th>Coaches count</th>
-                                            <th>@*Actions header*@</th>
+                                            <td colspan="4">No team to display</td>
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                        @if (Model.Teams == null || !Model.Teams.Any())
+                                    }
+                                    else
+                                    {
+                                        foreach (var team in Model.Teams)
                                         {
                                             <tr>
-                                                <td colspan="4">No team to display</td>
+                                                <td>@team.Name</td>
+                                                <td>@team.PlayersCount</td>
+                                                <td>@team.CoachesCount</td>
+                                                <td>
+                                                    <a class="text-accent" title="Detail" asp-action="Detail" asp-controller="Team" asp-route-id="@team.Id">
+                                                        <i class="glyphicon glyphicon-search"></i>
+                                                    </a>
+                                                    <a data-edit-team-btn class="text-primary" title="Edit" asp-action="Edit" asp-controller="Team" asp-route-id="@team.Id">
+                                                        <i class="glyphicon glyphicon-edit"></i>
+                                                    </a>
+                                                    <a data-delete-team-btn class="text-danger" title="Delete" asp-action="Delete" asp-controller="Team" asp-route-id="@team.Id">
+                                                        <i class="glyphicon glyphicon-remove"></i>
+                                                    </a>
+                                                </td>
                                             </tr>
                                         }
-                                        else
-                                        {
-                                            foreach (var team in Model.Teams)
-                                            {
-                                                <tr>
-                                                    <td>@team.Name</td>
-                                                    <td>@team.PlayersCount</td>
-                                                    <td>@team.CoachesCount</td>
-                                                    <td>
-                                                        <a class="text-accent" title="Detail" asp-action="Detail" asp-controller="Team" asp-route-id="@team.Id">
-                                                            <i class="glyphicon glyphicon-search"></i>
-                                                        </a>
-                                                        <a data-edit-team-btn class="text-primary" title="Edit" asp-action="Edit" asp-controller="Team" asp-route-id="@team.Id">
-                                                            <i class="glyphicon glyphicon-edit"></i>
-                                                        </a>
-                                                        <a data-delete-team-btn class="text-danger" title="Delete" asp-action="Delete" asp-controller="Team" asp-route-id="@team.Id">
-                                                            <i class="glyphicon glyphicon-remove"></i>
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                            }
-                                        }
-                                    </tbody>
-                                </table>
-                            </div>
+                                    }
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-                    <br />
-                    <div class="row">
-                        <div class="col-md-12">
-                            <a class="btn btn-success pull-right" title="Create new team" asp-action="Create" asp-controller="Team">
-                                Create new team <i class="glyphicon glyphicon-plus"></i>
-                            </a>
-                        </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-md-12">
+                        <a class="btn btn-success pull-right" title="Create new team" asp-action="Create" asp-controller="Team">
+                            Create new team <i class="glyphicon glyphicon-plus"></i>
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</main>
+</div>
 
 <script type="text/javascript">
     $(function () {
