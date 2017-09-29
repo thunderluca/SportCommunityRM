@@ -1,6 +1,5 @@
 ﻿@model SportCommunityRM.WebSite.ViewModels.User.DetailViewModel
 @{
-    Layout = "_ParallaxLayout";
     ViewData["Title"] = Model.Name;
     var birthDate = Model.BirthDate.ToShortDateString();
     var pictureUrl = Url.Action(nameof(IPictureController.GetPicture), new { pictureId = Model.PictureId });

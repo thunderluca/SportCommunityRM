@@ -9,6 +9,11 @@
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="user-menu">
                     <li>
+                        <a asp-action="Index" asp-controller="User" class="btn btn-link">
+                            My Home <i class="fa fa-home"></i>
+                        </a>
+                    </li>
+                    <li>
                         <a asp-action="Detail" asp-controller="User" asp-route-id="@Model.RegisteredUserId" class="btn btn-link">
                             My profile <i class="glyphicon glyphicon-search"></i>
                         </a>

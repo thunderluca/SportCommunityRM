@@ -1,43 +1,79 @@
-﻿@using SportCommunityRM.WebSite.Views.Manage
-@model SportCommunityRM.WebSite.ViewModels.Manage.IndexViewModel
+﻿@model SportCommunityRM.WebSite.ViewModels.Manage.IndexViewModel
 @{
     ViewData["Title"] = "Profile";
-    ViewData.AddActivePage(ManageNavPages.Index);
 }
 
-<br />
-@Html.Partial("_StatusMessage", Model.StatusMessage)
-<div class="row">
+<style type="text/css">
+    .parallax-html .parallax-header::before {
+        background: linear-gradient(to bottom, transparent, #0081cc 90%), url('/images/team_test.jpg') center no-repeat;
+    }
+</style>
+
+<header class="parallax-header">
+    <div class="parallax-container row">
+        <h2>@ViewData["Title"]</h2>
+    </div>
+</header>
+
+<main class="parallax-container row">
+    @Html.Partial("_StatusMessage", Model.StatusMessage)
     <div class="col-md-12">
         <form method="post">
             <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label asp-for="FirstName"></label>
-                        <span>@Html.DisplayFor(m => m.FirstName)</span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="LastName"></label>
-                        <span>@Html.DisplayFor(m => m.LastName)</span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="BirthDate"></label>
-                        <span>@Html.DisplayFor(m => m.BirthDate)</span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="Username"></label>
-                        <span>@Html.DisplayFor(m => m.Username)</span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="CroppedImage"></label>
-                        <div class="input-group">
-                            <input type="file" id="local-file-input" name="local-file-input" accept="image/*" class="form-control" />
-                            <span class="input-group-btn">
-                                <button data-update-pic-btn asp-action="UploadPicture" class="btn btn-accent" disabled type="submit">Update image</button>
-                            </span>
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="FirstName"></label>
+                                <span>@Html.DisplayFor(m => m.FirstName)</span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="LastName"></label>
+                                <span>@Html.DisplayFor(m => m.LastName)</span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="BirthDate"></label>
+                                <span>@Html.DisplayFor(m => m.BirthDate)</span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Username"></label>
+                                <span>@Html.DisplayFor(m => m.Username)</span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="CroppedImage"></label>
+                                <div class="input-group">
+                                    <input type="file" id="local-file-input" name="local-file-input" accept="image/jpeg,image/png" class="form-control" />
+                                    <span class="input-group-btn">
+                                        <button data-update-pic-btn asp-action="UploadPicture" class="btn btn-success" disabled type="submit">Update</button>
+                                    </span>
+                                </div>
+                                <input type="hidden" asp-for="CroppedImage" />
+                            </div>
                         </div>
-                        <input type="hidden" asp-for="CroppedImage" />
-                    </div>
+                        <div class="col-md-6">
+                            <div id="data-crop-preview-group" class="form-group" style="display: none;">
+                                <div class="inline-children">
+                                    <div class="circle-mask large">
+                                        <img id="crop-box-img" class="img-responsive" alt="User Picture Preview" />
+                                    </div>
+                                    <div class="crop-controls">
+                                        <div class="inline-children" style="margin-bottom: 20px;">
+                                            <a id="crop-zoom-out-btn" class="btn btn-default">-</a>
+                                            <a id="crop-zoom-in-btn" class="btn btn-default">+</a>
+                                        </div>
+                                        <button id="cancel-crop-btn" type="button" class="btn btn-danger">Cancel</button>
+                                        <br class="hidden-xs" />
+                                        <button id="confirm-crop-btn" type="button" class="btn btn-success">Confirm</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="data-final-preview-group" class="form-group">
+                                <img id="user-picture-preview" src="@Model.PictureUrl" alt="User picture" class="img-circle img-responsive img-square" />
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+                <div class="col-md-6">
                     <div class="form-group">
                         <label asp-for="Email"></label>
                         <div class="input-group">
@@ -51,7 +87,7 @@
                             else
                             {
                                 <span class="input-group-btn" aria-hidden="true">
-                                    <button asp-action="SendVerificationEmail" class="btn btn-primary">Send verification email</button>
+                                    <button asp-action="SendVerificationEmail" class="btn btn-primary">Verify</button>
                                 </span>
                             }
                         </div>
@@ -63,23 +99,6 @@
                         <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div id="data-crop-preview-group" class="form-group" style="display: none;">
-                        <div class="circle-mask large">
-                            <img id="crop-box-img" class="img-responsive" alt="User Picture Preview" />
-                        </div>
-                        <div class="crop-controls">
-                            <span>Zoom</span>
-                            <a id="crop-zoom-out-btn" class="btn btn-default">-</a>
-                            <a id="crop-zoom-in-btn" class="btn btn-default">+</a>
-                            <button id="cancel-crop-btn" type="button" class="btn btn-danger">Cancel</button>
-                            <button id="confirm-crop-btn" type="button" class="btn btn-success">Confirm</button>
-                        </div>
-                    </div>
-                    <div id="data-final-preview-group" class="form-group">
-                        <img id="user-picture-preview" src="@Model.PictureUrl" alt="User picture" class="img-circle img-responsive img-square" />
-                    </div>
-                </div>
                 <div class="col-md-12">
                     <div class="form-group">
                         <button type="button" class="btn btn-block-fluid btn-danger" onclick="history.back()">Back</button>
@@ -89,7 +108,10 @@
             </div>
         </form>
     </div>
-</div>
+    <div class="col-md-12">
+        @Html.Partial("_FooterPartial")
+    </div>
+</main>
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")

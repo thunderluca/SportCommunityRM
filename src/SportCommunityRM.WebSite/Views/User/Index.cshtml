@@ -3,8 +3,19 @@
     ViewData["Title"] = "My Home";
 }
 
-<br/>
-<div class="row">
+<style type="text/css">
+    .parallax-html .parallax-header::before {
+        background: linear-gradient(to bottom, transparent, #0081cc 90%), url('/images/team_test.jpg') center no-repeat;
+    }
+</style>
+
+<header class="parallax-header">
+    <div class="parallax-container row">
+        <h1>@ViewData["Title"]</h1>
+    </div>
+</header>
+
+<main class="parallax-container row">
     <div class="col-md-6">
         <div class="panel panel-accent">
             <div class="panel-heading" role="tab" id="teams-heading">
@@ -81,8 +92,6 @@
             </div>
         </div>
     }
-</div>
-<div class="row">
     <div class="col-md-6">
         <div class="panel panel-accent">
             <div class="panel-heading" role="tab" id="calendar-heading">
@@ -128,4 +137,7 @@
             </div>
         </div>
     }
-</div>
+    <div class="col-md-12">
+        @Html.Partial("_FooterPartial")
+    </div>
+</main>

@@ -15,9 +15,9 @@ namespace SportCommunityRM.WebSite.Controllers
         }
 
         [HttpGet]
-#if !DEBUG
-        [ResponseCache(Duration = 1800)]
-#endif
+//#if !DEBUG
+//        [ResponseCache(Duration = 1800)]
+//#endif
         public IActionResult Index()
         {
             var model = this.WorkerServices.GetIndexViewModel();

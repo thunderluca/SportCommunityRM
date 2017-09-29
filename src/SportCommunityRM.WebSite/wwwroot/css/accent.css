@@ -144,6 +144,10 @@ body,
         border-bottom: 0;
     }
 
+.login-html .container {
+    background-color: #006eb2;
+}
+
 footer,
 .form-group span:not(.text-danger),
 .fc-today,

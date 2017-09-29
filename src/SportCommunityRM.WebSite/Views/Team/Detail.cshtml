@@ -1,6 +1,5 @@
 ﻿@model SportCommunityRM.WebSite.ViewModels.Team.DetailViewModel
 @{
-    Layout = "_ParallaxLayout";
     ViewData["Title"] = $"Team '{Model.Name}'";
     var pictureUrl = Url.Action(nameof(IPictureController.GetPicture), new { pictureId = Model.PictureId });
     var backgroundPictureUrl = Url.Action(nameof(IPictureController.GetPicture), new { pictureId = Model.BackgroundPictureId });
@@ -8,7 +7,7 @@
 
 <style type="text/css">
     .parallax-html .parallax-header::before {
-        background: linear-gradient(to bottom, transparent, #0081cc 90%), url('/images/team_test.jpg') no-repeat;
+        background: linear-gradient(to bottom, transparent, #0081cc 90%), url('/images/team_test.jpg') center no-repeat;
     }
 </style>
 

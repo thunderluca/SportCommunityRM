@@ -4,9 +4,19 @@
     ViewData["Title"] = "Edit team";
 }
 
-<h2>@ViewData["Title"]</h2>
+<style type="text/css">
+    .parallax-html .parallax-header::before {
+        background: linear-gradient(to bottom, transparent, #0081cc 90%), url('/images/team_test.jpg') center no-repeat;
+    }
+</style>
 
-<div class="row">
+<header class="parallax-header">
+    <div class="parallax-container row">
+        <h2>@ViewData["Title"]</h2>
+    </div>
+</header>
+
+<main class="parallax-container row">
     <div class="col-md-6">
         <form class="form-horizontal" method="post">
             <div class="form-group">
@@ -39,7 +49,7 @@
                             <i class="glyphicon glyphicon-plus"></i>
                         </span>
                     </div>
-                    <br/>
+                    <br />
                     <ul id="players-list" class="list-unstyled">
                         @if (Model.Players != null && Model.Players.Length > 0)
                         {
@@ -102,7 +112,7 @@
             </div>
         </form>
     </div>
-</div>
+</main>
 
 <script type="text/html" id="new-player-template">
     <li>

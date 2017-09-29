@@ -2,6 +2,11 @@
     background-repeat: no-repeat;
 }
 
+html,
+body {
+    height: 100%;
+}
+
 a.text-accent,
 a.text-default,
 a.text-primary,
@@ -89,8 +94,24 @@ a.text-danger {
     transform: rotate(180deg);
 }
 
-.container {
+html:not(.login-html,.parallax-html) .container {
     padding: 0;
+}
+
+.login-html .container {
+    padding-bottom: 15px;
+}
+
+.crop-controls {
+    vertical-align: top;
+}
+    
+    .crop-controls > .btn {
+        width: 100%;
+    }
+
+.crop-controls > * + * {
+    margin-bottom: 20px;
 }
 
 .content-carousel {
@@ -210,49 +231,44 @@ a.text-danger {
 .input-group-addon.primary {
     color: #fff;
     background-color: #286090;
-    /*border-color: #122b40;*/
+    border-color: #2e6da4;
 }
 
 .input-group-addon.success {
     color: #fff;
     background-color: #5cb85c;
-    /*border-color: #4cae4c;*/
+    border-color: #4cae4c;
 }
 
 .input-group-addon.info {
     color: #fff;
     background-color: #5bc0de;
-    /*border-color: #46b8da;*/
+    border-color: #46b8da;
 }
 
 .input-group-addon.warning {
     color: #fff;
     background-color: #f0ad4e;
-    /*border-color: #eea236;*/
+    border-color: #eea236;
 }
 
 .input-group-addon.danger {
     color: #fff;
     background-color: #d9534f;
-    /*border-color: #d43f3a;*/
+    border-color: #d43f3a;
 }
 
-.login-html,
-.login-html > body {
-    height: 100%;
+.login-html .container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
-    .login-html .container {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
+    .login-html .container a:not(.btn):hover,
+    .login-html .container a:not(.btn):focus {
+        text-decoration: underline;
     }
-
-        .login-html .container a:not(.btn):hover,
-        .login-html .container a:not(.btn):focus {
-            text-decoration: underline;
-        }
 
 .navbar-collapse {
     border-top: none;
@@ -328,37 +344,52 @@ a.text-danger {
         width: auto;
     }
 
-    .login-html hr,
-    .login-html .form-group .form-control,
+    /*.login-html hr,
+    .login-html .form-group .form-control,*/
     .parallax-html .parallax-header .parallax-container,
     .parallax-html .parallax-header .parallax-title-picture,
     .parallax-html main hr,
     .parallax-html main .panel,
-    .parallax-html main .btn {
+    .parallax-html main .btn,
+    .parallax-html main .form-control {
         box-shadow: 0 2px 2px #000;
     }
 
-        .login-html .btn.btn-danger,
+        /*.login-html .btn.btn-danger,*/
         .parallax-html main .btn.btn-danger {
             box-shadow: 0 2px 2px #d43f3a;
         }
 
-.login-html .btn.btn-primary {
+        .parallax-html main .btn.btn-primary,
+        .parallax-html main .input-group-addon.primary {
+            box-shadow: 0 2px 2px #2e6da4;
+        }
+
+        .parallax-html main .btn.btn-success,
+        .parallax-html main .input-group-addon.success {
+            box-shadow: 0 2px 2px #4cae4c;
+        }
+
+    /*.login-html .btn.btn-primary {
     box-shadow: 0 2px 2px #122b40;
 }
 
 .login-html .btn.btn-success {
     box-shadow: 0 2px 2px #4cae4c;
-}
+}*/
 
-.parallax-html .parallax-header,
-.parallax-html .parallax-footer {
-    color: #fff;
-    position: relative;
-    text-shadow: 0 2px 2px #000;
-}
+    .parallax-html .parallax-header,
+    .parallax-html .parallax-footer {
+        color: #fff;
+        position: relative;
+    }
 
-.login-html h1,
+    .parallax-html .parallax-header [id^=fullcalendar] {
+        color: initial;
+        text-shadow: none;
+    }
+
+    /*.login-html h1,
 .login-html h2,
 .login-html h3,
 .login-html h4,
@@ -366,23 +397,22 @@ a.text-danger {
 .login-html h6,
 .login-html p,
 .login-html .form-group > label,
-.login-html .form-group > span,
-.parallax-html .parallax-header,
-.parallax-html .parallax-footer,
-.parallax-html main .form-group > label,
-.parallax-html main .form-group > span {
-    text-shadow: 0 2px 2px #000;
-}
-
+.login-html .form-group > span,*/
     .parallax-html .parallax-header,
-    .parallax-html .parallax-header:before {
-        background: 50% 50% / cover;
+    .parallax-html .parallax-footer,
+    .parallax-html main .form-group > label,
+    .parallax-html main .form-group > span {
+        text-shadow: 0 2px 2px #000;
     }
+
+        /*.parallax-html .parallax-header,
+        .parallax-html .parallax-header:before {
+            background: 50% 50% / 100% 100%;
+        }*/
 
         .parallax-html .parallax-header::before {
             background-size: cover;
             content: '';
-            opacity: 0.5;
             display: block;
             min-height: 100vh;
             position: absolute;
@@ -414,15 +444,15 @@ a.text-danger {
     margin-top: 10px;
 }
 
-@media screen and (min-width: 1600px) {
+@media screen and (min-width: 1400px) and (max-width: 1599px) {
     .container {
-        width: 1560px;
+        width: 1380px;
     }
 }
 
-@media screen and (min-width: 1400px) {
+@media screen and (min-width: 1600px) {
     .container {
-        width: 1380px;
+        width: 1560px;
     }
 }
 
@@ -451,6 +481,18 @@ a.text-danger {
         margin-bottom: 15px;
     }
 
+    .crop-controls > * { 
+        display: inline-block;
+    }
+
+    .crop-controls > * + * {
+        margin-bottom: 0;
+    }
+
+    .crop-controls > .btn {
+        width: auto;
+    } 
+    
     .dropdown-menu > li > .btn-link {
         text-align: left;
     }
@@ -506,6 +548,7 @@ a.text-danger {
         top: 0;
         left: 0;
         transform: none;
+        margin: 0 20px;
     }
 
     .navbar-nav {
