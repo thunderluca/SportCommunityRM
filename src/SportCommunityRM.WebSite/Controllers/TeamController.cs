@@ -7,6 +7,7 @@ using SportCommunityRM.WebSite.WorkerServices;
 using SportCommunityRM.WebSite.ViewModels.Team;
 using SportCommunityRM.WebSite.Models;
 using Microsoft.AspNetCore.Authorization;
+using SportCommunityRM.WebSite.Helpers;
 
 namespace SportCommunityRM.WebSite.Controllers
 {
@@ -21,6 +22,7 @@ namespace SportCommunityRM.WebSite.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Index()
         {
             var model = this.WorkerServices.GetIndexViewModel();
@@ -92,6 +94,7 @@ namespace SportCommunityRM.WebSite.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Detail(Guid? id)
         {
             if (id.IsNullOrEmpty())
@@ -130,7 +133,7 @@ namespace SportCommunityRM.WebSite.Controllers
         {
             var bytes = await this.WorkerServices.GetTeamPictureAsync(teamId, size);
 
-            return File(bytes ?? new byte[0], "image/jpeg");
+            return File(bytes ?? new byte[0], ImagesHelper.JpegMimeType);
         }
 
         [HttpGet]
@@ -139,7 +142,7 @@ namespace SportCommunityRM.WebSite.Controllers
         {
             var bytes = await this.WorkerServices.GetPictureAsync(pictureId, size);
 
-            return File(bytes ?? new byte[0], "image/jpeg");
+            return File(bytes ?? new byte[0], ImagesHelper.JpegMimeType);
         }
     }
 }

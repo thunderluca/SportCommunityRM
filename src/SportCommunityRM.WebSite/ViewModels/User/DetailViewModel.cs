@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SportCommunityRM.WebSite.ViewModels.User
 {
-    public class DetailViewModel
+    public class DetailViewModel : IPermissionsViewModel
     {
         public Guid Id { get; set; }
 
@@ -24,6 +24,12 @@ namespace SportCommunityRM.WebSite.ViewModels.User
         public string Name => $"{FirstName} {LastName}";
 
         public IEnumerable<Team> Teams { get; set; }
+
+        public bool IsCreateAllowed { get; set; }
+
+        public bool IsEditAllowed { get; set; }
+
+        public bool IsDeleteAllowed { get; set; }
 
         public class Team
         {

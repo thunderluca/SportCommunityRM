@@ -20,6 +20,7 @@ namespace SportCommunityRM.WebSite.Controllers
             this.WorkerServices = workerServices ?? throw new ArgumentNullException(nameof(workerServices));
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             var model = await this.WorkerServices.GetIndexViewModelAsync();

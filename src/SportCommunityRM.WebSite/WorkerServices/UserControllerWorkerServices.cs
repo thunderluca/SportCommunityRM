@@ -60,12 +60,25 @@ namespace SportCommunityRM.WebSite.WorkerServices
             };
         }
 
-        public async Task<DetailViewModel> GetDetailViewModelAsync(Guid registeredUserId)
+        public DetailViewModel GetDetailViewModel(Guid registeredUserId)
         {
-            var user = await this.GetApplicationUserAsync();
+            var baseQuery = this.Database.RegisteredUsers.Where(ru => ru.Id == registeredUserId);
 
-            var model = (from registeredUser in this.Database.RegisteredUsers
-                         where registeredUser.Id == registeredUserId
+            return GetDetailViewModel(baseQuery);
+        }
+
+        public async Task<DetailViewModel> GetDetailViewModelAsync(string username)
+        {
+            var user = await this.GetApplicationUserAsync(username);
+
+            var baseQuery = this.Database.RegisteredUsers.Where(ru => ru.AspNetUserId == user.Id);
+
+            return GetDetailViewModel(baseQuery);
+        }
+
+        private DetailViewModel GetDetailViewModel(IQueryable<RegisteredUser> baseRegisteredUserQuery)
+        {
+            var model = (from registeredUser in baseRegisteredUserQuery
                          let teams = registeredUser.Teams
                             .Select(rut => new DetailViewModel.Team
                             {
@@ -74,7 +87,7 @@ namespace SportCommunityRM.WebSite.WorkerServices
                             })
                          select new DetailViewModel
                          {
-                             Id = registeredUserId,
+                             Id = registeredUser.Id,
                              FirstName = registeredUser.FirstName,
                              LastName = registeredUser.LastName,
                              BirthDate = registeredUser.BirthDate,

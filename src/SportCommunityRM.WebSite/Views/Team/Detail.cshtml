@@ -63,12 +63,15 @@
                                         <td>@player.Name</td>
                                         <td>@player.BirthDate.ToShortDateString()</td>
                                         <td>
-                                            <a class="text-accent" asp-action="Detail" asp-controller="User" asp-route-id="@player.Id" title="Detail">
+                                            <a class="text-accent" asp-controller="User" asp-route-id="@player.Id" title="Detail">
                                                 <i class="glyphicon glyphicon-search"></i>
                                             </a>
-                                            <a data-remove-player-btn class="text-danger" asp-action="@nameof(TeamController.RemovePlayer)" asp-controller="Team" asp-route-playerId="@player.Id" asp-route-teamId="@Model.Id" title="Remove player">
-                                                <i class="glyphicon glyphicon-remove"></i>
-                                            </a>
+                                            @if (Model.IsDeleteAllowed)
+                                            {
+                                                <a data-remove-player-btn class="text-danger" asp-action="@nameof(TeamController.RemovePlayer)" asp-controller="Team" asp-route-playerId="@player.Id" asp-route-teamId="@Model.Id" title="Remove player">
+                                                    <i class="glyphicon glyphicon-remove"></i>
+                                                </a>
+                                            }
                                         </td>
                                     </tr>
                                 }
@@ -121,9 +124,12 @@
                                             <a class="text-accent" asp-action="Detail" asp-controller="Coach" asp-route-id="@coach.Id" title="Detail">
                                                 <i class="glyphicon glyphicon-search"></i>
                                             </a>
-                                            <a data-remove-coach-btn class="text-danger" asp-action="@nameof(TeamController.RemoveCoach)" asp-controller="Team" asp-route-playerId="@coach.Id" asp-route-teamId="@Model.Id" title="Remove coach">
-                                                <i class="glyphicon glyphicon-remove"></i>
-                                            </a>
+                                            @if (Model.IsDeleteAllowed)
+                                            {
+                                                <a data-remove-coach-btn class="text-danger" asp-action="@nameof(TeamController.RemoveCoach)" asp-controller="Team" asp-route-playerId="@coach.Id" asp-route-teamId="@Model.Id" title="Remove coach">
+                                                    <i class="glyphicon glyphicon-remove"></i>
+                                                </a>
+                                            }
                                         </td>
                                     </tr>
                                 }
@@ -139,21 +145,24 @@
     <button type="button" class="btn btn-block-fluid btn-danger" onclick="history.back()">Back</button>
 </div>
 
-<script type="text/javascript">
-    $(function () {
-        $('[data-remove-player-btn]').on('click', function (event) {
-            event.preventDefault();
-            var removeUrl = $(this).attr('href');
-            showConfirm('Are you sure to remove this player from @Model.Name?', 'Yes', 'No', function (result) {
-                if (result) window.location.href = removeUrl;
+@if (Model.IsDeleteAllowed)
+{
+    <script type="text/javascript">
+        $(function () {
+            $('[data-remove-player-btn]').on('click', function (event) {
+                event.preventDefault();
+                var removeUrl = $(this).attr('href');
+                showConfirm('Are you sure to remove this player from @Model.Name?', 'Yes', 'No', function (result) {
+                    if (result) window.location.href = removeUrl;
+                });
+            });
+            $('[data-remove-coach-btn]').on('click', function (event) {
+                event.preventDefault();
+                var removeUrl = $(this).attr('href');
+                showConfirm('Are you sure to remove this coach from @Model.Name?', 'Yes', 'No', function (result) {
+                    if (result) window.location.href = removeUrl;
+                });
             });
         });
-        $('[data-remove-coach-btn]').on('click', function (event) {
-            event.preventDefault();
-            var removeUrl = $(this).attr('href');
-            showConfirm('Are you sure to remove this coach from @Model.Name?', 'Yes', 'No', function (result) {
-                if (result) window.location.href = removeUrl;
-            });
-        });
-    });
-</script>
+    </script>
+}

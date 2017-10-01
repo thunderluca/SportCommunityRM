@@ -6,6 +6,7 @@ using SportCommunityRM.WebSite.WorkerServices;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using SportCommunityRM.WebSite.Models;
+using SportCommunityRM.WebSite.Helpers;
 
 namespace SportCommunityRM.WebSite.Controllers
 {
@@ -20,11 +21,27 @@ namespace SportCommunityRM.WebSite.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        [AllowAnonymous]
+        public async Task<IActionResult> Index(string username = null, string id = null)
         {
+            if (!string.IsNullOrWhiteSpace(username) || !string.IsNullOrWhiteSpace(id))
+                return GetUserView(username, id);
+
             var model = await this.WorkerServices.GetIndexViewModelAsync();
 
             return View(model);
+        }
+
+        private IActionResult GetUserView(string username, string id)
+        {
+            var isGuid = Guid.TryParse(id, out Guid guid);
+            if (isGuid && !guid.IsNullOrEmpty())
+                return RedirectToAction(nameof(this.Detail), new { id = id });
+
+            if (guid.IsNullOrEmpty() && string.IsNullOrWhiteSpace(username))
+                return NotFound();
+
+            return RedirectToAction(nameof(this.Detail), new { username = guid.IsNullOrEmpty() ? username : id });
         }
 
         public async Task<IActionResult> GetActivitiesAsync(string filter, int page, string sortExpression)
@@ -60,14 +77,25 @@ namespace SportCommunityRM.WebSite.Controllers
 
             return PartialView("DisplayTemplates/NewsFeed", newsFeedContents);
         }
+        
+        //public IActionResult Detail(Guid id)
+        //{
+        //    if (id.IsNullOrEmpty())
+        //        return NotFound();
 
-        [HttpGet]
-        public async Task<IActionResult> Detail(Guid? id)
+        //    var model = this.WorkerServices.GetDetailViewModel(id);
+
+        //    return View(model);
+        //}
+        
+        public async Task<IActionResult> Detail(string username, Guid id)
         {
-            if (id.IsNullOrEmpty())
+            if (string.IsNullOrWhiteSpace(username) && id.IsNullOrEmpty())
                 return NotFound();
 
-            var model = await this.WorkerServices.GetDetailViewModelAsync(id.Value);
+            var model = !string.IsNullOrWhiteSpace(username) 
+                ? await this.WorkerServices.GetDetailViewModelAsync(username)
+                : this.WorkerServices.GetDetailViewModel(id);
 
             return View(model);
         }
@@ -78,14 +106,14 @@ namespace SportCommunityRM.WebSite.Controllers
         {
             var bytes = await this.WorkerServices.GetUserPictureAsync(username, size);
 
-            return File(bytes ?? new byte[0], "image/jpeg");
+            return File(bytes ?? new byte[0], ImagesHelper.JpegMimeType);
         }
 
         public async Task<IActionResult> UserIdPicture(Guid id, int? size)
         {
             var bytes = await this.WorkerServices.GetUserPictureByIdAsync(id, size);
 
-            return File(bytes ?? new byte[0], "image/jpeg");
+            return File(bytes ?? new byte[0], ImagesHelper.JpegMimeType);
         }
 
         [HttpGet]
@@ -94,7 +122,7 @@ namespace SportCommunityRM.WebSite.Controllers
         {
             var bytes = await this.WorkerServices.GetPictureAsync(pictureId, size);
 
-            return File(bytes ?? new byte[0], "image/jpeg");
+            return File(bytes ?? new byte[0], ImagesHelper.JpegMimeType);
         }
     }
 }

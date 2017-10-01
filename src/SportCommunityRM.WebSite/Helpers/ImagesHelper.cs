@@ -8,6 +8,9 @@ namespace SportCommunityRM.WebSite.Helpers
 {
     public static class ImagesHelper
     {
+        public const string JpegMimeType = "image/jpeg";
+        public const string PngMimeType = "image/png";
+
         public static byte[] GetImageBytesFromBase64String(string base64Image)
         {
             if (base64Image.Contains(','))

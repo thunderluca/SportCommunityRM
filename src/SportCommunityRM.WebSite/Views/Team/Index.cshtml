@@ -62,12 +62,18 @@
                                                     <a class="text-accent" title="Detail" asp-action="Detail" asp-controller="Team" asp-route-id="@team.Id">
                                                         <i class="glyphicon glyphicon-search"></i>
                                                     </a>
-                                                    <a data-edit-team-btn class="text-primary" title="Edit" asp-action="Edit" asp-controller="Team" asp-route-id="@team.Id">
-                                                        <i class="glyphicon glyphicon-edit"></i>
-                                                    </a>
-                                                    <a data-delete-team-btn class="text-danger" title="Delete" asp-action="Delete" asp-controller="Team" asp-route-id="@team.Id">
-                                                        <i class="glyphicon glyphicon-remove"></i>
-                                                    </a>
+                                                    @if (Model.IsEditAllowed)
+                                                    {
+                                                        <a data-edit-team-btn class="text-primary" title="Edit" asp-action="Edit" asp-controller="Team" asp-route-id="@team.Id">
+                                                            <i class="glyphicon glyphicon-edit"></i>
+                                                        </a>
+                                                    }
+                                                    @if (Model.IsDeleteAllowed)
+                                                    {
+                                                        <a data-delete-team-btn class="text-danger" title="Delete" asp-action="Delete" asp-controller="Team" asp-route-id="@team.Id">
+                                                            <i class="glyphicon glyphicon-remove"></i>
+                                                        </a>
+                                                    }
                                                 </td>
                                             </tr>
                                         }
@@ -77,27 +83,33 @@
                         </div>
                     </div>
                 </div>
-                <br />
-                <div class="row">
-                    <div class="col-md-12">
-                        <a class="btn btn-success pull-right" title="Create new team" asp-action="Create" asp-controller="Team">
-                            Create new team <i class="glyphicon glyphicon-plus"></i>
-                        </a>
+                @if (Model.IsCreateAllowed)
+                {
+                    <br />
+                    <div class="row">
+                        <div class="col-md-12">
+                            <a class="btn btn-success pull-right" title="Create new team" asp-action="Create" asp-controller="Team">
+                                Create new team <i class="glyphicon glyphicon-plus"></i>
+                            </a>
+                        </div>
                     </div>
-                </div>
+                }
             </div>
         </div>
     </div>
 </div>
 
-<script type="text/javascript">
-    $(function () {
-        $('[data-delete-team-btn]').on('click', function (event) {
-            event.preventDefault();
-            var deleteUrl = $(this).attr('href');
-            showConfirm('Are you sure to delete this team? All players and coaches will be removed from the deleted team.', 'Yes', 'No', function (result) {
-                if (result) window.location.href = deleteUrl;
+@if (Model.IsDeleteAllowed)
+{
+    <script type="text/javascript">
+        $(function () {
+            $('[data-delete-team-btn]').on('click', function (event) {
+                event.preventDefault();
+                var deleteUrl = $(this).attr('href');
+                showConfirm('Are you sure to delete this team? All players and coaches will be removed from the deleted team.', 'Yes', 'No', function (result) {
+                    if (result) window.location.href = deleteUrl;
+                });
             });
         });
-    });
-</script>
+    </script>
+}

@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SportCommunityRM.WebSite.ViewModels.Team
 {
-    public class IndexViewModel
+    public class IndexViewModel : IPermissionsViewModel
     {
         public IEnumerable<Team> Teams { get; set; }
+
+        public bool IsCreateAllowed { get; set; }
+
+        public bool IsEditAllowed { get; set; }
+
+        public bool IsDeleteAllowed { get; set; }
 
         public class Team
         {

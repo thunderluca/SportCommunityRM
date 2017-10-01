@@ -118,7 +118,7 @@
                                         <img src="@pictureUrl" alt="Scorer Picture" class="img-circle img-responsive top-margin-10" />
                                     </div>
                                     <div class="col-xs-7">
-                                        <a asp-action="Detail" asp-controller="User" asp-route-id="@Model.TopScorers[i].Id">
+                                        <a asp-controller="User" asp-route-id="@Model.TopScorers[i].Id">
                                             <p>
                                                 <h4>@Model.TopScorers[i].Name</h4>
                                                 <h2>@Model.TopScorers[i].Points</h2>
