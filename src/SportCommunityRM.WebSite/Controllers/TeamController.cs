@@ -23,9 +23,9 @@ namespace SportCommunityRM.WebSite.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var model = this.WorkerServices.GetIndexViewModel();
+            var model = await this.WorkerServices.GetIndexViewModelAsync();
 
             return View(model);
         }
@@ -42,6 +42,7 @@ namespace SportCommunityRM.WebSite.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = ClaimPoliciesConstants.CreateTeamsPolicyName)]
         public IActionResult Create()
         {
             var model = this.WorkerServices.GetCreateViewModel();
@@ -50,6 +51,7 @@ namespace SportCommunityRM.WebSite.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = ClaimPoliciesConstants.CreateTeamsPolicyName)]
         public async Task<IActionResult> Create(CreateViewModel viewModel)
         {
             if (!ModelState.IsValid)
@@ -61,6 +63,7 @@ namespace SportCommunityRM.WebSite.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = ClaimPoliciesConstants.EditTeamsPolicyName)]
         public IActionResult Edit(Guid? id)
         {
             if (id.IsNullOrEmpty())
@@ -72,6 +75,7 @@ namespace SportCommunityRM.WebSite.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = ClaimPoliciesConstants.EditTeamsPolicyName)]
         public async Task<IActionResult> Edit(EditViewModel viewModel)
         {
             if (!ModelState.IsValid)
@@ -83,6 +87,7 @@ namespace SportCommunityRM.WebSite.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = ClaimPoliciesConstants.DeleteTeamsPolicyName)]
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id.IsNullOrEmpty())
@@ -106,6 +111,7 @@ namespace SportCommunityRM.WebSite.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = ClaimPoliciesConstants.EditTeamsPolicyName)]
         public async Task<IActionResult> RemoveCoach(Guid? teamId, Guid? coachId)
         {
             if (teamId.IsNullOrEmpty() || coachId.IsNullOrEmpty())
@@ -117,6 +123,7 @@ namespace SportCommunityRM.WebSite.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = ClaimPoliciesConstants.EditTeamsPolicyName)]
         public async Task<IActionResult> RemovePlayer(Guid? teamId, Guid? playerId)
         {
             if (teamId.IsNullOrEmpty() || playerId.IsNullOrEmpty())

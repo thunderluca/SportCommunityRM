@@ -13,8 +13,8 @@ using System;
 namespace SportCommunityRM.Data.Migrations
 {
     [DbContext(typeof(SCRMContext))]
-    [Migration("20170920140219_Initial2")]
-    partial class Initial2
+    [Migration("20171002102343_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -34,6 +34,8 @@ namespace SportCommunityRM.Data.Migrations
                     b.Property<DateTime>("EndDate");
 
                     b.Property<Guid?>("FieldId");
+
+                    b.Property<bool>("IsConfirmed");
 
                     b.Property<string>("Name");
 
@@ -65,7 +67,42 @@ namespace SportCommunityRM.Data.Migrations
 
                     b.HasIndex("RegisteredUserId");
 
-                    b.ToTable("SCRM_Coach");
+                    b.ToTable("SCRM_Coaches");
+                });
+
+            modelBuilder.Entity("SportCommunityRM.Data.Models.Content", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<Guid?>("AuthorId");
+
+                    b.Property<string>("Body");
+
+                    b.Property<string>("Caption");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired();
+
+                    b.Property<bool>("IsPinned");
+
+                    b.Property<DateTime?>("LastModifiedDate");
+
+                    b.Property<string>("PictureId");
+
+                    b.Property<string>("PictureUrl");
+
+                    b.Property<DateTime>("PublicationDate");
+
+                    b.Property<string>("Title");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
+
+                    b.ToTable("SCRM_Contents");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("Content");
                 });
 
             modelBuilder.Entity("SportCommunityRM.Data.Models.Field", b =>
@@ -135,6 +172,39 @@ namespace SportCommunityRM.Data.Migrations
                     b.ToTable("SCRM_Addresses");
                 });
 
+            modelBuilder.Entity("SportCommunityRM.Data.Models.MatchScore", b =>
+                {
+                    b.Property<Guid?>("RegisteredUserId");
+
+                    b.Property<Guid>("MatchId");
+
+                    b.Property<int>("Points");
+
+                    b.HasKey("RegisteredUserId", "MatchId");
+
+                    b.HasIndex("MatchId");
+
+                    b.ToTable("SCRM_MatchScore");
+                });
+
+            modelBuilder.Entity("SportCommunityRM.Data.Models.Media", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<Guid?>("ActivityId");
+
+                    b.Property<string>("FileId");
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ActivityId");
+
+                    b.ToTable("SCRM_Media");
+                });
+
             modelBuilder.Entity("SportCommunityRM.Data.Models.MedicalCertificate", b =>
                 {
                     b.Property<Guid>("Id")
@@ -160,10 +230,20 @@ namespace SportCommunityRM.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("Address");
+
                     b.Property<string>("AspNetUserId")
                         .IsRequired();
 
+                    b.Property<string>("BackgroundPictureId");
+
                     b.Property<DateTime>("BirthDate");
+
+                    b.Property<string>("City");
+
+                    b.Property<string>("CivicNumber");
+
+                    b.Property<string>("Country");
 
                     b.Property<string>("FirstName")
                         .IsRequired();
@@ -173,11 +253,28 @@ namespace SportCommunityRM.Data.Migrations
                     b.Property<string>("LastName")
                         .IsRequired();
 
+                    b.Property<string>("PictureId");
+
+                    b.Property<string>("PostalCode");
+
                     b.Property<int>("Sex");
 
                     b.HasKey("Id");
 
                     b.ToTable("SCRM_RegisteredUsers");
+                });
+
+            modelBuilder.Entity("SportCommunityRM.Data.Models.RegisteredUserMediaTag", b =>
+                {
+                    b.Property<Guid>("RegisteredUserId");
+
+                    b.Property<Guid>("MediaId");
+
+                    b.HasKey("RegisteredUserId", "MediaId");
+
+                    b.HasIndex("MediaId");
+
+                    b.ToTable("SCRM_RegisteredUserMediaTag");
                 });
 
             modelBuilder.Entity("SportCommunityRM.Data.Models.RegisteredUserTeam", b =>
@@ -198,12 +295,16 @@ namespace SportCommunityRM.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("BackgroundPictureId");
+
                     b.Property<int?>("MaxBirthYear");
 
                     b.Property<int?>("MinBirthYear");
 
                     b.Property<string>("Name")
                         .IsRequired();
+
+                    b.Property<string>("PictureId");
 
                     b.HasKey("Id");
 
@@ -231,7 +332,7 @@ namespace SportCommunityRM.Data.Migrations
 
                     b.Property<int>("EnemyTeamScore");
 
-                    b.Property<int>("TeamScore");
+                    b.Property<int>("Score");
 
                     b.Property<Guid?>("TournamentId");
 
@@ -262,6 +363,29 @@ namespace SportCommunityRM.Data.Migrations
                     b.HasDiscriminator().HasValue("Training");
                 });
 
+            modelBuilder.Entity("SportCommunityRM.Data.Models.Article", b =>
+                {
+                    b.HasBaseType("SportCommunityRM.Data.Models.Content");
+
+
+                    b.ToTable("SCRM_Articles");
+
+                    b.HasDiscriminator().HasValue("Article");
+                });
+
+            modelBuilder.Entity("SportCommunityRM.Data.Models.MatchReport", b =>
+                {
+                    b.HasBaseType("SportCommunityRM.Data.Models.Content");
+
+                    b.Property<Guid?>("MatchId");
+
+                    b.HasIndex("MatchId");
+
+                    b.ToTable("SCRM_MatchesReports");
+
+                    b.HasDiscriminator().HasValue("MatchReport");
+                });
+
             modelBuilder.Entity("SportCommunityRM.Data.Models.Activity", b =>
                 {
                     b.HasOne("SportCommunityRM.Data.Models.Field", "Field")
@@ -281,6 +405,13 @@ namespace SportCommunityRM.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("SportCommunityRM.Data.Models.Content", b =>
+                {
+                    b.HasOne("SportCommunityRM.Data.Models.RegisteredUser", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId");
+                });
+
             modelBuilder.Entity("SportCommunityRM.Data.Models.Field", b =>
                 {
                     b.HasOne("SportCommunityRM.Data.Models.Location", "Location")
@@ -296,11 +427,44 @@ namespace SportCommunityRM.Data.Migrations
                         .HasForeignKey("UserId");
                 });
 
+            modelBuilder.Entity("SportCommunityRM.Data.Models.MatchScore", b =>
+                {
+                    b.HasOne("SportCommunityRM.Data.Models.Match", "Match")
+                        .WithMany("MatchScores")
+                        .HasForeignKey("MatchId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("SportCommunityRM.Data.Models.RegisteredUser", "RegisteredUser")
+                        .WithMany("MatchScores")
+                        .HasForeignKey("RegisteredUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("SportCommunityRM.Data.Models.Media", b =>
+                {
+                    b.HasOne("SportCommunityRM.Data.Models.Activity", "Activity")
+                        .WithMany("Medias")
+                        .HasForeignKey("ActivityId");
+                });
+
             modelBuilder.Entity("SportCommunityRM.Data.Models.MedicalCertificate", b =>
                 {
                     b.HasOne("SportCommunityRM.Data.Models.RegisteredUser", "User")
                         .WithMany("MedicalCertificatesHistory")
                         .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("SportCommunityRM.Data.Models.RegisteredUserMediaTag", b =>
+                {
+                    b.HasOne("SportCommunityRM.Data.Models.Media", "Media")
+                        .WithMany("TaggedUsers")
+                        .HasForeignKey("MediaId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("SportCommunityRM.Data.Models.RegisteredUser", "RegisteredUser")
+                        .WithMany("TaggedMedia")
+                        .HasForeignKey("RegisteredUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("SportCommunityRM.Data.Models.RegisteredUserTeam", b =>
@@ -334,6 +498,13 @@ namespace SportCommunityRM.Data.Migrations
                     b.HasOne("SportCommunityRM.Data.Models.Tournament")
                         .WithMany("Matches")
                         .HasForeignKey("TournamentId");
+                });
+
+            modelBuilder.Entity("SportCommunityRM.Data.Models.MatchReport", b =>
+                {
+                    b.HasOne("SportCommunityRM.Data.Models.Match", "Match")
+                        .WithMany()
+                        .HasForeignKey("MatchId");
                 });
 #pragma warning restore 612, 618
         }

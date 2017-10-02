@@ -11,6 +11,7 @@ using SportCommunityRM.WebSite.ViewModels.Team;
 using Microsoft.EntityFrameworkCore;
 using SportCommunityRM.Data.Models;
 using SportCommunityRM.WebSite.Services;
+using static SportCommunityRM.WebSite.Models.ClaimPoliciesConstants;
 
 namespace SportCommunityRM.WebSite.WorkerServices
 {
@@ -27,7 +28,7 @@ namespace SportCommunityRM.WebSite.WorkerServices
         {
         }
 
-        public IndexViewModel GetIndexViewModel()
+        public async Task<IndexViewModel> GetIndexViewModelAsync()
         {
             var teams = (from team in this.Database.Teams
                          orderby team.Name ascending
@@ -39,7 +40,13 @@ namespace SportCommunityRM.WebSite.WorkerServices
                              CoachesCount = team.Coaches.Count()
                          }).ToArray();
 
-            return new IndexViewModel
+            var userClaimTypes = await this.GetApplicationUserClaims();
+
+            var isCreateAllowed = userClaimTypes.Any(uc => uc == CreateTeams.Value);
+            var isDeleteAllowed = userClaimTypes.Any(uc => uc == DeleteTeams.Value);
+            var isEditAllowed = userClaimTypes.Any(uc => uc == EditTeams.Value);
+
+            return new IndexViewModel(isCreateAllowed, isDeleteAllowed, isEditAllowed)
             {
                 Teams = teams
             };

@@ -1,11 +1,18 @@
 ﻿namespace SportCommunityRM.WebSite.ViewModels
 {
-    public interface IPermissionsViewModel
+    public abstract class IPermissionsViewModel
     {
-        bool IsCreateAllowed { get; set; }
+        public IPermissionsViewModel(bool isCreateAllowed, bool isDeleteAllowed, bool isEditAllowed)
+        {
+            this.IsCreateAllowed = isCreateAllowed;
+            this.IsDeleteAllowed = isDeleteAllowed;
+            this.IsEditAllowed = isEditAllowed;
+        }
 
-        bool IsEditAllowed { get; set; }
+        bool IsCreateAllowed { get; }
 
-        bool IsDeleteAllowed { get; set; }
+        bool IsEditAllowed { get; }
+
+        bool IsDeleteAllowed { get; }
     }
 }

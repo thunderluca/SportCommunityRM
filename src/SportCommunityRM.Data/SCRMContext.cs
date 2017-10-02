@@ -13,7 +13,7 @@ namespace SportCommunityRM.Data
         {
             if (string.IsNullOrWhiteSpace(connectionString))
                 throw new ArgumentException(
-                    $"{nameof(connectionString)} cannot be null or empty or composed by white spaces.", 
+                    $"{nameof(connectionString)} cannot be null or empty or composed by white spaces.",
                     nameof(connectionString));
 
             this.ConnectionString = connectionString;

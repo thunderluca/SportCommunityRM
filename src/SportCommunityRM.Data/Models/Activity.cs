@@ -12,6 +12,8 @@ namespace SportCommunityRM.Data.Models
 
         public DateTime EndDate { get; set; }
 
+        public bool IsConfirmed { get; set; }
+
         [ForeignKey(nameof(Field))]
         public Guid? FieldId { get; set; }
 

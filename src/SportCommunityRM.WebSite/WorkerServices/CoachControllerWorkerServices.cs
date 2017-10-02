@@ -12,6 +12,7 @@ using ReflectionIT.Mvc.Paging;
 using SportCommunityRM.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using SportCommunityRM.WebSite.Services;
+using static SportCommunityRM.WebSite.Models.ClaimPoliciesConstants;
 
 namespace SportCommunityRM.WebSite.WorkerServices
 {
@@ -32,7 +33,12 @@ namespace SportCommunityRM.WebSite.WorkerServices
         {
             var coaches = await this.GetCoachesPagingListAsync();
 
-            return new IndexViewModel
+            var userClaimTypes = await this.GetApplicationUserClaims();
+
+            var isCreateAllowed = userClaimTypes.Any(uc => uc == CreateCoaches.Value);
+            var isDeleteAllowed = userClaimTypes.Any(uc => uc == DeleteCoaches.Value);
+
+            return new IndexViewModel(isCreateAllowed, isDeleteAllowed, isEditAllowed: false)
             {
                 Coaches = coaches
             };
@@ -98,8 +104,16 @@ namespace SportCommunityRM.WebSite.WorkerServices
         {
             var coach = this.DbContext.Coaches.WithId(coachId);
 
-            this.DbContext.Coaches.Remove(coach);
+            var coachUser = await this.UserManager.FindByIdAsync(coach.RegisteredUser.AspNetUserId);
 
+            var coachUserClaims = await this.UserManager.GetClaimsAsync(coachUser);
+            if (!coachUserClaims.IsNullOrEmpty())
+            {
+                var claimsToRemove = coachUserClaims.Where(c => CoachesClaims.Any(uc => uc.Type == c.Type));
+                await this.UserManager.RemoveClaimsAsync(coachUser, claimsToRemove);
+            }
+
+            this.DbContext.Coaches.Remove(coach);
             await this.DbContext.SaveChangesAsync();
         }
     }

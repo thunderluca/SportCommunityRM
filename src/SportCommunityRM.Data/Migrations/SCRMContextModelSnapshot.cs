@@ -34,6 +34,8 @@ namespace SportCommunityRM.Data.Migrations
 
                     b.Property<Guid?>("FieldId");
 
+                    b.Property<bool>("IsConfirmed");
+
                     b.Property<string>("Name");
 
                     b.Property<string>("Notes");

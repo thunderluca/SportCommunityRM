@@ -6,13 +6,12 @@ namespace SportCommunityRM.WebSite.ViewModels.Coach
 {
     public class IndexViewModel : IPermissionsViewModel
     {
+        public IndexViewModel(bool isCreateAllowed, bool isDeleteAllowed, bool isEditAllowed)
+            : base(isCreateAllowed, isDeleteAllowed, isEditAllowed)
+        {
+        }
+
         public PagingList<Coach> Coaches { get; set; }
-
-        public bool IsCreateAllowed { get; set; }
-
-        public bool IsEditAllowed { get; set; }
-
-        public bool IsDeleteAllowed { get; set; }
 
         public class Coach
         {

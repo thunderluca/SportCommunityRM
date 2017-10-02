@@ -30,10 +30,18 @@ namespace SportCommunityRM.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AspNetUserId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BackgroundPictureId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     BirthDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    City = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CivicNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Country = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FiscalCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PictureId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PostalCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Sex = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -46,9 +54,11 @@ namespace SportCommunityRM.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    BackgroundPictureId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     MaxBirthYear = table.Column<int>(type: "int", nullable: true),
                     MinBirthYear = table.Column<int>(type: "int", nullable: true),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PictureId = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -75,7 +85,7 @@ namespace SportCommunityRM.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "SCRM_Coach",
+                name: "SCRM_Coaches",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -83,9 +93,9 @@ namespace SportCommunityRM.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SCRM_Coach", x => x.Id);
+                    table.PrimaryKey("PK_SCRM_Coaches", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SCRM_Coach_SCRM_RegisteredUsers_RegisteredUserId",
+                        name: "FK_SCRM_Coaches_SCRM_RegisteredUsers_RegisteredUserId",
                         column: x => x.RegisteredUserId,
                         principalTable: "SCRM_RegisteredUsers",
                         principalColumn: "Id",
@@ -168,13 +178,14 @@ namespace SportCommunityRM.Data.Migrations
                     Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     FieldId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsConfirmed = table.Column<bool>(type: "bit", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Notes = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TeamId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     EnemyTeamName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     EnemyTeamScore = table.Column<int>(type: "int", nullable: true),
-                    TeamScore = table.Column<int>(type: "int", nullable: true),
+                    Score = table.Column<int>(type: "int", nullable: true),
                     TournamentId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
@@ -211,15 +222,118 @@ namespace SportCommunityRM.Data.Migrations
                 {
                     table.PrimaryKey("PK_SCRM_TeamCoach", x => new { x.TeamId, x.CoachId });
                     table.ForeignKey(
-                        name: "FK_SCRM_TeamCoach_SCRM_Coach_CoachId",
+                        name: "FK_SCRM_TeamCoach_SCRM_Coaches_CoachId",
                         column: x => x.CoachId,
-                        principalTable: "SCRM_Coach",
+                        principalTable: "SCRM_Coaches",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_SCRM_TeamCoach_SCRM_Teams_TeamId",
                         column: x => x.TeamId,
                         principalTable: "SCRM_Teams",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SCRM_Contents",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AuthorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Body = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Caption = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsPinned = table.Column<bool>(type: "bit", nullable: false),
+                    LastModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    PictureId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PictureUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PublicationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MatchId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SCRM_Contents", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SCRM_Contents_SCRM_RegisteredUsers_AuthorId",
+                        column: x => x.AuthorId,
+                        principalTable: "SCRM_RegisteredUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_SCRM_Contents_SCRM_Activities_MatchId",
+                        column: x => x.MatchId,
+                        principalTable: "SCRM_Activities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SCRM_MatchScore",
+                columns: table => new
+                {
+                    RegisteredUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MatchId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Points = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SCRM_MatchScore", x => new { x.RegisteredUserId, x.MatchId });
+                    table.ForeignKey(
+                        name: "FK_SCRM_MatchScore_SCRM_Activities_MatchId",
+                        column: x => x.MatchId,
+                        principalTable: "SCRM_Activities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SCRM_MatchScore_SCRM_RegisteredUsers_RegisteredUserId",
+                        column: x => x.RegisteredUserId,
+                        principalTable: "SCRM_RegisteredUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SCRM_Media",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ActivityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    FileId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SCRM_Media", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SCRM_Media_SCRM_Activities_ActivityId",
+                        column: x => x.ActivityId,
+                        principalTable: "SCRM_Activities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SCRM_RegisteredUserMediaTag",
+                columns: table => new
+                {
+                    RegisteredUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MediaId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SCRM_RegisteredUserMediaTag", x => new { x.RegisteredUserId, x.MediaId });
+                    table.ForeignKey(
+                        name: "FK_SCRM_RegisteredUserMediaTag_SCRM_Media_MediaId",
+                        column: x => x.MediaId,
+                        principalTable: "SCRM_Media",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SCRM_RegisteredUserMediaTag_SCRM_RegisteredUsers_RegisteredUserId",
+                        column: x => x.RegisteredUserId,
+                        principalTable: "SCRM_RegisteredUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -240,9 +354,19 @@ namespace SportCommunityRM.Data.Migrations
                 column: "TournamentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SCRM_Coach_RegisteredUserId",
-                table: "SCRM_Coach",
+                name: "IX_SCRM_Coaches_RegisteredUserId",
+                table: "SCRM_Coaches",
                 column: "RegisteredUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SCRM_Contents_AuthorId",
+                table: "SCRM_Contents",
+                column: "AuthorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SCRM_Contents_MatchId",
+                table: "SCRM_Contents",
+                column: "MatchId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SCRM_Fields_LocationId",
@@ -255,9 +379,24 @@ namespace SportCommunityRM.Data.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_SCRM_MatchScore_MatchId",
+                table: "SCRM_MatchScore",
+                column: "MatchId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SCRM_Media_ActivityId",
+                table: "SCRM_Media",
+                column: "ActivityId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_SCRM_MedicalCertificates_UserId",
                 table: "SCRM_MedicalCertificates",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SCRM_RegisteredUserMediaTag_MediaId",
+                table: "SCRM_RegisteredUserMediaTag",
+                column: "MediaId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SCRM_RegisteredUserTeam_TeamId",
@@ -273,13 +412,19 @@ namespace SportCommunityRM.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "SCRM_Activities");
+                name: "SCRM_Contents");
 
             migrationBuilder.DropTable(
                 name: "SCRM_Inscriptions");
 
             migrationBuilder.DropTable(
+                name: "SCRM_MatchScore");
+
+            migrationBuilder.DropTable(
                 name: "SCRM_MedicalCertificates");
+
+            migrationBuilder.DropTable(
+                name: "SCRM_RegisteredUserMediaTag");
 
             migrationBuilder.DropTable(
                 name: "SCRM_RegisteredUserTeam");
@@ -288,19 +433,25 @@ namespace SportCommunityRM.Data.Migrations
                 name: "SCRM_TeamCoach");
 
             migrationBuilder.DropTable(
-                name: "SCRM_Fields");
+                name: "SCRM_Media");
 
             migrationBuilder.DropTable(
-                name: "SCRM_Coach");
+                name: "SCRM_Coaches");
+
+            migrationBuilder.DropTable(
+                name: "SCRM_Activities");
+
+            migrationBuilder.DropTable(
+                name: "SCRM_RegisteredUsers");
+
+            migrationBuilder.DropTable(
+                name: "SCRM_Fields");
 
             migrationBuilder.DropTable(
                 name: "SCRM_Teams");
 
             migrationBuilder.DropTable(
                 name: "SCRM_Addresses");
-
-            migrationBuilder.DropTable(
-                name: "SCRM_RegisteredUsers");
         }
     }
 }

@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using static SportCommunityRM.WebSite.Models.ClaimPoliciesConstants;
 
 namespace SportCommunityRM.WebSite.WorkerServices
 {
@@ -60,6 +61,22 @@ namespace SportCommunityRM.WebSite.WorkerServices
                 throw new ApplicationException($"Unable to load user with ID '{httpContextUser.GetUserId()}'.");
 
             return user;
+        }
+
+        public async Task<IEnumerable<string>> GetApplicationUserClaims(string username = null)
+        {
+            try
+            {
+                var user = await this.GetApplicationUserAsync(username);
+
+                var claims = await this.UserManager.GetClaimsAsync(user);
+
+                return claims.Select(c => c.Type);
+            }
+            catch
+            {
+                return new string[0];
+            }
         }
 
         public async Task<RegisteredUser> GetRegisteredUserAsync(string username = null)
@@ -119,17 +136,31 @@ namespace SportCommunityRM.WebSite.WorkerServices
 
         public async Task CreateCoachIfNotExists(Guid registeredUserId)
         {
-            var existingCoach = (from coach in this.Database.Coaches
-                                 where coach.RegisteredUserId == registeredUserId
-                                 select coach).SingleOrDefault();
-            if (existingCoach != null) return;
+            var coach = (from c in this.Database.Coaches
+                         where c.RegisteredUserId == registeredUserId
+                         select c).SingleOrDefault();
 
             var registeredUser = this.DbContext.RegisteredUsers.WithId(registeredUserId);
 
-            var newCoach = new Coach { RegisteredUser = registeredUser };
+            if (coach == null)
+            {
+                coach = new Coach { RegisteredUser = registeredUser };
+                this.DbContext.Coaches.Add(coach);
+            }
 
-            this.DbContext.Coaches.Add(newCoach);
-            await this.DbContext.SaveChangesAsync();
+            var coachUser = await this.UserManager.FindByIdAsync(registeredUser.AspNetUserId);
+
+            var coachUserClaims = await this.UserManager.GetClaimsAsync(coachUser);
+            var newClaims = CoachesClaims.Where(c => coachUserClaims.All(uc => uc.Type != c.Type));
+            if (!newClaims.IsNullOrEmpty())
+            {
+                var result = await this.UserManager.AddClaimsAsync(coachUser, newClaims);
+                if (!result.Succeeded)
+                    throw new ArgumentException($"Coaches claims operation failed: {string.Join(';', result.Errors)}");
+            }
+
+            if (coach != null)
+                await this.DbContext.SaveChangesAsync();
         }
 
         private const string DefaultActivitiesSortExpression = nameof(ActivitiesViewModel.Activity.StartDate);
