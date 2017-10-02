@@ -22,26 +22,11 @@ namespace SportCommunityRM.WebSite.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Index(string username = null, string id = null)
+        public async Task<IActionResult> Index()
         {
-            if (!string.IsNullOrWhiteSpace(username) || !string.IsNullOrWhiteSpace(id))
-                return GetUserView(username, id);
-
             var model = await this.WorkerServices.GetIndexViewModelAsync();
 
             return View(model);
-        }
-
-        private IActionResult GetUserView(string username, string id)
-        {
-            var isGuid = Guid.TryParse(id, out Guid guid);
-            if (isGuid && !guid.IsNullOrEmpty())
-                return RedirectToAction(nameof(this.Detail), new { id = id });
-
-            if (guid.IsNullOrEmpty() && string.IsNullOrWhiteSpace(username))
-                return NotFound();
-
-            return RedirectToAction(nameof(this.Detail), new { username = guid.IsNullOrEmpty() ? username : id });
         }
 
         public async Task<IActionResult> GetActivitiesAsync(string filter, int page, string sortExpression)
@@ -78,24 +63,14 @@ namespace SportCommunityRM.WebSite.Controllers
             return PartialView("DisplayTemplates/NewsFeed", newsFeedContents);
         }
         
-        //public IActionResult Detail(Guid id)
-        //{
-        //    if (id.IsNullOrEmpty())
-        //        return NotFound();
-
-        //    var model = this.WorkerServices.GetDetailViewModel(id);
-
-        //    return View(model);
-        //}
-        
-        public async Task<IActionResult> Detail(string username, Guid id)
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult Detail(Guid id)
         {
-            if (string.IsNullOrWhiteSpace(username) && id.IsNullOrEmpty())
+            if (id.IsNullOrEmpty())
                 return NotFound();
 
-            var model = !string.IsNullOrWhiteSpace(username) 
-                ? await this.WorkerServices.GetDetailViewModelAsync(username)
-                : this.WorkerServices.GetDetailViewModel(id);
+            var model = this.WorkerServices.GetDetailViewModel(id);
 
             return View(model);
         }

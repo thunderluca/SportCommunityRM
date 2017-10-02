@@ -62,6 +62,25 @@ namespace SportCommunityRM.WebSite.WorkerServices
             return user;
         }
 
+        public async Task<RegisteredUser> GetRegisteredUserAsync(string username = null)
+        {
+            var httpContextUser = this.HttpContextAccessor.HttpContext.User;
+
+            var user = !string.IsNullOrWhiteSpace(username)
+                ? await UserManager.FindByNameAsync(username)
+                : await UserManager.GetUserAsync(httpContextUser);
+
+            if (user == null)
+                throw new ApplicationException($"Unable to load user with ID '{(httpContextUser.GetUserId() ?? "null")}'.");
+
+            var registeredUser = this.Database.RegisteredUsers.WithUserId(user.Id);
+
+            if (registeredUser == null)
+                throw new ArgumentNullException(nameof(registeredUser));
+
+            return registeredUser;
+        }
+
         public IEnumerable<UserSearchResult> SearchUser(
             string filter,
             int? minBirthYear = null,

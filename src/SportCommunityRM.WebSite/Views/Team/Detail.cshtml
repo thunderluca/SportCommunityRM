@@ -63,7 +63,7 @@
                                         <td>@player.Name</td>
                                         <td>@player.BirthDate.ToShortDateString()</td>
                                         <td>
-                                            <a class="text-accent" asp-controller="User" asp-route-id="@player.Id" title="Detail">
+                                            <a class="text-accent" asp-action="Detail" asp-controller="User" asp-route-id="@player.Id" title="Detail">
                                                 <i class="glyphicon glyphicon-search"></i>
                                             </a>
                                             @if (Model.IsDeleteAllowed)
