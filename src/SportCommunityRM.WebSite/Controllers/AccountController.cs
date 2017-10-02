@@ -56,7 +56,8 @@ namespace SportCommunityRM.WebSite.Controllers
             if (!result.Succeeded)
             {
                 var user = await this.WorkerServices.FindApplicationUserByEmail(model.Email, checkIfConfirmed: false);
-                result = await SignInManager.PasswordSignInAsync(user.UserName, model.Password, model.RememberMe, lockoutOnFailure: false);
+                if (user != null)
+                    result = await SignInManager.PasswordSignInAsync(user.UserName, model.Password, model.RememberMe, lockoutOnFailure: false);
             }
 
             if (result.Succeeded)

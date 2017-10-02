@@ -37,14 +37,14 @@ namespace SportCommunityRM.WebSite.Controllers
         }
 
         [HttpGet]
-        [Authorize(Policy = ClaimPoliciesConstants.CreateCoachesPolicyName)]
+        [Authorize(Policy = nameof(ClaimPoliciesConstants.CreateCoaches))]
         public IActionResult Add()
         {
             return View();
         }
 
         [HttpPost]
-        [Authorize(Policy = ClaimPoliciesConstants.CreateCoachesPolicyName)]
+        [Authorize(Policy = nameof(ClaimPoliciesConstants.CreateCoaches))]
         public async Task<IActionResult> Add(AddViewModel viewModel)
         {
             if (!ModelState.IsValid || viewModel.Id.IsNullOrEmpty())
@@ -56,7 +56,7 @@ namespace SportCommunityRM.WebSite.Controllers
         }
 
         [HttpGet]
-        [Authorize(Policy = ClaimPoliciesConstants.DeleteTeamsPolicyName)]
+        [Authorize(Policy = nameof(ClaimPoliciesConstants.DeleteTeams))]
         public async Task<IActionResult> Remove(Guid? coachId, Guid? teamId)
         {
             if (coachId.IsNullOrEmpty() || teamId.IsNullOrEmpty())
@@ -68,7 +68,7 @@ namespace SportCommunityRM.WebSite.Controllers
         }
 
         [HttpGet]
-        [Authorize(Policy = ClaimPoliciesConstants.DeleteCoachesPolicyName)]
+        [Authorize(Policy = nameof(ClaimPoliciesConstants.DeleteCoaches))]
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id.IsNullOrEmpty())

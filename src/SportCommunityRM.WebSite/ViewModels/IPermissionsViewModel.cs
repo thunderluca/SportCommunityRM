@@ -9,10 +9,10 @@
             this.IsEditAllowed = isEditAllowed;
         }
 
-        bool IsCreateAllowed { get; }
+        public bool IsCreateAllowed { get; }
 
-        bool IsEditAllowed { get; }
+        public bool IsEditAllowed { get; }
 
-        bool IsDeleteAllowed { get; }
+        public bool IsDeleteAllowed { get; }
     }
 }

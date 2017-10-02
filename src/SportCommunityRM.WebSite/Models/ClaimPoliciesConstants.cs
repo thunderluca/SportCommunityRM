@@ -7,14 +7,14 @@ namespace SportCommunityRM.WebSite.Models
 {
     public class ClaimPoliciesConstants
     {
-        public const string CreateCoachesPolicyName = "Create Coaches";
-        public const string DeleteCoachesPolicyName = "Delete Coaches";
-        public const string CreateActivitiesPolicyName = "Create Activities";
-        public const string DeleteActivitiesPolicyName = "Delete Activities";
-        public const string EditActivitiesPolicyName = "Edit Activities";
-        public const string CreateTeamsPolicyName = "Create Teams";
-        public const string DeleteTeamsPolicyName = "Delete Teams";
-        public const string EditTeamsPolicyName = "Edit Teams";
+        private const string CreateCoachesPolicyName = "Create Coaches";
+        private const string DeleteCoachesPolicyName = "Delete Coaches";
+        private const string CreateActivitiesPolicyName = "Create Activities";
+        private const string DeleteActivitiesPolicyName = "Delete Activities";
+        private const string EditActivitiesPolicyName = "Edit Activities";
+        private const string CreateTeamsPolicyName = "Create Teams";
+        private const string DeleteTeamsPolicyName = "Delete Teams";
+        private const string EditTeamsPolicyName = "Edit Teams";
 
         public static KeyValuePair<string, string> CreateCoaches = new KeyValuePair<string, string>(nameof(CreateCoaches), CreateCoachesPolicyName);
         public static KeyValuePair<string, string> DeleteCoaches = new KeyValuePair<string, string>(nameof(DeleteCoaches), DeleteCoachesPolicyName);

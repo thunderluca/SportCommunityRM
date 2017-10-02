@@ -42,7 +42,7 @@ namespace SportCommunityRM.WebSite.Controllers
         }
 
         [HttpGet]
-        [Authorize(Policy = ClaimPoliciesConstants.CreateTeamsPolicyName)]
+        [Authorize(Policy = nameof(ClaimPoliciesConstants.CreateTeams))]
         public IActionResult Create()
         {
             var model = this.WorkerServices.GetCreateViewModel();
@@ -51,7 +51,7 @@ namespace SportCommunityRM.WebSite.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = ClaimPoliciesConstants.CreateTeamsPolicyName)]
+        [Authorize(Policy = nameof(ClaimPoliciesConstants.CreateTeams))]
         public async Task<IActionResult> Create(CreateViewModel viewModel)
         {
             if (!ModelState.IsValid)
@@ -63,7 +63,7 @@ namespace SportCommunityRM.WebSite.Controllers
         }
 
         [HttpGet]
-        [Authorize(Policy = ClaimPoliciesConstants.EditTeamsPolicyName)]
+        [Authorize(Policy = nameof(ClaimPoliciesConstants.EditTeams))]
         public IActionResult Edit(Guid? id)
         {
             if (id.IsNullOrEmpty())
@@ -75,7 +75,7 @@ namespace SportCommunityRM.WebSite.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = ClaimPoliciesConstants.EditTeamsPolicyName)]
+        [Authorize(Policy = nameof(ClaimPoliciesConstants.EditTeams))]
         public async Task<IActionResult> Edit(EditViewModel viewModel)
         {
             if (!ModelState.IsValid)
@@ -87,7 +87,7 @@ namespace SportCommunityRM.WebSite.Controllers
         }
 
         [HttpGet]
-        [Authorize(Policy = ClaimPoliciesConstants.DeleteTeamsPolicyName)]
+        [Authorize(Policy = nameof(ClaimPoliciesConstants.DeleteTeams))]
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id.IsNullOrEmpty())
@@ -111,7 +111,7 @@ namespace SportCommunityRM.WebSite.Controllers
         }
 
         [HttpGet]
-        [Authorize(Policy = ClaimPoliciesConstants.EditTeamsPolicyName)]
+        [Authorize(Policy = nameof(ClaimPoliciesConstants.EditTeams))]
         public async Task<IActionResult> RemoveCoach(Guid? teamId, Guid? coachId)
         {
             if (teamId.IsNullOrEmpty() || coachId.IsNullOrEmpty())
@@ -123,7 +123,7 @@ namespace SportCommunityRM.WebSite.Controllers
         }
 
         [HttpGet]
-        [Authorize(Policy = ClaimPoliciesConstants.EditTeamsPolicyName)]
+        [Authorize(Policy = nameof(ClaimPoliciesConstants.EditTeams))]
         public async Task<IActionResult> RemovePlayer(Guid? teamId, Guid? playerId)
         {
             if (teamId.IsNullOrEmpty() || playerId.IsNullOrEmpty())
