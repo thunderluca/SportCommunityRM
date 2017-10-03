@@ -31,11 +31,13 @@ namespace SportCommunityRM.WebSite
         
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            var connectionString = Configuration.GetConnectionStringByOS();
 
-            services.AddDbContext<SCRMContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddScoped<IDatabase, Database>(_ => new Database(new SCRMContext(Configuration.GetConnectionString("DefaultConnection"))));
+            services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(connectionString));
+
+            services.AddDbContext<SCRMContext>(options => options.UseSqlServer(connectionString));
+            services.AddScoped<IDatabase, Database>(_ => new Database(new SCRMContext(connectionString)));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -102,11 +104,11 @@ namespace SportCommunityRM.WebSite
             app.UseMvcWithDefaultRoute();
 
             //TODO: comment this part of code after seeding
-            //var serviceScopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
-            //using (var serviceScope = serviceScopeFactory.CreateScope())
-            //{
-            //    ApplicationDbContextSeed.InitializeAdminsAsync(serviceScope).Wait();
-            //}
+            var serviceScopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
+            using (var serviceScope = serviceScopeFactory.CreateScope())
+            {
+               ApplicationDbContextSeed.InitializeAdminsAsync(serviceScope).Wait();
+            }
         }
     }
 }
