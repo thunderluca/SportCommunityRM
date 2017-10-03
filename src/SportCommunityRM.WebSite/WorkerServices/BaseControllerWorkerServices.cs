@@ -205,7 +205,7 @@ namespace SportCommunityRM.WebSite.WorkerServices
                                        EndDate = activity.EndDate
                                    });
 
-            var activities = await PagingList<ActivitiesViewModel.Activity>.CreateAsync(
+            var activities = await PagingList.CreateAsync(
                 activitiesQuery,
                 pageSize,
                 page,
@@ -254,7 +254,7 @@ namespace SportCommunityRM.WebSite.WorkerServices
                                                 : NewsFeedViewModel.ContentType.Article
                                          });
 
-            var newsFeedContents = await PagingList<NewsFeedViewModel.Content>.CreateAsync(
+            var newsFeedContents = await PagingList.CreateAsync(
                 newsFeedContentsQuery, 
                 pageSize, 
                 page, 

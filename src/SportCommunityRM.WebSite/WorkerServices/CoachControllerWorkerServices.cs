@@ -79,7 +79,7 @@ namespace SportCommunityRM.WebSite.WorkerServices
                                     Teams = teams
                                 });
 
-            var coaches = await PagingList<IndexViewModel.Coach>.CreateAsync(
+            var coaches = await PagingList.CreateAsync(
                 coachesQuery,
                 pageSize,
                 page,
