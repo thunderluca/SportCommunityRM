@@ -1,12 +1,12 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SportCommunityRM.WebSite.WorkerServices;
-using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
-using SportCommunityRM.WebSite.Models;
 using SportCommunityRM.WebSite.Helpers;
+using SportCommunityRM.WebSite.Models;
+using SportCommunityRM.WebSite.WorkerServices;
+using System;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace SportCommunityRM.WebSite.Controllers
 {
@@ -79,7 +79,7 @@ namespace SportCommunityRM.WebSite.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> UserPicture(string username, int? size)
         {
-            var bytes = await this.WorkerServices.GetUserPictureAsync(username, size);
+            var bytes = await this.WorkerServices.GetUserPictureByUsernameAsync(username, size);
 
             return File(bytes ?? new byte[0], ImagesHelper.JpegMimeType);
         }
@@ -95,7 +95,9 @@ namespace SportCommunityRM.WebSite.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetPicture(string pictureId, int? size)
         {
-            var bytes = await this.WorkerServices.GetPictureAsync(pictureId, size);
+            var defaultStaticImagePath = this.WorkerServices.GetDefaultStaticImagePath();
+
+            var bytes = await this.WorkerServices.GetPictureAsync(pictureId, defaultStaticImagePath, size);
 
             return File(bytes ?? new byte[0], ImagesHelper.JpegMimeType);
         }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
@@ -32,11 +33,12 @@ namespace SportCommunityRM.WebSite.WorkerServices
             SCRMContext dbContext,
             IDatabase database,
             IHttpContextAccessor httpContextAccessor,
+            IHostingEnvironment hostingEnvironment,
             IUrlService urlService,
             UrlEncoder urlEncoder,
             IEmailSender emailSender,
             IStorageService storageService,
-            ILogger<ManageControllerWorkerServices> logger) : base(userManager, dbContext, database, httpContextAccessor, urlService, storageService, logger)
+            ILogger<ManageControllerWorkerServices> logger) : base(userManager, dbContext, database, httpContextAccessor, hostingEnvironment, urlService, storageService, logger)
         {
             this.SignInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
             this.UrlEncoder = urlEncoder ?? throw new ArgumentNullException(nameof(urlEncoder));

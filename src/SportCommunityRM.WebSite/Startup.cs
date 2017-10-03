@@ -101,12 +101,12 @@ namespace SportCommunityRM.WebSite
 
             app.UseMvcWithDefaultRoute();
 
-            //TODO: comment when apply migration
-            var serviceScopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
-            using (var serviceScope = serviceScopeFactory.CreateScope())
-            {
-                ApplicationDbContextSeed.InitializeAdminsAsync(serviceScope).Wait();
-            }
+            //TODO: comment this part of code after seeding
+            //var serviceScopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
+            //using (var serviceScope = serviceScopeFactory.CreateScope())
+            //{
+            //    ApplicationDbContextSeed.InitializeAdminsAsync(serviceScope).Wait();
+            //}
         }
     }
 }

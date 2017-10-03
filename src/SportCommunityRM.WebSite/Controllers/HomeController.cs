@@ -26,7 +26,9 @@ namespace SportCommunityRM.WebSite.Controllers
         [HttpGet]
         public async Task<IActionResult> GetPicture(string pictureId, int? size)
         {
-            var bytes = await this.WorkerServices.GetPictureAsync(pictureId, size);
+            var defaultStaticImagePath = this.WorkerServices.GetDefaultStaticImagePath();
+
+            var bytes = await this.WorkerServices.GetPictureAsync(pictureId, defaultStaticImagePath, size);
 
             return File(bytes ?? new byte[0], ImagesHelper.JpegMimeType);
         }

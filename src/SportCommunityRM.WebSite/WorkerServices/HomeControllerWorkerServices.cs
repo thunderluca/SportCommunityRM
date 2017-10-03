@@ -1,13 +1,14 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using SportCommunityRM.Data;
+using SportCommunityRM.Data.Models;
 using SportCommunityRM.Data.ReadModel;
-using SportCommunityRM.WebSite.ViewModels.Home;
 using SportCommunityRM.WebSite.Models;
 using SportCommunityRM.WebSite.Services;
+using SportCommunityRM.WebSite.ViewModels.Home;
 using System.Linq;
-using SportCommunityRM.Data.Models;
 
 namespace SportCommunityRM.WebSite.WorkerServices
 {
@@ -17,10 +18,11 @@ namespace SportCommunityRM.WebSite.WorkerServices
             UserManager<ApplicationUser> userManager, 
             SCRMContext dbContext, 
             IDatabase database, 
-            IHttpContextAccessor httpContextAccessor, 
+            IHttpContextAccessor httpContextAccessor,
+            IHostingEnvironment hostingEnvironment,
             IUrlService urlService,
             IStorageService storageService,
-            ILogger<HomeControllerWorkerServices> logger) : base(userManager, dbContext, database, httpContextAccessor, urlService, storageService, logger)
+            ILogger<HomeControllerWorkerServices> logger) : base(userManager, dbContext, database, httpContextAccessor, hostingEnvironment, urlService, storageService, logger)
         {
         }
 

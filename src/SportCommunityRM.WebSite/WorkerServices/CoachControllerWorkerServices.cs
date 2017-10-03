@@ -1,17 +1,18 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
+using ReflectionIT.Mvc.Paging;
 using SportCommunityRM.Data;
+using SportCommunityRM.Data.Models;
 using SportCommunityRM.Data.ReadModel;
 using SportCommunityRM.WebSite.Models;
-using SportCommunityRM.WebSite.ViewModels.Coach;
-using ReflectionIT.Mvc.Paging;
-using SportCommunityRM.Data.Models;
-using Microsoft.EntityFrameworkCore;
 using SportCommunityRM.WebSite.Services;
+using SportCommunityRM.WebSite.ViewModels.Coach;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using static SportCommunityRM.WebSite.Models.ClaimPoliciesConstants;
 
 namespace SportCommunityRM.WebSite.WorkerServices
@@ -22,10 +23,11 @@ namespace SportCommunityRM.WebSite.WorkerServices
             UserManager<ApplicationUser> userManager, 
             SCRMContext dbContext, 
             IDatabase database, 
-            IHttpContextAccessor httpContextAccessor, 
+            IHttpContextAccessor httpContextAccessor,
+            IHostingEnvironment hostingEnvironment,
             IUrlService urlService,
             IStorageService storageService,
-            ILogger<CoachControllerWorkerServices> logger) : base(userManager, dbContext, database, httpContextAccessor, urlService, storageService, logger)
+            ILogger<CoachControllerWorkerServices> logger) : base(userManager, dbContext, database, httpContextAccessor, hostingEnvironment, urlService, storageService, logger)
         {
         }
 

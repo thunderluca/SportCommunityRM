@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -12,6 +13,7 @@ using SportCommunityRM.WebSite.Services;
 using SportCommunityRM.WebSite.ViewModels.Shared;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -29,11 +31,14 @@ namespace SportCommunityRM.WebSite.WorkerServices
         public readonly IStorageService StorageService;
         public readonly ILogger Logger;
 
+        private readonly IHostingEnvironment HostingEnvironment;
+
         public BaseControllerWorkerServices(
             UserManager<ApplicationUser> userManager,
             SCRMContext dbContext,
             IDatabase database,
             IHttpContextAccessor httpContextAccessor,
+            IHostingEnvironment hostingEnvironment,
             IUrlService urlService,
             IStorageService storageService,
             ILogger<BaseControllerWorkerServices> logger)
@@ -42,6 +47,7 @@ namespace SportCommunityRM.WebSite.WorkerServices
             this.DbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             this.Database = database ?? throw new ArgumentNullException(nameof(database));
             this.HttpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
+            this.HostingEnvironment = hostingEnvironment ?? throw new ArgumentNullException(nameof(hostingEnvironment));
             this.UrlService = urlService ?? throw new ArgumentNullException(nameof(urlService));
             this.StorageService = storageService ?? throw new ArgumentNullException(nameof(storageService));
             this.Logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -341,10 +347,13 @@ namespace SportCommunityRM.WebSite.WorkerServices
             return calendarEvents;
         }
 
-        public async Task<byte[]> GetPictureAsync(string pictureId, int? size = null)
+        public string GetDefaultStaticImagePath(string path = "images/default.jpg") => this.HostingEnvironment.WebRootFileProvider.GetFileInfo(path)?.PhysicalPath;
+
+        public async Task<byte[]> GetPictureAsync(string pictureId, string defaultStaticImagePath, int? size = null)
         {
             var bytes = await this.StorageService.GetFileBytesAsync(pictureId);
-            if (bytes == null) return bytes;
+            if (bytes == null)
+                bytes = await File.ReadAllBytesAsync(defaultStaticImagePath);
 
             if (size.HasValue && size.Value >= 1 && size.Value <= byte.MaxValue)
                 bytes = await ImagesHelper.ResizeImageAsync(bytes, size.Value, quality: 70);

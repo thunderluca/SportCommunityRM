@@ -147,7 +147,7 @@ namespace SportCommunityRM.WebSite.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetPicture(string pictureId, int? size)
         {
-            var bytes = await this.WorkerServices.GetPictureAsync(pictureId, size);
+            var bytes = await this.WorkerServices.GetPictureAsync(pictureId, "/images/default.jpg", size);
 
             return File(bytes ?? new byte[0], ImagesHelper.JpegMimeType);
         }

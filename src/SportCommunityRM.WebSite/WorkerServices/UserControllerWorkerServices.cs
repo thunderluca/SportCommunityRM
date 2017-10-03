@@ -1,17 +1,18 @@
-﻿using System;
-using System.Linq;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using SportCommunityRM.Data;
-using SportCommunityRM.Data.ReadModel;
-using SportCommunityRM.WebSite.Models;
-using SportCommunityRM.WebSite.ViewModels.User;
-using SportCommunityRM.WebSite.Services;
-using System.Threading.Tasks;
 using SportCommunityRM.Data.Models;
+using SportCommunityRM.Data.ReadModel;
 using SportCommunityRM.WebSite.Controllers;
+using SportCommunityRM.WebSite.Models;
+using SportCommunityRM.WebSite.Services;
 using SportCommunityRM.WebSite.ViewModels.Shared;
+using SportCommunityRM.WebSite.ViewModels.User;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SportCommunityRM.WebSite.WorkerServices
 {
@@ -22,9 +23,10 @@ namespace SportCommunityRM.WebSite.WorkerServices
             SCRMContext dbContext, 
             IDatabase database, 
             IHttpContextAccessor httpContextAccessor, 
+            IHostingEnvironment hostingEnvironment,
             IUrlService urlService,
             IStorageService storageService,
-            ILogger<UserControllerWorkerServices> logger) : base(userManager, dbContext, database, httpContextAccessor, urlService, storageService, logger)
+            ILogger<UserControllerWorkerServices> logger) : base(userManager, dbContext, database, httpContextAccessor, hostingEnvironment, urlService, storageService, logger)
         {
         }
 
@@ -99,7 +101,7 @@ namespace SportCommunityRM.WebSite.WorkerServices
             return model;
         }
 
-        public async Task<byte[]> GetUserPictureAsync(string username, int? size = null)
+        public async Task<byte[]> GetUserPictureByUsernameAsync(string username, int? size = null)
         {
             if (string.IsNullOrWhiteSpace(username))
                 return null;
@@ -107,10 +109,7 @@ namespace SportCommunityRM.WebSite.WorkerServices
             var user = await this.GetApplicationUserAsync(username);
 
             var registeredUser = this.Database.RegisteredUsers.WithUserId(user.Id);
-            if (registeredUser == null || string.IsNullOrWhiteSpace(registeredUser.PictureId))
-                return null;
-
-            return await this.GetPictureAsync(registeredUser.PictureId);
+            return await this.GetUserPictureAsync(registeredUser?.PictureId, size);
         }
 
         public async Task<byte[]> GetUserPictureByIdAsync(Guid id, int? size = null)
@@ -118,10 +117,13 @@ namespace SportCommunityRM.WebSite.WorkerServices
             if (id.IsNullOrEmpty()) return null;
             
             var registeredUser = this.Database.RegisteredUsers.WithId(id);
-            if (registeredUser == null || string.IsNullOrWhiteSpace(registeredUser.PictureId))
-                return null;
+            return await this.GetUserPictureAsync(registeredUser?.PictureId, size);
+        }
 
-            return await this.GetPictureAsync(registeredUser.PictureId);
+        private async Task<byte[]> GetUserPictureAsync(string pictureId, int? size = null)
+        {
+            var defaultStaticImagePath = this.GetDefaultStaticImagePath();
+            return await this.GetPictureAsync(pictureId, defaultStaticImagePath);
         }
     }
 }

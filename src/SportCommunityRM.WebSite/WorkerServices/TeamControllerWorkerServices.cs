@@ -1,16 +1,17 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using SportCommunityRM.Data;
+using SportCommunityRM.Data.Models;
 using SportCommunityRM.Data.ReadModel;
 using SportCommunityRM.WebSite.Models;
-using SportCommunityRM.Data;
-using Microsoft.Extensions.Logging;
-using SportCommunityRM.WebSite.ViewModels.Team;
-using Microsoft.EntityFrameworkCore;
-using SportCommunityRM.Data.Models;
 using SportCommunityRM.WebSite.Services;
+using SportCommunityRM.WebSite.ViewModels.Team;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using static SportCommunityRM.WebSite.Models.ClaimPoliciesConstants;
 
 namespace SportCommunityRM.WebSite.WorkerServices
@@ -22,9 +23,10 @@ namespace SportCommunityRM.WebSite.WorkerServices
             SCRMContext dbContext,
             IDatabase database, 
             IHttpContextAccessor httpContextAccessor,
+            IHostingEnvironment hostingEnvironment,
             IUrlService urlService,
             IStorageService storageService,
-            ILogger<TeamControllerWorkerServices> logger) : base(userManager, dbContext, database, httpContextAccessor, urlService, storageService, logger)
+            ILogger<TeamControllerWorkerServices> logger) : base(userManager, dbContext, database, httpContextAccessor, hostingEnvironment, urlService, storageService, logger)
         {
         }
 
@@ -292,10 +294,10 @@ namespace SportCommunityRM.WebSite.WorkerServices
         public async Task<byte[]> GetTeamPictureAsync(Guid teamId, int? size = null)
         {
             var team = this.Database.Teams.WithId(teamId);
-            if (team == null || string.IsNullOrWhiteSpace(team.PictureId))
-                return null;
 
-            return await this.GetPictureAsync(team.PictureId);
+            var defaultStaticImagePath = this.GetDefaultStaticImagePath("images/default_test.jpg");
+
+            return await this.GetPictureAsync(team?.PictureId, defaultStaticImagePath, size);
         }
     }
 }
