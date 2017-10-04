@@ -1,17 +1,20 @@
 using System.Runtime.InteropServices;
-using Microsoft.Extensions.Configuration;
 
-namespace SportCommunityRM.WebSite
+namespace Microsoft.Extensions.Configuration
 {
     public static class StartupExtensions
     {
         public static string GetConnectionStringByOS(this IConfiguration configuration)
         {
-            var isWindowsOS = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
-            if (isWindowsOS)
-                return configuration.GetConnectionString("DefaultWinConnection");
+            var isMacOsPlatform = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
+            if (isMacOsPlatform)
+                return configuration.GetConnectionString("DefaultMacOsConnection");
 
-            return configuration.GetConnectionString("DefaultUnixConnection");
+            var isLinuxPlatform = RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
+            if (isLinuxPlatform)
+                return configuration.GetConnectionString("DefaultLinuxConnection");
+
+            return configuration.GetConnectionString("DefaultWindowsConnection");
         }
     }
 }
